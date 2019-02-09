@@ -2,13 +2,11 @@ from django.shortcuts import render
 from homepage.forms import LoginForm
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
-# Create your views here.
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def home(request):
-    return render(request, 'login.html', {'form': LoginForm()})
-    #  return HttpResponse('<h1> Homepage </h1>')
-
+    return HttpResponse('<h1> Homepage </h1>')
 
 def about(request):
     return HttpResponse('<h1> Testerooni </h1>')
