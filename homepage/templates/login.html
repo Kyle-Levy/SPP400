@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<p>HAAAAY</p>
-</body>
+<div class="log-form">
+  <h2>Login to your account</h2>
+  <form action="/login/" method="POST">{% csrf_token %}
+    {{form.as_p}}
+     <input type="submit" value="Log in!" />
+  </form>
+</div><!--end log form -->
 </html>
