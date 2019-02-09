@@ -23,5 +23,6 @@ urlpatterns = [
     path('test/', include('homepage.urls')),
     path('login/', log_in),
     path('logout/', log_out),
+    path('', log_in),
 
 ]
