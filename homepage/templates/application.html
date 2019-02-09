@@ -3,9 +3,12 @@
 <body>
     <div class="page-header">
 {% if user.is_authenticated %}
-    <p>Welcome, {{ user.get_username }}. Thanks for logging in.</p>
+    <p>Welcome, {{ user.get_username }}.</p>
+     <form action="/logout/" method="POST">{% csrf_token %}
+        <input type="submit" value="Log out" />
+     </form>
 {% else %}
-    <p>Welcome, new user. Please log in.</p>
+    <p>Please log in.</p>
 {% endif %}
     </div>
     <div class="content container">

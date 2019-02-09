@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from homepage.forms import LoginForm
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 
 
@@ -27,3 +27,7 @@ def log_in(request):
                 return render(request, 'login.html', {'form': LoginForm()})
             else:
                 return render(request, 'login.html', {'form': LoginForm()})
+
+def log_out(request):
+    logout(request)
+    return render(request, 'login.html', {'form': LoginForm()})
