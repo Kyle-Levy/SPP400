@@ -1,0 +1,10 @@
+{% extends 'application.html' %}
+{% block content %}
+<div class="log-form">
+  <h2>Login to your account</h2>
+  <form action="/login/" method="POST">{% csrf_token %}
+    {{form.as_p}}
+     <input type="submit" value="Log in!" />
+  </form>
+</div><!--end log form -->
+{% endblock %}

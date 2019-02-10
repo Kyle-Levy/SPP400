@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div class="page-header">
+{% if user.is_authenticated %}
+    <p>Welcome, {{ user.get_username }}.</p>
+     <form action="/logout/" method="POST">{% csrf_token %}
+        <input type="submit" value="Log out" />
+     </form>
+{% else %}
+    <p>Please log in.</p>
+{% endif %}
+    </div>
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-8">
+            {% block content %}
+            {% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
