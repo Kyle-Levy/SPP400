@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="08802651-7628-41c7-9535-46a9e2ff0745" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/homepage/migrations/0001_initial.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -122,44 +121,6 @@
               <item name="SPP400" type="462c0819:PsiDirectoryNode" />
               <item name=".elasticbeanstalk" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="SPP400" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SPP400" type="462c0819:PsiDirectoryNode" />
-              <item name="accounts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="SPP400" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SPP400" type="462c0819:PsiDirectoryNode" />
-              <item name="accounts" type="462c0819:PsiDirectoryNode" />
-              <item name="management" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="SPP400" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SPP400" type="462c0819:PsiDirectoryNode" />
-              <item name="accounts" type="462c0819:PsiDirectoryNode" />
-              <item name="migrations" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="SPP400" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SPP400" type="462c0819:PsiDirectoryNode" />
-              <item name="homepage" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="SPP400" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SPP400" type="462c0819:PsiDirectoryNode" />
-              <item name="homepage" type="462c0819:PsiDirectoryNode" />
-              <item name="migrations" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="SPP400" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SPP400" type="462c0819:PsiDirectoryNode" />
-              <item name="login" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="SPP400" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SPP400" type="462c0819:PsiDirectoryNode" />
-              <item name="SPP400" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -230,7 +191,7 @@
       <workItem from="1548882758034" duration="204000" />
       <workItem from="1548883066069" duration="38000" />
       <workItem from="1549486853465" duration="188000" />
-      <workItem from="1549954073413" duration="9772000" />
+      <workItem from="1549954073413" duration="10925000" />
     </task>
     <task id="LOCAL-00001" summary="Creating Django project">
       <created>1548880226944</created>
@@ -295,11 +256,25 @@
       <option name="project" value="LOCAL" />
       <updated>1550007537435</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="reran migrations for aws">
+      <created>1550008454772</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1550008454772</updated>
+    </task>
+    <task id="LOCAL-00011" summary="renamed the aws script, i think that was causing a problem in deployment">
+      <created>1550008908449</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1550008908449</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15558000" />
+    <option name="totallyTimeSpent" value="16711000" />
   </component>
   <component name="TodoView" selected-index="4">
     <todo-panel id="selected-file">
@@ -313,12 +288,12 @@
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1118" height="1055" extended-state="4" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27985075" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27985075" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32972974" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4972015" weight="0.32972974" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4972015" visible="true" weight="0.32972974" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -327,7 +302,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49683145" weight="0.28667563" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.505597" side_tool="true" weight="0.3264865" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49440297" visible="true" weight="0.3264865" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49440297" weight="0.3264865" />
       <window_info anchor="bottom" id="Python Console" order="12" sideWeight="0.49813432" weight="0.32972974" />
       <window_info anchor="bottom" id="Messages" order="13" />
       <window_info anchor="bottom" id="Database Console" order="14" />
@@ -391,7 +366,9 @@
     <MESSAGE value="created custom `python manage.py` command that will create a super user. This will be ran via a script in .ebextensions" />
     <MESSAGE value="woops forgot to actually include the directory for the custom command" />
     <MESSAGE value="the script that eb will run after it deploys to create the super user" />
-    <option name="LAST_COMMIT_MESSAGE" value="the script that eb will run after it deploys to create the super user" />
+    <MESSAGE value="reran migrations for aws" />
+    <MESSAGE value="renamed the aws script, i think that was causing a problem in deployment" />
+    <option name="LAST_COMMIT_MESSAGE" value="renamed the aws script, i think that was causing a problem in deployment" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Pipfile.lock">
@@ -572,7 +549,7 @@
     <entry file="file://$PROJECT_DIR$/accounts/management/commands/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/.ebextensions/01_python.config">
+    <entry file="file://$PROJECT_DIR$/.ebextensions/04_python.config">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="38">
           <caret line="2" column="21" selection-start-line="2" selection-start-column="21" selection-end-line="2" selection-end-column="21" />
