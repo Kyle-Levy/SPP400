@@ -2,13 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="08802651-7628-41c7-9535-46a9e2ff0745" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.ebextensions/db-migrate.config" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.ebextensions/django.config" beforeDir="false" afterPath="$PROJECT_DIR$/.ebextensions/django.config" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.ebextensions/01_python.config" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accounts/management/commands/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/accounts/management/commands/makesuper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/homepage/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/login/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/login/migrations/0002_auto_20190207_0050.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/admin/css/responsive.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/admin/css/responsive.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SPP400/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/SPP400/settings.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -69,7 +67,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.ebextensions/db-migrate.config">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="114">
@@ -91,8 +89,22 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SPP400/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1635">
-              <caret line="19" column="71" selection-start-line="19" selection-start-column="71" selection-end-line="19" selection-end-column="71" />
+            <state relative-caret-position="334">
+              <caret line="41" column="14" selection-start-line="41" selection-start-column="14" selection-end-line="41" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/accounts/management/commands/__init__.py">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.ebextensions/01_python.config">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="38">
+              <caret line="2" column="21" selection-start-line="2" selection-start-column="21" selection-end-line="2" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -111,6 +123,7 @@
     <findStrings>
       <find>.id</find>
       <find>STATIC_ROOT</find>
+      <find>install</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -135,16 +148,19 @@
         <option value="$PROJECT_DIR$/SPP400/urls.py" />
         <option value="$PROJECT_DIR$/homepage/templates/application.html" />
         <option value="$PROJECT_DIR$/homepage/views.py" />
-        <option value="$PROJECT_DIR$/SPP400/settings.py" />
         <option value="$PROJECT_DIR$/.ebextensions/django.config" />
         <option value="$PROJECT_DIR$/.ebextensions/db-migrate.config" />
+        <option value="$PROJECT_DIR$/accounts/commands/makesuper.py" />
+        <option value="$PROJECT_DIR$/accounts/management/commands/commands/makesuper.py" />
+        <option value="$PROJECT_DIR$/SPP400/settings.py" />
+        <option value="$PROJECT_DIR$/.ebextensions/01_python.config" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="993" />
+  <component name="ProjectFrameBounds" extendedState="4">
+    <option name="x" value="67" />
     <option name="y" value="25" />
-    <option name="width" value="927" />
+    <option name="width" value="1118" />
     <option name="height" value="1055" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -168,7 +184,20 @@
             <path>
               <item name="SPP400" type="b2602c69:ProjectViewProjectNode" />
               <item name="SPP400" type="462c0819:PsiDirectoryNode" />
+              <item name="accounts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SPP400" type="b2602c69:ProjectViewProjectNode" />
               <item name="SPP400" type="462c0819:PsiDirectoryNode" />
+              <item name="accounts" type="462c0819:PsiDirectoryNode" />
+              <item name="management" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SPP400" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SPP400" type="462c0819:PsiDirectoryNode" />
+              <item name="accounts" type="462c0819:PsiDirectoryNode" />
+              <item name="management" type="462c0819:PsiDirectoryNode" />
+              <item name="commands" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -181,6 +210,11 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="settings.editor.selected.configurable" value="Erlang External Tools" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/accounts/management/commands" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -235,7 +269,7 @@
       <workItem from="1548882758034" duration="204000" />
       <workItem from="1548883066069" duration="38000" />
       <workItem from="1549486853465" duration="188000" />
-      <workItem from="1549954073413" duration="6046000" />
+      <workItem from="1549954073413" duration="8857000" />
     </task>
     <task id="LOCAL-00001" summary="Creating Django project">
       <created>1548880226944</created>
@@ -272,11 +306,18 @@
       <option name="project" value="LOCAL" />
       <updated>1549955986075</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="deleted migrations and added config file so that a database migration can be made on deployment">
+      <created>1550004518391</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1550004518391</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="11832000" />
+    <option name="totallyTimeSpent" value="14643000" />
   </component>
   <component name="TodoView" selected-index="4">
     <todo-panel id="selected-file">
@@ -288,15 +329,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
+    <frame x="67" y="25" width="1118" height="1055" extended-state="4" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16602103" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27985075" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32972974" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32972974" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4972015" weight="0.32972974" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -304,9 +345,9 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49683145" weight="0.28667563" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50397277" side_tool="true" weight="0.4582701" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49602723" visible="true" weight="0.3264865" />
-      <window_info anchor="bottom" id="Python Console" order="12" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.505597" side_tool="true" weight="0.3264865" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49440297" visible="true" weight="0.3264865" />
+      <window_info anchor="bottom" id="Python Console" order="12" sideWeight="0.49813432" weight="0.32972974" />
       <window_info anchor="bottom" id="Messages" order="13" />
       <window_info anchor="bottom" id="Database Console" order="14" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -365,7 +406,8 @@
     <MESSAGE value="Updating python version" />
     <MESSAGE value="testing to see if having a file added to the staging area effects deployment" />
     <MESSAGE value="Added Static directory which is used to store images/css for deployment. Also committing migrations to see if that has an effect on aws deployment" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Static directory which is used to store images/css for deployment. Also committing migrations to see if that has an effect on aws deployment" />
+    <MESSAGE value="deleted migrations and added config file so that a database migration can be made on deployment" />
+    <option name="LAST_COMMIT_MESSAGE" value="deleted migrations and added config file so that a database migration can be made on deployment" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Pipfile.lock">
@@ -502,13 +544,6 @@
     <entry file="file://$PROJECT_DIR$/login/migrations/0002_auto_20190207_0050.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/SPP400/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1635">
-          <caret line="19" column="71" selection-start-line="19" selection-start-column="71" selection-end-line="19" selection-end-column="71" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.ebextensions/django.config">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="38">
@@ -520,6 +555,43 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="114">
           <caret line="6" column="43" selection-start-line="6" selection-start-column="35" selection-end-line="6" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/accounts/commands/makesuper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="7" column="53" lean-forward="true" selection-start-line="7" selection-start-column="53" selection-end-line="7" selection-end-column="53" />
+          <folding>
+            <element signature="e#0#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/accounts/management/commands/commands/makesuper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="7" column="87" selection-start-line="7" selection-start-column="87" selection-end-line="7" selection-end-column="87" />
+          <folding>
+            <element signature="e#0#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SPP400/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="334">
+          <caret line="41" column="14" selection-start-line="41" selection-start-column="14" selection-end-line="41" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/accounts/management/commands/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.ebextensions/01_python.config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="38">
+          <caret line="2" column="21" selection-start-line="2" selection-start-column="21" selection-end-line="2" selection-end-column="21" />
         </state>
       </provider>
     </entry>
