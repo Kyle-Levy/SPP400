@@ -261,3 +261,7 @@ fabric.properties
 .venv/
 
 # End of https://www.gitignore.io/api/pycharm,python,django
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
