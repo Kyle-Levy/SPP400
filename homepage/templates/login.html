@@ -1,6 +1,13 @@
 {% extends 'application.html' %}
 {% block content %}
 <div class="container-fixed">
+{% if failed_login %}
+    <div class="alert alert-danger" role="alert">
+    <strong>Invalid Login!</strong> Try entering your login information again.
+    </div>
+    {% else %}
+    <p> </p>
+    {% endif %}
     <h2> Cardiology Patient Manager </h2>
     <form action="/login/" method="POST"> {% csrf_token %}
         <div class="form-group">

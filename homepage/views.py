@@ -13,6 +13,7 @@ def about(request):
 
 
 def log_in(request):
+
     if request.method == 'GET':
         return render(request, 'login.html', {'form': LoginForm()})
     if request.method == 'POST':
@@ -22,10 +23,10 @@ def log_in(request):
             user = authenticate(username=cd['username'], password=cd['password'])
             if user is not None:
                 login(request, user)
-                return render(request, 'login.html', {'form': LoginForm()})
+                return render(request, 'login.html', {'form': LoginForm(), 'failed_login': False})
             else:
-                return render(request, 'login.html', {'form': LoginForm()})
+                return render(request, 'login.html', {'form': LoginForm(), 'failed_login': True})
 
 def log_out(request):
     logout(request)
-    return render(request, 'login.html', {'form': LoginForm()})
+    return render(request, 'login.html', {'form': LoginForm(), 'logged_out': True})
