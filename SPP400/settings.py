@@ -25,7 +25,7 @@ SECRET_KEY = '%c4wn#4mz@!p9ogr7dldj6pg@53e&le29=bt!f4fzbe19lm^vk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['test-dev222.us-west-2.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['test-dev222.us-west-2.elasticbeanstalk.com','127.0.0.1']
 
 
 
@@ -121,6 +121,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = 'static'
 
 LOGIN_URL = '/login/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
