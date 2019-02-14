@@ -11,7 +11,7 @@
       -DJANGO=2.1.5 DB=mysql
 
     install:
-      - pip install -r requirements.txt
+      # we need a command to install our dependencies here, this is in the process of being changed i think?
 
     before_script:
       - mysql -e 'create database test;' -u root
