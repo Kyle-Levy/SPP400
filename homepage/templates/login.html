@@ -1,10 +1,24 @@
 {% extends 'application.html' %}
 {% block content %}
-<div class="log-form">
-  <h2>Login to your account</h2>
-  <form action="/login/" method="POST">{% csrf_token %}
-    {{form.as_p}}
-     <input type="submit" value="Log in!" />
-  </form>
-</div><!--end log form -->
+<div class="container-fixed">
+{% if failed_login %}
+    <div class="alert alert-danger" role="alert">
+    <strong>Invalid Login!</strong> Try entering your login information again.
+    </div>
+    {% else %}
+    <p> </p>
+    {% endif %}
+    <h2> Cardiology Patient Manager </h2>
+    <form action="/login/" method="POST"> {% csrf_token %}
+        <div class="form-group">
+            <label for="loginUsername"> Username</label>
+            {{ form.username }}
+        </div>
+        <div class="form-group">
+            <label for="loginPassword"> Password</label>
+            {{ form.password }}
+        </div>
+        <button type="submit" class="btn btn-warning">Login</button>
+    </form>
+</div>
 {% endblock %}

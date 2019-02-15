@@ -4,9 +4,11 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
+
 @login_required
 def home(request):
     return HttpResponse('<h1> Homepage </h1>')
+
 
 def about(request):
     return HttpResponse('<h1> Testerooni </h1>')
@@ -22,10 +24,11 @@ def log_in(request):
             user = authenticate(username=cd['username'], password=cd['password'])
             if user is not None:
                 login(request, user)
-                return render(request, 'login.html', {'form': LoginForm()})
+                return render(request, 'homepage.html', {'form': LoginForm(), 'failed_login': False}, status=200)
             else:
-                return render(request, 'login.html', {'form': LoginForm()})
+                return render(request, 'login.html', {'form': LoginForm(), 'failed_login': True}, status=401)
+
 
 def log_out(request):
     logout(request)
-    return render(request, 'login.html', {'form': LoginForm()})
+    return render(request, 'login.html', {'form': LoginForm(), 'logged_out': True})
