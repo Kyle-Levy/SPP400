@@ -39,7 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'homepage',
-    'accounts'
+    'accounts',
+    'material',
+    'material.frontend',
+    'viewflow',
+    'viewflow.frontend',
+    'SPP400.workflow',
 ]
 
 MIDDLEWARE = [
