@@ -139,3 +139,10 @@ LOGIN_URL = '/login/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 15 * 60
 SESSION_SAVE_EVERY_REQUEST = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'SEP400test@gmail.com'
+EMAIL_HOST_PASSWORD = 'passwordSEP400*'

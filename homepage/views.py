@@ -3,6 +3,8 @@ from homepage.forms import LoginForm
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMessage
+
 
 @login_required
 def home(request):
@@ -21,6 +23,8 @@ def log_in(request):
             cd = form.cleaned_data
             user = authenticate(username=cd['username'], password=cd['password'])
             if user is not None:
+                email = EmailMessage('Hello', 'World', to=['gregory-malicki@uiowa.edu'])
+                # email.send()
                 login(request, user)
                 return render(request, 'login.html', {'form': LoginForm()})
             else:
