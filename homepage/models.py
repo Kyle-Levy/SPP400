@@ -41,6 +41,7 @@ class Profile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         profile = Profile.objects.create(user=instance)
+        profile.new_key()
         profile.save()
 
 
