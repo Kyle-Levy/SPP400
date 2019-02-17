@@ -12,9 +12,12 @@
     install:
       # we need a command to install our dependencies here, this is in the process of being changed i think?
       - pip install django
+      - pip install coverage
 
     before_script:
       - mysql -e 'create database test;' -u root
       -
     script:
       - python manage.py test
+      - coverage run --source='.' manage.py test
+      - coverage report
