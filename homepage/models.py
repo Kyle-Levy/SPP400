@@ -17,20 +17,22 @@ class Profile(models.Model):
     def new_key(self):
         user = self.user
         self.key = random.randint(1000, 9999)
-        self.key_expiration = timezone.now() + timedelta(days=30)
-        email = EmailMessage('New authentication key', "Your new authentication key is: " + str(self.key) + " now: " + str(timezone.now()) + " expiration: " + str(self.key_expiration), to=[user.email])
+        email = EmailMessage('New authentication key', "Your new authentication key is: " + str(self.key), to=[user.email])
         email.send()
 
     def check_key(self, num):
+        print(num)
+        print(self.key)
+        if self.user.email is None:
+            return True
         if self.key == num:
-            # self.new_key()
+            self.key_expiration = timezone.now() + timedelta(days=30)
             return True
         else:
             return False
 
     def expired(self):
-        if timezone.now() < self.key_expiration:
-            # self.new_key()
+        if timezone.now() > self.key_expiration:
             return True
         else:
             return False
