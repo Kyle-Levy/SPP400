@@ -17,6 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 from homepage.views import log_in, log_out, new_code
 
+from django.conf.urls import include, url
+from django.views import generic
+from material.frontend import urls as frontend_urls
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +29,6 @@ urlpatterns = [
     path('logout/', log_out),
     path('', log_in),
     path('code/', new_code),
-
+    url(r'^$', generic.RedirectView.as_view(url='/workflow/', permanent=False)),
+    url(r'', include(frontend_urls)),
 ]
