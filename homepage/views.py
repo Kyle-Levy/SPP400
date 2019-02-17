@@ -41,7 +41,7 @@ def log_in(request):
                     login(request, user)
                     return render(request, 'homepage.html', {'form': LoginForm(), 'failed_login': False}, status=200)
             else:
-                return render(request, 'homepage.html', {'form': LoginForm(), 'failed_login': False}, status=200)
+                return render(request, 'login.html', {'form': LoginForm(), 'failed_login': True}, status=401)
 
 
 def log_out(request):
