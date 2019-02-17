@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from homepage.views import log_in, log_out
+from homepage.views import log_in, log_out, new_code
 
 
 urlpatterns = [
@@ -24,5 +24,6 @@ urlpatterns = [
     path('login/', log_in),
     path('logout/', log_out),
     path('', log_in),
+    path('code/', new_code),
 
 ]

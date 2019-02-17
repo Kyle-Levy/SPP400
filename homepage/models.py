@@ -17,12 +17,11 @@ class Profile(models.Model):
     def new_key(self):
         user = self.user
         self.key = random.randint(1000, 9999)
+        self.save()
         email = EmailMessage('New authentication key', "Your new authentication key is: " + str(self.key), to=[user.email])
         email.send()
 
     def check_key(self, num):
-        print(num)
-        print(self.key)
         if self.user.email is None:
             return True
         if self.key == num:

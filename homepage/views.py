@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from homepage.forms import LoginForm
+from homepage.forms import LoginForm, NewKeyForm
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 
 @login_required
 def home(request):
@@ -46,3 +47,19 @@ def log_in(request):
 def log_out(request):
     logout(request)
     return render(request, 'login.html', {'form': LoginForm(), 'logged_out': True})
+
+def new_code(request):
+    if request.method == 'GET':
+        return render(request, 'new_key.html', {'form': NewKeyForm(), 'failed_login': False, 'two_factor': True}, status=200)
+    if request.method == 'POST':
+        form = NewKeyForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            try:
+                user = User.objects.get(username=cd['username'])
+                user.profile.new_key()
+                return render(request, 'login.html', {'form': LoginForm(), 'failed_login': False, 'two_factor': True}, status=200)
+
+            except ObjectDoesNotExist:
+                return render(request, 'new_key.html', {'form': NewKeyForm(), 'failed_login': False, 'two_factor': True}, status=200)
+

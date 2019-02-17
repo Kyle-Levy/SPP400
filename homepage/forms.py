@@ -19,7 +19,17 @@ class LoginForm(forms.Form):
                 'placeholder': 'Password'
             }
     ))
-    auth_key = forms.IntegerField(required=False
-        )
+    auth_key = forms.IntegerField(required=False)
 
+
+class NewKeyForm(forms.Form):
+    username = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'id': 'newKeyUsername',
+                'placeholder': 'Enter username'
+            }
+        ))
 
