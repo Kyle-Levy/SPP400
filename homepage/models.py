@@ -25,7 +25,7 @@ class Profile(models.Model):
         if self.user.email is None:
             return True
         if self.key == num:
-            self.key_expiration = timezone.now() + timedelta(minutes=1)
+            self.key_expiration = timezone.now() + timedelta(days=30)
             return True
         else:
             return False

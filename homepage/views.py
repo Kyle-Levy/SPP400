@@ -22,22 +22,15 @@ def log_in(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            print("form is valid")
             cd = form.cleaned_data
             user = authenticate(username=cd['username'], password=cd['password'])
             if user is not None:
-                # user.profile.new_key()
-                print("expiration: " + str(user.profile.key_expiration))
-                print("curre time:" + str(timezone.now()))
                 if user.profile.expired():
-                    print("2 factor expired")
                     if user.profile.check_key(cd['auth_key']):
-                        print("2 factor validated")
                         login(request, user)
                         return render(request, 'homepage.html', {'form': LoginForm(), 'failed_login': False, 'two_factor': True}, status=200)
                     return render(request, 'login.html', {'form': LoginForm(), 'failed_login': True, 'two_factor': True}, status=401)
                 else:
-                    print("2 factor still valid")
                     login(request, user)
                     return render(request, 'homepage.html', {'form': LoginForm(), 'failed_login': False}, status=200)
             else:
