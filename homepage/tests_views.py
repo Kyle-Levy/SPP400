@@ -92,6 +92,8 @@ class TestLogout(TestCase):
         request.session.save()
 
         log_in(request)
+        self.assertTrue(request.user.is_authenticated)
+
 
         log_out(request)
 
