@@ -39,7 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'homepage',
-    'accounts'
+    'accounts',
+    'material',
+    'material.frontend',
+    'viewflow',
+    'viewflow.frontend',
+    'SPP400.workflow',
+    'redgreenunittest'
 ]
 
 MIDDLEWARE = [
@@ -139,3 +145,6 @@ LOGIN_URL = '/login/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 15 * 60
 SESSION_SAVE_EVERY_REQUEST = True
+
+#Makes tests colored
+TEST_RUNNER="redgreenunittest.django.runner.RedGreenDiscoverRunner"
