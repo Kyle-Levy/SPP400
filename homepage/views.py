@@ -23,10 +23,15 @@ def log_in(request):
             cd = form.cleaned_data
             user = authenticate(username=cd['username'], password=cd['password'])
             if user is not None:
-                email = EmailMessage('Hello', 'World', to=['gregory-malicki@uiowa.edu'])
-                # email.send()
-                login(request, user)
-                return render(request, 'login.html', {'form': LoginForm()})
+                print(user.profile.expired())
+                if user.profile.expired():
+                    return render(request, 'login.html', {'form': LoginForm()})
+                else:
+                    print(cd['auth_key'])
+                    print(user.profile.key)
+                    if user.profile.key == cd['auth_key']:
+                        login(request, user)
+                    return render(request, 'login.html', {'form': LoginForm()})
             else:
                 return render(request, 'login.html', {'form': LoginForm()})
 

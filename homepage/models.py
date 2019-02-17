@@ -4,6 +4,9 @@ from datetime import datetime
 import random
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.mail import EmailMessage
+from datetime import timedelta
+from django.utils import timezone
 
 
 class Profile(models.Model):
@@ -12,10 +15,21 @@ class Profile(models.Model):
     key_expiration = models.DateTimeField(default=datetime.now)
 
     def new_key(self):
+        user = self.user
         self.key = random.randint(1000, 9999)
+        self.key_expiration = timezone.now() + timedelta(days=30)
+        email = EmailMessage('New authentication key', "Your new authentication key is: " + str(self.key) + " now: " + str(timezone.now()) + " expiration: " + str(self.key_expiration), to=[user.email])
+        email.send()
 
     def check_key(self, num):
         if self.key == num:
+            # self.new_key()
+            return True
+        else:
+            return False
+
+    def expired(self):
+        if timezone.now() < self.key_expiration:
             # self.new_key()
             return True
         else:
