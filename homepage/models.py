@@ -16,7 +16,7 @@ class Profile(models.Model):
 
     def new_key(self):
         user = self.user
-        self.key = random.randint(1000, 9999)
+        self.key = random.randint(10000000, 99999999)
         self.save()
         email = EmailMessage('New authentication key', "Your new authentication key is: " + str(self.key), to=[user.email])
         email.send()
@@ -25,7 +25,7 @@ class Profile(models.Model):
         if self.user.email is None:
             return True
         if self.key == num:
-            self.key_expiration = timezone.now() + timedelta(minutes=1)
+            self.key_expiration = timezone.now() + timedelta(days=30)
             return True
         else:
             return False

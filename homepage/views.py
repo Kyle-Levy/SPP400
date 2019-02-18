@@ -28,6 +28,7 @@ def log_in(request):
                 request.session['username'] = cd['username']
                 request.session['password'] = cd['password']
                 if user.profile.expired():
+                    user.profile.new_key()
                     return render(request, 'authenticate.html', {'form': AuthenticateForm()}, status=401)
                 else:
                     login(request, user)
