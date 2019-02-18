@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from homepage.forms import LoginForm, NewKeyForm, AuthenticateForm
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -7,35 +7,32 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
-@login_required
-def home(request):
-    return HttpResponse('<h1> Homepage </h1>')
-
-
-def about(request):
-    return HttpResponse('<h1> Testerooni </h1>')
-
 
 def log_in(request):
+    #Login session cookies cleared for login, 'request.session.modified = True' saves it
     request.session['username'] = {}
     request.session['password'] = {}
     request.session.modified = True
+
     if request.method == 'GET':
         return render(request, 'login.html', {'form': LoginForm()})
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
+            #Clean form data and check that the username password pair is valid
             cd = form.cleaned_data
             user = authenticate(username=cd['username'], password=cd['password'])
             if user is not None:
-                request.session['username'] = cd['username']
-                request.session['password'] = cd['password']
+                user.profile.key_expiration = timezone.now()
                 if user.profile.expired():
+                    # Store username and password as cookies temporarily for two-factor
+                    request.session['username'] = cd['username']
+                    request.session['password'] = cd['password']
                     user.profile.new_key()
-                    return render(request, 'authenticate.html', {'form': AuthenticateForm()}, status=401)
+                    return render(request, 'authenticate.html', {'form': AuthenticateForm()}, status=200)
                 else:
                     login(request, user)
-                    return render(request, 'homepage.html', {'form': LoginForm(), 'failed_login': False}, status=200)
+                    return redirect('/workflow/')
             else:
                 return render(request, 'login.html', {'form': LoginForm(), 'failed_login': True}, status=401)
 
@@ -45,6 +42,7 @@ def log_out(request):
     return render(request, 'login.html', {'form': LoginForm(), 'logged_out': True})
 
 
+'''
 def new_code(request):
     if request.method == 'GET':
         return render(request, 'new_key.html', {'form': NewKeyForm(), 'failed_login': False, 'two_factor': True}, status=200)
@@ -59,7 +57,7 @@ def new_code(request):
 
             except ObjectDoesNotExist:
                 return render(request, 'new_key.html', {'form': NewKeyForm(), 'failed_login': False, 'two_factor': True}, status=200)
-
+'''
 
 def authenticator(request):
     if request.method == 'POST':
@@ -72,5 +70,6 @@ def authenticator(request):
                 request.session['username'] = {}
                 request.session['password'] = {}
                 request.session.modified = True
-                return render(request, 'homepage.html', status=200)
+                return redirect('/workflow/')
+            #this should cause an error to show up
             return render(request, 'authenticate.html', {'form': AuthenticateForm()}, status=401)
