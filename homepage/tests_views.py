@@ -2,6 +2,8 @@ from django.contrib.auth import authenticate
 from django.test import RequestFactory, TestCase
 from django.contrib.auth.models import User
 from django.contrib.sessions.middleware import SessionMiddleware
+from datetime import timedelta
+from django.utils import timezone
 
 from .views import log_in, log_out, authenticator
 
@@ -68,7 +70,24 @@ class TestLogin(TestCase):
 
         authResponse = authenticator(authRequest)
 
-        self.assertEqual(authResponse.status_code, 401 )
+        self.assertEqual(authResponse.status_code, 401)
+
+    def test_login_page_good_credentials_no_auth_needed(self):
+        request = self.factory.post('login/', {'username': 'testuser', 'password': 'super_secret_pass'})
+        request.user = self.user
+
+        # Fast forward the key expiration so its valid
+        request.user.profile.key_expiration = timezone.now() + timedelta(days=30)
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user.save()
+
+        response = log_in(request)
+
+        self.assertEqual(response.status_code, 302)
+
+
+
 
     def test_login_page_wrong_password(self):
         request = self.factory.post('login/', {'username': 'testuser', 'password': 'soup_secret_pass'})
