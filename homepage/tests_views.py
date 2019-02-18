@@ -86,9 +86,6 @@ class TestLogin(TestCase):
 
         self.assertEqual(response.status_code, 302)
 
-
-
-
     def test_login_page_wrong_password(self):
         request = self.factory.post('login/', {'username': 'testuser', 'password': 'soup_secret_pass'})
         request.user = self.user
@@ -128,6 +125,17 @@ class TestLogin(TestCase):
         response = log_in(request)
 
         self.assertIsNone(response)
+
+    def test_get_login_page(self):
+        request = self.factory.get('/login/')
+
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+
+        response = log_in(request)
+
+        self.assertTrue(response.status_code, 200)
 
 
 class TestLogout(TestCase):
