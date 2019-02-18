@@ -11,7 +11,7 @@
     <h2> Enter your two-factor code sent to you by email. </h2>
     <form action="/authenticate/" method="POST"> {% csrf_token %}
         <div class="form-group">
-            <label for="loginUsername"> Authentication Code</label>
+            <label for="id_key"> Authentication Code</label>
             {{ form.key }}
         </div>
         <button type="submit" class="btn btn-warning"> Submit</button>
