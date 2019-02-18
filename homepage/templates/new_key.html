@@ -1,0 +1,20 @@
+{% extends 'application.html' %}
+{% block content %}
+<div class="container-fixed">
+{% if failed_login %}
+    <div class="alert alert-danger" role="alert">
+    <strong>Invalid Login!</strong> Try entering your login information again.
+    </div>
+    {% else %}
+    <p> </p>
+    {% endif %}
+    <h2> Enter your username to receive a new two-factor code. </h2>
+    <form action="/code/" method="POST"> {% csrf_token %}
+        <div class="form-group">
+            <label for="loginUsername"> Username</label>
+            {{ form.username }}
+        </div>
+        <button type="submit" class="btn btn-warning"> E-Mail Code</button>
+    </form>
+</div>
+{% endblock %}

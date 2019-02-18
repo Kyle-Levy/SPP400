@@ -15,8 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from homepage.views import log_in, log_out
-
 from django.conf.urls import include, url
 from django.views import generic
 from material.frontend import urls as frontend_urls
@@ -24,10 +22,8 @@ from material.frontend import urls as frontend_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('test/', include('homepage.urls')),
-    path('login/', log_in),
-    path('logout/', log_out),
-    path('', log_in),
+    path('', include('homepage.urls')),
+    #path('code/', new_code),
     url(r'^$', generic.RedirectView.as_view(url='/workflow/', permanent=False)),
     url(r'', include(frontend_urls)),
 ]
