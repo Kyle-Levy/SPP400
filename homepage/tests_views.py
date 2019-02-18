@@ -1,8 +1,9 @@
+from django.contrib.auth import authenticate
 from django.test import RequestFactory, TestCase
 from django.contrib.auth.models import User
 from django.contrib.sessions.middleware import SessionMiddleware
 
-from .views import log_in, log_out
+from .views import log_in, log_out, authenticator
 
 
 # Create your tests here.
@@ -25,15 +26,49 @@ class TestLogin(TestCase):
         self.user = User.objects.create_superuser('testuser', 'testuser@email.com', 'super_secret_pass')
         self.user.save()
 
-    def test_login_page_good_credentials(self):
+    def test_login_page_good_credentials_good_auth(self):
         request = self.factory.post('login/', {'username': 'testuser', 'password': 'super_secret_pass'})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
 
         response = log_in(request)
-
         self.assertEqual(response.status_code, 200)
+
+        userObj = authenticate(username=request.session['username'], password=request.session['password'])
+
+        authRequest = self.factory.post('authenticator/', {'key': userObj.profile.key})
+        authRequest.user = self.user
+
+        # Grab the session cookies from the previous post
+        authRequest.session = request.session
+        authRequest.session.save()
+
+        authResponse = authenticator(authRequest)
+
+        self.assertEqual(authResponse.status_code, 302)
+
+    def test_login_page_good_credentials_bad_auth(self):
+        request = self.factory.post('login/', {'username': 'testuser', 'password': 'super_secret_pass'})
+        request.user = self.user
+        self.middleware.process_request(request)
+        request.session.save()
+
+        response = log_in(request)
+        self.assertEqual(response.status_code, 200)
+
+        userObj = authenticate(username=request.session['username'], password=request.session['password'])
+
+        authRequest = self.factory.post('authenticator/', {'key': 1})
+        authRequest.user = self.user
+
+        # Grab the session cookies from the previous post
+        authRequest.session = request.session
+        authRequest.session.save()
+
+        authResponse = authenticator(authRequest)
+
+        self.assertEqual(authResponse.status_code, 401 )
 
     def test_login_page_wrong_password(self):
         request = self.factory.post('login/', {'username': 'testuser', 'password': 'soup_secret_pass'})
@@ -93,7 +128,6 @@ class TestLogout(TestCase):
 
         log_in(request)
         self.assertTrue(request.user.is_authenticated)
-
 
         log_out(request)
 
