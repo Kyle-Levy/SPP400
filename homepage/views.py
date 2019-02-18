@@ -17,6 +17,9 @@ def about(request):
 
 
 def log_in(request):
+    request.session['username'] = {}
+    request.session['password'] = {}
+    request.session.modified = True
     if request.method == 'GET':
         return render(request, 'login.html', {'form': LoginForm()})
     if request.method == 'POST':
@@ -66,5 +69,8 @@ def authenticator(request):
             key = form.cleaned_data['key']
             if user.profile.check_key(key):
                 login(request, user)
+                request.session['username'] = {}
+                request.session['password'] = {}
+                request.session.modified = True
                 return render(request, 'homepage.html', status=200)
             return render(request, 'authenticate.html', {'form': AuthenticateForm()}, status=401)
