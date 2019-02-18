@@ -73,4 +73,4 @@ def authenticator(request):
                 request.session['password'] = {}
                 request.session.modified = True
                 return render(request, 'homepage.html', status=200)
-            return render(request, 'authenticate.html', {'form': AuthenticateForm()}, status=401)
+            return render(request, 'authenticate.html', {'form': AuthenticateForm(), 'bad_code': True}, status=401)
