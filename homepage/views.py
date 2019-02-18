@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 def log_in(request):
-    #Login session cookies cleared for login, 'request.session.modified = True' saves it
+    # Login session cookies cleared for login, 'request.session.modified = True' saves it
     request.session['username'] = {}
     request.session['password'] = {}
     request.session.modified = True
@@ -19,11 +19,10 @@ def log_in(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            #Clean form data and check that the username password pair is valid
+            # Clean form data and check that the username password pair is valid
             cd = form.cleaned_data
             user = authenticate(username=cd['username'], password=cd['password'])
             if user is not None:
-                user.profile.key_expiration = timezone.now()
                 if user.profile.expired():
                     # Store username and password as cookies temporarily for two-factor
                     request.session['username'] = cd['username']
@@ -59,6 +58,7 @@ def new_code(request):
                 return render(request, 'new_key.html', {'form': NewKeyForm(), 'failed_login': False, 'two_factor': True}, status=200)
 '''
 
+
 def authenticator(request):
     if request.method == 'POST':
         user = authenticate(username=request.session['username'], password=request.session['password'])
@@ -71,5 +71,6 @@ def authenticator(request):
                 request.session['password'] = {}
                 request.session.modified = True
                 return redirect('/workflow/')
-            #this should cause an error to show up
-            return render(request, 'authenticate.html', {'form': AuthenticateForm()}, status=401)
+            # this should cause an error to show up
+            return render(request, 'authenticate.html', {'form': AuthenticateForm(), 'bad_code': True}, status=401)
+

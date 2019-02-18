@@ -1,6 +1,13 @@
 {% extends 'application.html' %}
 {% block content %}
 <div class="container-fixed">
+{% if bad_code %}
+    <div class="alert alert-danger" role="alert">
+    <strong>Invalid code:</strong> Check you are using the most recent version.
+    </div>
+    {% else %}
+    <p> </p>
+    {% endif %}
     <h2> Enter your two-factor code sent to you by email. </h2>
     <form action="/authenticate/" method="POST"> {% csrf_token %}
         <div class="form-group">
