@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from homepage.views import log_in, log_out, new_code
+from homepage.views import log_in, log_out, new_code, authenticator
 
 from django.conf.urls import include, url
 from django.views import generic
@@ -31,4 +31,5 @@ urlpatterns = [
     path('code/', new_code),
     url(r'^$', generic.RedirectView.as_view(url='/workflow/', permanent=False)),
     url(r'', include(frontend_urls)),
+    path('authenticate/', authenticator)
 ]

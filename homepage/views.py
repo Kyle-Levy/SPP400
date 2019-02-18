@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from homepage.forms import LoginForm, NewKeyForm
+from homepage.forms import LoginForm, NewKeyForm, AuthenticateForm
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -25,11 +25,10 @@ def log_in(request):
             cd = form.cleaned_data
             user = authenticate(username=cd['username'], password=cd['password'])
             if user is not None:
+                request.session['username'] = cd['username']
+                request.session['password'] = cd['password']
                 if user.profile.expired():
-                    if user.profile.check_key(cd['auth_key']):
-                        login(request, user)
-                        return render(request, 'homepage.html', {'form': LoginForm(), 'failed_login': False, 'two_factor': True}, status=200)
-                    return render(request, 'login.html', {'form': LoginForm(), 'failed_login': True, 'two_factor': True}, status=401)
+                    return render(request, 'authenticate.html', {'form': AuthenticateForm()}, status=401)
                 else:
                     login(request, user)
                     return render(request, 'homepage.html', {'form': LoginForm(), 'failed_login': False}, status=200)
@@ -40,6 +39,7 @@ def log_in(request):
 def log_out(request):
     logout(request)
     return render(request, 'login.html', {'form': LoginForm(), 'logged_out': True})
+
 
 def new_code(request):
     if request.method == 'GET':
@@ -56,3 +56,14 @@ def new_code(request):
             except ObjectDoesNotExist:
                 return render(request, 'new_key.html', {'form': NewKeyForm(), 'failed_login': False, 'two_factor': True}, status=200)
 
+
+def authenticator(request):
+    if request.method == 'POST':
+        user = authenticate(username=request.session['username'], password=request.session['password'])
+        form = AuthenticateForm(request.POST)
+        if form.is_valid():
+            key = form.cleaned_data['key']
+            if user.profile.check_key(key):
+                login(request, user)
+                return render(request, 'homepage.html', status=200)
+            return render(request, 'authenticate.html', {'form': AuthenticateForm()}, status=401)

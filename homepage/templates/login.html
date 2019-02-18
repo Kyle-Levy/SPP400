@@ -18,15 +18,6 @@
             <label for="loginPassword"> Password</label>
             {{ form.password }}
         </div>
-        {% if two_factor %}
-        <div class="form-group">
-            <label for="loginKey"> ID Key</label>
-            {{ form.auth_key }}
-        </div>
-        <div>
-            <a href="/code/">I need a new code</a>
-        </div>
-        {% endif %}
         <button type="submit" class="btn btn-warning">Login</button>
     </form>
 </div>
