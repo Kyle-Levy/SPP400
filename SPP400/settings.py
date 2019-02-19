@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'viewflow',
     'viewflow.frontend',
     'SPP400.workflow',
-    'redgreenunittest'
+    'redgreenunittest',
+    'patients'
 ]
 
 MIDDLEWARE = [
