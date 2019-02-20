@@ -46,7 +46,7 @@
     font-size: 0.85em;
 }
 
-#sidebar.active ul li a i {
+#sidebar.active ul li a svg {
     margin-right: 0;
     display: block;
     font-size: 1.8em;
@@ -120,4 +120,10 @@ a, a:hover, a:focus {
     color: inherit;
     text-decoration: none;
     transition: all 0.3s;
+}
+
+.octicon {
+  display: inline-block;
+  vertical-align: text-top;
+  fill: white;
 }
