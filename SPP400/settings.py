@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'material.frontend',
     'viewflow',
     'viewflow.frontend',
-    'SPP400.workflow',
+    'workflow',
     'redgreenunittest'
 ]
 
