@@ -2,9 +2,108 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <!-- Helps scale for mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Personal CSS -->
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href={% static "homepage/homepage.css" %}>
+    <!-- Tutorial for creating sidebar can be found at: https://bootstrapious.com/p/bootstrap-sidebar -->
 </head>
+
 <body>
+
+<!-- Div holding the entire page -->
+<div class = "wrapper">
+
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Patient Tracker</h3>
+            <strong>UIHC</strong>
+        </div>
+
+        <!-- This holds the bulk of the side bar -->
+        <ul class="list-unstyled components">
+            <p>Possible Header Here</p>
+            <!-- .active is denoting that homepage is the active page -->
+            <li class="active">
+                <a href="#">
+                    <span class="glyphicon glyphicon-home"></span>
+                    Home
+                </a>
+            </li>
+
+            <li>
+                <a href="/workflow/">
+                    Workflow
+                </a>
+            </li>
+
+            <li>
+                <!-- the <a> href must match the id of the <ul> that contains the drop down -->
+                <a href="#profileSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Profile</a>
+                <ul class="collapse list-unstyled" id="profileSubmenu">
+
+                    <li>
+                        <a href="#">Settings</a>
+                    </li>
+
+                    <li>
+                        <a href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+
+            </li>
+        </ul>
+
+
+
+
+
+    </nav>
+
+    <div id="content">
+
+        <button type="button" id="sidebarCollapse" class="btn btn-info">
+            <span>Toggle Sidebar</span>
+        </button>
+        Rest of the content of the page goes here
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<!-- Personal JS -->
+<script src={% static "homepage/sidebar.js" %}></script>
+
 <h1>Homepage</h1>
 </body>
 </html>
