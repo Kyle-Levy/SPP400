@@ -1,0 +1,123 @@
+.wrapper {
+    display:flex;
+    width: 100%;
+    align-items:stretch;
+}
+
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    min-height: 100vh;
+
+    background: #2c2c2c;
+    color: white;
+    transition: all 0.3s;
+}
+
+#sidebar .sidebar-header {
+    padding: 15px;
+    background: gold;
+    color: #272727;
+}
+
+/*Marks the bottom of the List of elements in the sidebar*/
+#sidebar ul.components {
+    padding: 15px 0;
+    border-bottom: 1px solid #272727;
+}
+
+/* Possible header styling */
+#sidebar ul p {
+    color: white;
+    padding: 10px;
+}
+
+/* list link styling */
+#sidebar ul li a {
+    padding: 10px;
+    display: block;
+    font-size: 1.1em;
+
+}
+
+#sidebar.active ul li a {
+    padding: 20px 10px;
+    text-align: center;
+    font-size: 0.85em;
+}
+
+#sidebar.active ul li a i {
+    margin-right: 0;
+    display: block;
+    font-size: 1.8em;
+    margin-bottom: 5px;
+
+}
+
+/* Drop down item padding*/
+#sidebar.active ul ul a {
+    padding: 10px !important;
+}
+
+/* Center the drop arrow when sidebar closed*/
+#sidebar.active .dropdown-toggle::after {
+    top: auto;
+    bottom: 10px;
+    right: 50%;
+    -webkit-transform: translateX(50%);
+    -ms-transform: translateX(50%);
+    transform: translateX(50%);
+}
+
+
+/* Hover over a list link */
+#sidebar ul li a:hover {
+    color: #2c2c2c;
+    background: gold;
+}
+
+/*When the drop down is expanded */
+#sidebar ul li.active > a, a[aria-expanded="true"]{
+    color: white;
+    background: #272727;
+}
+
+/*Items within the dropdown menu */
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: #272727;
+}
+/*When sidebar is active, hide it*/
+#sidebar.active {
+    min-width: 80px;
+    max-width: 80px;
+    text-align: center;
+}
+
+/* Hide the strong text when the sidebar isn't "active" */
+#sidebar .sidebar-header strong {
+    display: none;
+}
+
+
+/* Hide the header when the sidebar is active*/
+#sidebar.active .sidebar-header h3 {
+    display: none;
+}
+
+/* Show the strong text when active*/
+#sidebar.active .sidebar-header strong {
+    display: block;
+}
+
+
+body {
+    background: whitesmoke;
+}
+
+a, a:hover, a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
