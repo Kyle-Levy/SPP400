@@ -8,6 +8,11 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
 
+def homepage(request):
+    if request.method == 'GET':
+        return render(request, 'homepage.html')
+
+
 def log_in(request):
     # Login session cookies cleared for login, 'request.session.modified = True' saves it
     request.session['username'] = {}
@@ -73,4 +78,3 @@ def authenticator(request):
                 return redirect('/workflow/')
             # this should cause an error to show up
             return render(request, 'authenticate.html', {'form': AuthenticateForm(), 'bad_code': True}, status=401)
-
