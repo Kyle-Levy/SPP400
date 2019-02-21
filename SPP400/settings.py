@@ -43,9 +43,10 @@ INSTALLED_APPS = [
     'material.frontend',
     'viewflow',
     'viewflow.frontend',
-    'SPP400.workflow',
     'redgreenunittest',
     'octicons',
+    'workflow',
+    'redgreenunittest'
 ]
 
 MIDDLEWARE = [
