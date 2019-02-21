@@ -111,6 +111,17 @@ ul ul a {
     }
 }
 
+li a svg{
+    fill: white;
+}
+li a:hover svg{
+    fill: black;
+}
+
+
+li.active a:hover svg{
+    fill: white;
+}
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
