@@ -14,18 +14,9 @@ class ProceduresTemplate(forms.Form):
         )
     )
 
-    expired_time = forms.DateField(
-        label= 'Expire Date',
-        widget= forms.DateInput(
-            attrs={
-                'class': 'procedures-group',
-                'id': 'expirationDate',
-            }
-        )
-    )
-
     procedure_date = forms.DateField(
         label= 'Procedure Date',
+        required=False,
         widget= forms.DateInput(
             attrs={
                 'class': 'procedures-group',
@@ -34,8 +25,20 @@ class ProceduresTemplate(forms.Form):
         )
     )
 
+    expired_time = forms.DateField(
+        label='Expire Date',
+        required=False,
+        widget=forms.DateInput(
+            attrs={
+                'class': 'procedures-group',
+                'id': 'expirationDate',
+            }
+        )
+    )
+
     notes = forms.CharField(
         label= 'Notes',
+        required=False,
         widget= forms.Textarea(
             attrs={
                 'class': 'procedures-group',
