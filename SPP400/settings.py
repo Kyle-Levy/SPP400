@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'redgreenunittest',
     'octicons',
     'workflow',
-    'redgreenunittest'
 ]
 
 MIDDLEWARE = [
