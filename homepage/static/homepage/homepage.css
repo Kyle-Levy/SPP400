@@ -1,129 +1,123 @@
+/*
+    DEMO STYLE
+*/
+
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+    background: #fafafa;
+}
+
+p {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+
+a,
+a:hover,
+a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.navbar {
+    padding: 15px 10px;
+    background: #fff;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 40px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
 .wrapper {
     display:flex;
+    align-items: stretch;
     width: 100%;
-    align-items:stretch;
 }
+
 
 #sidebar {
     min-width: 250px;
     max-width: 250px;
-    min-height: 100vh;
-
     background: #2c2c2c;
     color: white;
-    transition: all 0.3s;
+    transition: all 0.2s;
 }
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
 
 #sidebar .sidebar-header {
-    padding: 15px;
+    padding: 20px;
     background: gold;
-    color: #272727;
 }
 
-/*Marks the bottom of the List of elements in the sidebar*/
 #sidebar ul.components {
-    padding: 15px 0;
+    padding: 20px 0;
     border-bottom: 1px solid #272727;
 }
 
-/* Possible header styling */
 #sidebar ul p {
-    color: white;
+    color: #fff;
     padding: 10px;
 }
 
-/* list link styling */
 #sidebar ul li a {
     padding: 10px;
-    display: block;
     font-size: 1.1em;
-
-}
-
-#sidebar.active ul li a {
-    padding: 20px 10px;
-    text-align: center;
-    font-size: 0.85em;
-}
-
-#sidebar.active ul li a svg {
-    margin-right: 0;
     display: block;
-    font-size: 1.8em;
-    margin-bottom: 5px;
-
 }
 
-/* Drop down item padding*/
-#sidebar.active ul ul a {
-    padding: 10px !important;
-}
-
-/* Center the drop arrow when sidebar closed*/
-#sidebar.active .dropdown-toggle::after {
-    top: auto;
-    bottom: 10px;
-    right: 50%;
-    -webkit-transform: translateX(50%);
-    -ms-transform: translateX(50%);
-    transform: translateX(50%);
-}
-
-
-/* Hover over a list link */
 #sidebar ul li a:hover {
     color: #2c2c2c;
     background: gold;
 }
 
-/*When the drop down is expanded */
-#sidebar ul li.active > a, a[aria-expanded="true"]{
-    color: white;
+#sidebar ul li.active>a, a[aria-expanded="true"] {
+    color: #fff;
     background: #272727;
 }
 
-/*Items within the dropdown menu */
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
     background: #272727;
 }
-/*When sidebar is active, hide it*/
-#sidebar.active {
-    min-width: 80px;
-    max-width: 80px;
-    text-align: center;
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -250px;
+    }
+    #sidebar.active {
+        margin-left: 0;
+    }
 }
 
-/* Hide the strong text when the sidebar isn't "active" */
-#sidebar .sidebar-header strong {
-    display: none;
-}
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
 
-
-/* Hide the header when the sidebar is active*/
-#sidebar.active .sidebar-header h3 {
-    display: none;
-}
-
-/* Show the strong text when active*/
-#sidebar.active .sidebar-header strong {
-    display: block;
-}
-
-
-body {
-    background: whitesmoke;
-}
-
-a, a:hover, a:focus {
-    color: inherit;
-    text-decoration: none;
+#content {
+    width: 100%;
+    padding: 20px;
+    min-height: 100vh;
     transition: all 0.3s;
-}
-
-.octicon {
-  display: inline-block;
-  vertical-align: text-top;
-  fill: white;
 }

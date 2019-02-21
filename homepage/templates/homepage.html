@@ -10,7 +10,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
     <!-- Personal CSS -->
+    {% load octicons %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href={% static "homepage/homepage.css" %}>
     <!-- Tutorial for creating sidebar can be found at: https://bootstrapious.com/p/bootstrap-sidebar -->
@@ -19,12 +21,11 @@
 <body>
 
 <!-- Div holding the entire page -->
-<div class = "wrapper">
+<div class="wrapper">
 
     <nav id="sidebar">
         <div class="sidebar-header">
             <h3>Patient Tracker</h3>
-            <strong>UIHC</strong>
         </div>
 
         <!-- This holds the bulk of the side bar -->
@@ -33,20 +34,24 @@
             <!-- .active is denoting that homepage is the active page -->
             <li class="active">
                 <a href="#">
-                    <span class="glyphicon glyphicon-home"></span>
+                    {% octicon "home" %}
                     Home
                 </a>
             </li>
 
             <li>
                 <a href="/workflow/">
+                    {% octicon "repo" %}
                     Workflow
                 </a>
             </li>
 
             <li>
                 <!-- the <a> href must match the id of the <ul> that contains the drop down -->
-                <a href="#profileSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Profile</a>
+                <a href="#profileSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    {% octicon "person" %}
+                    Profile
+                </a>
                 <ul class="collapse list-unstyled" id="profileSubmenu">
 
                     <li>
@@ -65,32 +70,37 @@
         </ul>
 
 
-
-
-
     </nav>
 
     <div id="content">
 
-        <button type="button" id="sidebarCollapse" class="btn btn-info">
-            <span>Toggle Sidebar</span>
-        </button>
-        Rest of the content of the page goes here
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <span>Toggle Sidebar</span>
+                </button>
+            </div>
+
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm" id="alerts-col">
+                    Alerts go here
+                </div>
+                <div class="col-sm" id="today-col">
+                    Today's patients go here
+                </div>
+                <div class="col-sm" id="patients-col">
+                    All patients go here
+                </div>
+            </div>
+            <div class="row" id="analytics-glance">
+                Here is where our analytics at a glance will go
+            </div>
+        </div>
     </div>
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <!-- Optional JavaScript -->
@@ -101,9 +111,8 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 <!-- Personal JS -->
 <script src={% static "homepage/sidebar.js" %}></script>
-
-<h1>Homepage</h1>
 </body>
 </html>
