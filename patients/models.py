@@ -2,7 +2,6 @@ from django.db import models
 from datetime import datetime
 from datetime import timedelta
 from django.utils import timezone
-
 # Create your models here.
 
 
@@ -25,7 +24,7 @@ class Patients(models.Model):
             return True
         else:
             self.today_flag = False
-            self.today_flag_end(blank=True)
+            self.today_flag_end = None
             return False
 
     #returns true if flag is still valid
@@ -37,5 +36,7 @@ class Patients(models.Model):
             return False
         else:
             return False
+
+
 
 
