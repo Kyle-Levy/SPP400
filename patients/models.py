@@ -6,15 +6,15 @@ from django.utils import timezone
 
 
 class Patients(models.Model):
-    first_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=150)
+    first_name = models.CharField(max_length=150, default="")
+    last_name = models.CharField(max_length=150, default="")
     bday = models.DateField(auto_now=False, auto_now_add=False)
-    doc_notes = models.CharField(max_length = 1000)
+    doc_notes = models.CharField(max_length = 1000, default="")
     flagged = models.BooleanField(default=False)
-    patient_flagged_reason = models.CharField(max_length = 1000, default=" ")
+    patient_flagged_reason = models.CharField(max_length = 1000, default="")
     today_flag = models.BooleanField(default=False)
     today_flag_end = models.DateTimeField(default=datetime.now())
-    today_flag_reason = models.CharField(max_length = 1000)
+    today_flag_reason = models.CharField(max_length = 1000, default="")
 
 
     def toggle_today_flag(self):
