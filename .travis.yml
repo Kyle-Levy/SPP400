@@ -17,6 +17,7 @@
       - pip install -r requirements.txt
       - pip install django-viewflow
       - pip install redgreenunittest
+      - pip install django-octicons
     before_script:
       - mysql -e 'create database test;' -u root
       -
