@@ -8,6 +8,12 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
 
+@login_required()
+def homepage(request):
+    if request.method == 'GET':
+        return render(request, 'homepage.html')
+
+
 def log_in(request):
     # Login session cookies cleared for login, 'request.session.modified = True' saves it
     request.session['username'] = {}
@@ -31,7 +37,7 @@ def log_in(request):
                     return render(request, 'authenticate.html', {'form': AuthenticateForm()}, status=200)
                 else:
                     login(request, user)
-                    return redirect('/workflow/')
+                    return redirect('/homepage/')
             else:
                 return render(request, 'login.html', {'form': LoginForm(), 'failed_login': True}, status=401)
 
@@ -70,7 +76,6 @@ def authenticator(request):
                 request.session['username'] = {}
                 request.session['password'] = {}
                 request.session.modified = True
-                return redirect('/workflow/')
+                return redirect('/homepage/')
             # this should cause an error to show up
             return render(request, 'authenticate.html', {'form': AuthenticateForm(), 'bad_code': True}, status=401)
-
