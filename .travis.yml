@@ -21,6 +21,8 @@
       - mysql -e 'create database test;' -u root
       -
     script:
+      - python manage.py makemigration
+      - python manage.py migrate
       - python manage.py test
       - coverage run --source='.' manage.py test
       - coverage report
