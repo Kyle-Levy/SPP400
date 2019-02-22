@@ -29,9 +29,9 @@ class Patients(models.Model):
 
     #returns true if flag is still valid
     def check_today_flag(self):
-        if self.today_flag is True and timezone.now() <= self.today_flag_end is True:
+        if self.today_flag is True and timezone.now().day <= self.today_flag_end.day is True:
             return True
-        if self.today_flag is True and timezone.now() > self.today_flag_end is True:
+        elif self.today_flag is True and timezone.now().day > self.today_flag_end.day is True:
             self.toggle_today_flag()
             return False
         else:
