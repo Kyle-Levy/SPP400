@@ -5,7 +5,7 @@ from django.contrib.sessions.middleware import SessionMiddleware
 from datetime import timedelta
 from django.utils import timezone
 
-from .views import log_in, log_out, authenticator
+from .views import log_in, log_out, authenticator, homepage
 
 
 # Create your tests here.
@@ -134,6 +134,17 @@ class TestLogin(TestCase):
         request.user = self.user
 
         response = log_in(request)
+
+        self.assertTrue(response.status_code, 200)
+
+    def test_get_homepage(self):
+        request = self.factory.get('/homepage/')
+
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+
+        response = homepage(request)
 
         self.assertTrue(response.status_code, 200)
 
