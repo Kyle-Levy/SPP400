@@ -28,3 +28,9 @@ class TestPatientModel(TestCase):
         test_patient.today_flag_end = timezone.now()+timedelta(days=1)
         self.assertEqual(test_patient.toggle_today_flag(), False)
         self.assertEqual(test_patient.today_flag_end, None)
+
+    def test_today_flag_expired(self):
+        test_patient = self.create_patient()
+        test_patient.today_flag = True
+        test_patient.today_flag_end = timezone.now() - timedelta(days=1)
+        self.assertEqual(test_patient.check_today_flag(), False)
