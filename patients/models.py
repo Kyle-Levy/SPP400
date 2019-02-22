@@ -9,12 +9,12 @@ class Patients(models.Model):
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     bday = models.DateField(auto_now=False, auto_now_add=False)
-    doc_notes = models.TextField()
+    doc_notes = models.CharField(max_length = 1000)
     flagged = models.BooleanField(default=False)
-    flagged_reason = models.TextField(default="")
+    flagged_reason = models.CharField(max_length = 1000)
     today_flag = models.BooleanField(default=False)
     today_flag_end = models.DateTimeField(default=datetime.now())
-    today_flag_reason = models.TextField(default="")
+    today_flag_reason = models.CharField(max_length = 1000)
 
 
     def toggle_today_flag(self):
