@@ -10,6 +10,7 @@ class TestProcedures(TestCase):
 
     def test_procedures_post(self):
         request = self.factory.post('index/', {'procedure_name': 'blood test'})
+        request.user = None
         self.middleware.process_request(request)
         request.session.save()
 
@@ -18,6 +19,7 @@ class TestProcedures(TestCase):
 
     def test_procedures_other(self):
         request = self.factory.get('index/', {'procedure_name': 'blood test'})
+        request.user = None
         self.middleware.process_request(request)
         request.session.save()
 
