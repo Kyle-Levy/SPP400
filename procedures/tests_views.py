@@ -1,5 +1,6 @@
 from django.test import RequestFactory, TestCase
 from django.contrib.sessions.middleware import SessionMiddleware
+from django.contrib.auth.models import User
 from .views import index
 
 class TestProcedures(TestCase):
@@ -7,10 +8,12 @@ class TestProcedures(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.middleware = SessionMiddleware()
+        self.user = User.objects.create_superuser('testuser', 'testuser@email.com', 'supersecretpass')
+        self.user.save()
 
     def test_procedures_post(self):
         request = self.factory.post('index/', {'procedure_name': 'blood test'})
-        request.user = None
+        request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
 
@@ -19,7 +22,7 @@ class TestProcedures(TestCase):
 
     def test_procedures_other(self):
         request = self.factory.get('index/', {'procedure_name': 'blood test'})
-        request.user = None
+        request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
 
