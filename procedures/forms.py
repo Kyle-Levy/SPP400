@@ -7,7 +7,7 @@ class ProceduresTemplate(forms.Form):
         max_length = 100,
         widget= forms.TextInput(
             attrs={
-                'class': 'procedures-group',
+                'class': 'form-control',
                 'id': 'procedureName',
                 'placeholder': 'Enter Procedure Name'
             }
@@ -19,8 +19,9 @@ class ProceduresTemplate(forms.Form):
         required=False,
         widget= forms.DateInput(
             attrs={
-                'class': 'procedures-group',
+                'class': 'form-control',
                 'id': 'procedureDate',
+                'placeholder': 'MM/DD/YYYY',
             }
         )
     )
@@ -30,8 +31,9 @@ class ProceduresTemplate(forms.Form):
         required=False,
         widget=forms.DateInput(
             attrs={
-                'class': 'procedures-group',
+                'class': 'form-control',
                 'id': 'expirationDate',
+                'placeholder': 'MM/DD/YYYY',
             }
         )
     )
@@ -41,7 +43,7 @@ class ProceduresTemplate(forms.Form):
         required=False,
         widget= forms.Textarea(
             attrs={
-                'class': 'procedures-group',
+                'class': 'form-control',
                 'id': 'notes',
             }
         )

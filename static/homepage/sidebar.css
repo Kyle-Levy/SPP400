@@ -25,24 +25,27 @@ a:focus {
 }
 
 .navbar {
-    padding: 15px 10px;
+    padding: 22px 10px;
     background: #fff;
     border: none;
     border-radius: 0;
-    margin-bottom: 40px;
+    margin: -20px -20px 40px -20px;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .wrapper {
     display:flex;
-    align-items: stretch;
     width: 100%;
 }
 
 
 #sidebar {
-    min-width: 250px;
-    max-width: 250px;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
     background: #2c2c2c;
     color: white;
     transition: all 0.2s;
@@ -122,13 +125,61 @@ li a:hover svg{
 li.active a:hover svg{
     fill: white;
 }
+
+a[aria-expanded="true"]::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%) scaleY(-1);
+}
+
+
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
 
 #content {
-    width: 100%;
+    width: calc(100% - 250px);
     padding: 20px;
     min-height: 100vh;
     transition: all 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#content.active {
+    width: 100%;
+}
+
+#content nav {
+    position: relative;
+    top: 0px;
+}
+
+.bg-dark {
+    background-color: #2c2c2c !important;
+}
+
+/* ---------------------------------------------------
+    Mobile Device CSS
+----------------------------------------------------- */
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -250px;
+    }
+    #sidebar.active {
+        margin-left: 0;
+    }
+    #content {
+        width: 100%;
+    }
+    #content.active {
+        width: calc(100% - 250px);
+    }
+    #sidebarCollapse span {
+        display: none;
+    }
 }

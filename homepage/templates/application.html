@@ -15,38 +15,9 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-            <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-            <a class="nav-item nav-link" href="#">Link1</a>
-            <a class="nav-item nav-link" href="#">Link2</a>
-            <a class="nav-item nav-link disabled" href="#">Disabled</a>
-
-            {% if user.is_authenticated %}
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ user.get_username }}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Profile</a>
-                    <a class="dropdown-item" href="#">Settings</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="/logout/">
-                        {% csrf_token %}
-                        Logout
-                    </a>
-                </div>
-            </li>
-            {% endif %}
-        </div>
-    </div>
-</nav>
-
 {% block content %}
 
 {% endblock %}
-
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
