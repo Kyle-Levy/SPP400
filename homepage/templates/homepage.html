@@ -10,11 +10,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
     <!-- Personal CSS -->
     {% load octicons %}
     {% load static %}
-    <link rel="stylesheet" type="text/css" href={% static "homepage/homepage.css" %}>
+    <link rel="stylesheet" type="text/css" href={% static "homepage/sidebar.css" %}>
     <!-- Tutorial for creating sidebar can be found at: https://bootstrapious.com/p/bootstrap-sidebar -->
 </head>
 
@@ -23,90 +24,12 @@
 <!-- Div holding the entire page -->
 <div class="wrapper">
 
-    <nav id="sidebar">
-        <div class="sidebar-header">
-            <h3>Patient Tracker</h3>
-        </div>
-
-        <!-- This holds the bulk of the side bar -->
-        <ul class="list-unstyled components">
-            <p>Possible Header Here</p>
-            <!-- .active is denoting that homepage is the active page -->
-
-            <li class="active">
-                <a href="#">
-                    {% octicon "home" %}
-                    Home
-                </a>
-            </li>
-
-
-            <li>
-                <a href="/patients/">
-                    {% octicon "organization" %}
-                    Patients
-                </a>
-            </li>
-
-            <li>
-                <a href="/procedures/">
-                    {% octicon "pulse" %}
-                    Procedures
-                </a>
-            </li>
-
-            <li>
-                <a href="/analytics/">
-                    {% octicon "graph" %}
-                    Analytics
-                </a>
-            </li>
-
-            <!-- Profile list item -->
-            <li>
-                <!-- the <a> href must match the id of the <ul> that contains the drop down -->
-                <a href="#profileSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    {% octicon "person" %}
-                    Profile
-                </a>
-                <ul class="collapse list-unstyled" id="profileSubmenu">
-
-                    <li>
-                        <a href="#">
-                            {% octicon "gear" %}
-                            Settings
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="/logout">
-                            {% octicon "x" %}
-                            Logout
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-
-
-        </ul>
-
-
-    </nav>
+    {% include "sidebar.html" %}
 
     <div id="content">
 
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-            <div class="container-fluid">
-                <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
-                    <span>
-                        {% octicon "three-bars" %}
-                        Menu
-                    </span>
-                </button>
-            </div>
-
-        </nav>
+        {% include "menu_bar.html" %}
+        
         <div class="container">
             <div class="row">
                 <div class="col-sm" id="alerts-col">
@@ -129,16 +52,22 @@
 
 
 <!-- Optional JavaScript -->
-    <!-- jQuery CDN - Slim version (=without AJAX) -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <!-- Popper.JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-    <!-- jQuery Custom Scroller CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+<!-- jQuery CDN - Slim version (=without AJAX) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<!-- Popper.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+<!-- jQuery Custom Scroller CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 
 <!-- Personal JS -->
-<script src={% static "homepage/sidebar.js" %}></script>
+<script src={% static "homepage/homepage.js" %}></script>
 </body>
 </html>
