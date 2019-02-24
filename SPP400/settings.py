@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'viewflow.frontend',
     'redgreenunittest',
     'patients',
+    'octicons',
+    'workflow',
+    'procedures',
 ]
 
 MIDDLEWARE = [
