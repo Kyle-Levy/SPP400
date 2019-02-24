@@ -7,7 +7,6 @@ $(document).ready(function () {
     $("#procedures").addClass("active");
 
     $("#procedures > a:nth-child(1)").attr("href", "#");
-
     $('#sidebarCollapse').on('click', function () {
         // open or close navbar
         $('#sidebar, #content').toggleClass('active');
