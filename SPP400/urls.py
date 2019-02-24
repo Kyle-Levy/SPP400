@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^$', generic.RedirectView.as_view(url='/workflow/', permanent=False)),
     url(r'', include(frontend_urls)),
     path('procedures/', include('procedures.urls')),
+    path('patients/', include('patients.urls')),
 ]
