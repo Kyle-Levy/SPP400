@@ -26,7 +26,6 @@ idna==2.7
 jmespath==0.9.3
 jsonschema==2.6.0
 kombu==4.3.0
-material==0.1
 mysql-connector-python==8.0.15
 mysqlclient==1.4.2
 pathspec==0.5.5
@@ -35,7 +34,6 @@ pycparser==2.19
 Pygments==2.3.1
 python-dateutil==2.8.0
 pytz==2018.9
-PyYAML==3.13
 redgreenunittest==0.1.1
 requests==2.20.1
 semantic-version==2.5.0
