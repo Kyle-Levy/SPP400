@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'viewflow',
     'viewflow.frontend',
     'redgreenunittest',
+    'patients',
     'octicons',
     'workflow',
     'procedures',
