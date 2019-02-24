@@ -4,9 +4,9 @@ $(document).ready(function () {
          theme: "minimal"
     });
 
-    $("#home").addClass("active");
+    $("#procedures").addClass("active");
 
-    $("#home > a:nth-child(1)").attr("href", "#");
+    $("#procedures > a:nth-child(1)").attr("href", "#");
 
     $('#sidebarCollapse').on('click', function () {
         // open or close navbar
