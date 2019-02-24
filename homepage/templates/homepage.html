@@ -32,6 +32,7 @@
         <ul class="list-unstyled components">
             <p>Possible Header Here</p>
             <!-- .active is denoting that homepage is the active page -->
+
             <li class="active">
                 <a href="#">
                     {% octicon "home" %}
@@ -39,13 +40,29 @@
                 </a>
             </li>
 
+
             <li>
-                <a href="/workflow/">
-                    {% octicon "repo" %}
-                    Workflow
+                <a href="/patients/">
+                    {% octicon "organization" %}
+                    Patients
                 </a>
             </li>
 
+            <li>
+                <a href="/procedures/">
+                    {% octicon "pulse" %}
+                    Procedures
+                </a>
+            </li>
+
+            <li>
+                <a href="/analytics/">
+                    {% octicon "graph" %}
+                    Analytics
+                </a>
+            </li>
+
+            <!-- Profile list item -->
             <li>
                 <!-- the <a> href must match the id of the <ul> that contains the drop down -->
                 <a href="#profileSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
@@ -55,18 +72,23 @@
                 <ul class="collapse list-unstyled" id="profileSubmenu">
 
                     <li>
-                        <a href="#">Settings</a>
+                        <a href="#">
+                            {% octicon "gear" %}
+                            Settings
+                        </a>
                     </li>
 
                     <li>
-                        <a href="/logout">Logout</a>
+                        <a href="/logout">
+                            {% octicon "x" %}
+                            Logout
+                        </a>
                     </li>
                 </ul>
             </li>
 
-            <li>
 
-            </li>
+
         </ul>
 
 
@@ -74,10 +96,13 @@
 
     <div id="content">
 
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
             <div class="container-fluid">
-                <button type="button" id="sidebarCollapse" class="btn btn-info">
-                    <span>Toggle Sidebar</span>
+                <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                    <span>
+                        {% octicon "three-bars" %}
+                        Menu
+                    </span>
                 </button>
             </div>
 
@@ -95,7 +120,7 @@
                 </div>
             </div>
             <div class="row" id="analytics-glance">
-                Here is where our analytics at a glance will go
+                Here is where our analytics at a glance will go.
             </div>
         </div>
     </div>
@@ -104,14 +129,15 @@
 
 
 <!-- Optional JavaScript -->
-<!-- jQuery first, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- jQuery Custom Scroller CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
 <!-- Personal JS -->
 <script src={% static "homepage/sidebar.js" %}></script>
 </body>
