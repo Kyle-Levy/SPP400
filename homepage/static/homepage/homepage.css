@@ -122,6 +122,16 @@ li a:hover svg{
 li.active a:hover svg{
     fill: white;
 }
+
+a[aria-expanded="true"]::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%) scaleY(-1);
+}
+
+
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
