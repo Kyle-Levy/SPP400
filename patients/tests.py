@@ -11,7 +11,7 @@ import pytz
 # Create your tests here.
 class TestPatientModel(TestCase):
 
-    def create_patient(self, first_name="Kyle", last_name="Dorcey", bday=datetime(1996, 10, 24), doc_notes="he thickque" ):
+    def create_patient(self, first_name="Kyle", last_name="Dorcey", bday=datetime(1996, 10, 24), doc_notes="he sick" ):
         return Patients.objects.create(first_name=first_name, last_name=last_name, bday=bday, doc_notes=doc_notes,flagged=False, patient_flagged_reason="none",today_flag=False,today_flag_end=datetime.now(),today_flag_reason="")
 
 
@@ -34,3 +34,9 @@ class TestPatientModel(TestCase):
         test_patient.today_flag = True
         test_patient.today_flag_end = timezone.now() - timedelta(days=1)
         self.assertEqual(test_patient.check_today_flag(), False)
+
+    def test_flagged_toggle(self):
+        test_patient = self.create_patient()
+        test_patient.flagged = True
+        test_patient.toggle_flag()
+        self.assertEqual(test_patient.flagged, False)
