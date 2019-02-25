@@ -37,6 +37,14 @@ class Patients(models.Model):
         else:
             return False
 
+    def toggle_flag(self):
+        if self.flagged is True:
+            self.flagged = False
+            return False
+        elif self.flagged is False:
+            self.flagged = True
+            return True
+
 
 
 

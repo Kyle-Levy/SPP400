@@ -34,3 +34,9 @@ class TestPatientModel(TestCase):
         test_patient.today_flag = True
         test_patient.today_flag_end = timezone.now() - timedelta(days=1)
         self.assertEqual(test_patient.check_today_flag(), False)
+
+    def test_flagged_toggle(self):
+        test_patient = self.create_patient()
+        test_patient.flagged = True
+        test_patient.toggle_flag()
+        self.assertEqual(test_patient.flagged, False)
