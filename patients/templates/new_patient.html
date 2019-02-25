@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Helps scale for mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
+    <title>New Patient</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -15,7 +15,6 @@
     <!-- Personal CSS -->
     {% load octicons %}
     {% load static %}
-    <link rel="shortcut icon" type="image/x-icon" href={% static "homepage/home.ico" %}>
     <link rel="stylesheet" type="text/css" href={% static "homepage/sidebar.css" %}>
     <!-- Tutorial for creating sidebar can be found at: https://bootstrapious.com/p/bootstrap-sidebar -->
 </head>
@@ -30,22 +29,29 @@
     <div id="content">
 
         {% include "menu_bar.html" %}
-        
+
         <div class="container">
-            <div class="row">
-                <div class="col-sm" id="alerts-col">
-                    Alerts go here
+            {% if failed_creation %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>Form requirements not met!</strong> Try entering your patient information again.
                 </div>
-                <div class="col-sm" id="today-col">
-                    Today's patients go here
+            {% endif %}
+            <h2> New Patient </h2>
+            <form action="" method="POST"> {% csrf_token %}
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    {{ form.first_name }}
                 </div>
-                <div class="col-sm" id="patients-col">
-                    All patients go here
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    {{ form.last_name }}
                 </div>
-            </div>
-            <div class="row" id="analytics-glance">
-                Here is where our analytics at a glance will go.
-            </div>
+                <div class="form-group">
+                    <label for="birthDate">Birthday </label>
+                    {{ form.birth_date }}
+                </div>
+                <button type="submit" class="btn btn-warning">Create New Patient</button>
+            </form>
         </div>
     </div>
 
@@ -69,7 +75,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 
 <!-- Personal JS -->
-<script src={% static "homepage/homepage.js" %}></script>
+<script src={% static "patients/patients.js" %}></script>
 <script src={% static "homepage/sidebar.js" %}></script>
 </body>
 </html>
