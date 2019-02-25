@@ -28,7 +28,6 @@ class NewPatient(forms.Form):
 
     birth_date = forms.DateField(
         label='Birthday',
-        required=False,
         widget=forms.DateInput(
             attrs={
                 'class': 'form-control',
