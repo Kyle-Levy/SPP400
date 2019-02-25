@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from patients.forms import NewPatient
 from patients.models import Patients
@@ -8,6 +9,7 @@ def index(request):
         return render(request, 'landing_page.html')
 
 
+@login_required
 def new_patient(request):
     if request.method == 'GET':
         return render(request, 'new_patient.html', {'form': NewPatient()})
@@ -19,3 +21,5 @@ def new_patient(request):
             patient = Patients.create_patient(cd['first_name'], cd['last_name'], cd['birth_date'])
             patient.save()
             return redirect('/homepage/')
+        else:
+            return render(request, 'new_patient.html', {'form': NewPatient(), 'failed_creation': True}, status=401)
