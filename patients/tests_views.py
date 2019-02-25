@@ -14,6 +14,16 @@ class TestLogin(TestCase):
         self.user = User.objects.create_superuser('testuser', 'testuser@email.com', 'super_secret_pass')
         self.user.save()
 
+    def test_valid_patient(self):
+        request = self.factory.post('create/', {'first_name': 'John', 'last_name': 'Smith', 'birth_date': '01/01/1950'})
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+
+        response = new_patient(request)
+
+        self.assertTrue(response.status_code, 200)
+
     def test_get_patients(self):
         request = self.factory.get('/patients/')
 
