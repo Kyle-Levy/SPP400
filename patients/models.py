@@ -17,6 +17,10 @@ class Patients(models.Model):
     today_flag_reason = models.CharField(max_length = 1000, default="")
 
 
+    @classmethod
+    def create_patient(cls, first_name, last_name, birth_date):
+        patient = cls(first_name=first_name, last_name=last_name, bday=birth_date)
+        return patient
     def toggle_today_flag(self):
         if self.today_flag is False:
             self.today_flag = True
