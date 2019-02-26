@@ -33,11 +33,30 @@
         <div class="container">
             <div class="row">
                 <div class="col" id="patients-col">
-                    {% for ab in patients %}
-                        <div >
-                            <a href="/patients/profile/?id={{ab.id}}" > {{ ab.first_name }} </a>
-                        </div>
-                    {% endfor %}
+                    <div class="container">
+                      <h2>All Patients</h2>
+                      <p>Seach bar here probably</p>
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>Last</th>
+                            <th>First</th>
+                            <th>Profile</th>
+                          </tr>
+                        </thead>
+                        <tbody style="overflow-y: scroll; height: 25px">
+                        {% for patient in patients %}
+                          <tr>
+                            <td>{{patient.last_name}}</td>
+                            <td>{{patient.first_name}}</td>
+                            <td>
+                                <a class="text-primary" href="/patients/profile/?id={{patient.id}}">View Profile</a>
+                            </td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
                 </div>
             </div>
             <div class="row">
