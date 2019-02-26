@@ -27,4 +27,9 @@ def new_patient(request):
 
 @login_required
 def profile(request):
-    return render(request, 'patient.html', {})
+    if request.method == 'GET':
+        patient = Patients.objects.get(id=3)#request.session['patient_id'])
+        if patient is not None:
+            return render(request, 'patient.html', {"patient": patient})
+        if patient is None:
+            return redirect('/homepage/')
