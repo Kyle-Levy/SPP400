@@ -49,5 +49,8 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
+    if not instance.username == instance.username.lower():
+        instance.username = instance.username.lower()
+        instance.save()
     instance.profile.save()
 
