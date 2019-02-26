@@ -6,7 +6,7 @@ from .views import index, new_patient
 
 
 # Create your tests here.
-class TestLogin(TestCase):
+class TestCreatePatient(TestCase):
     # create setUp so every test can have access to the requestFactory
     def setUp(self):
         self.factory = RequestFactory()
