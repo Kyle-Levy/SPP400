@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime
 from datetime import timedelta
 from django.utils import timezone
+from django.utils.timezone import now
 # Create your models here.
 
 
@@ -13,7 +14,7 @@ class Patients(models.Model):
     flagged = models.BooleanField(default=False)
     patient_flagged_reason = models.CharField(max_length = 1000, default="")
     today_flag = models.BooleanField(default=False)
-    today_flag_end = models.DateTimeField(default=datetime.now())
+    today_flag_end = models.DateTimeField(default=timezone.now)
     today_flag_reason = models.CharField(max_length = 1000, default="")
 
 
