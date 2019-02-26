@@ -6,7 +6,7 @@ from patients.models import Patients
 
 def index(request):
     if request.method == 'GET':
-        return render(request, 'landing_page.html')
+        return render(request, 'landing_page.html', {'patients': Patients.objects.all()})
 
 
 @login_required
@@ -28,8 +28,10 @@ def new_patient(request):
 @login_required
 def profile(request):
     if request.method == 'GET':
-        patient = Patients.objects.get(id=3)#request.session['patient_id'])
-        if patient is not None:
+        try:
+            # Get desired patient id from url
+            patient = Patients.objects.get(id=request.GET.get('id'))#request.session['patient_id'])
             return render(request, 'patient.html', {"patient": patient})
-        if patient is None:
-            return redirect('/homepage/')
+        except Patients.DoesNotExist:
+            # TODO: add in error message here
+            return redirect('/patients/')
