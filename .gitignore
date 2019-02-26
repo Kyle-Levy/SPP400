@@ -267,3 +267,6 @@ fabric.properties
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 idea
+
+*/migrations/*
+!*/migrations/*__init__.py
