@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Helps scale for mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Patient</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <!-- Personal CSS -->
+    {% load octicons %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href={% static "homepage/sidebar.css" %}>
+    <!-- Tutorial for creating sidebar can be found at: https://bootstrapious.com/p/bootstrap-sidebar -->
+</head>
+
+<body>
+
+<!-- Div holding the entire page -->
+<div class="wrapper">
+
+    {% include "sidebar.html" %}
+
+    <div id="content">
+
+        {% include "menu_bar.html" %}
+
+        <div class="container">
+            {% if failed_creation %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>Form requirements not met!</strong> Try entering your patient information again.
+                </div>
+            {% endif %}
+            <h2> Update information for: {{patient.first_name}} {{patient.last_name}} </h2>
+            <form action="update/" method="POST"> {% csrf_token %}
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    {{ form.first_name }}
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    {{ form.last_name }}
+                </div>
+                <div class="form-group">
+                    <label for="birthDate">Birthday </label>
+                    {{ form.birth_date }}
+                </div>
+                <button type="submit" class="btn btn-warning">Update Patient</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery CDN - Slim version (=without AJAX) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<!-- Popper.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+<!-- jQuery Custom Scroller CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+<!-- Personal JS -->
+<script src={% static "patients/patients.js" %}></script>
+<script src={% static "homepage/sidebar.js" %}></script>
+</body>
+</html>

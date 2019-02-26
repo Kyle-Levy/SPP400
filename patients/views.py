@@ -27,11 +27,46 @@ def new_patient(request):
 
 @login_required
 def profile(request):
+    if request.method == 'POST':
+        try:
+            # Get desired patient id from url
+            patient = Patients.objects.get(id=request.GET.get('id'))
+            request.session['patient_id'] = request.GET.get('id')
+            return render(request, 'update_patient.html', {'form': NewPatient(), 'patient': patient})
+        except Patients.DoesNotExist:
+            # TODO: add in error message here
+            return redirect('/patients/')
+
     if request.method == 'GET':
         try:
             # Get desired patient id from url
-            patient = Patients.objects.get(id=request.GET.get('id'))#request.session['patient_id'])
+            patient = Patients.objects.get(id=request.GET.get('id'))
             return render(request, 'patient.html', {"patient": patient})
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
+
+@login_required
+def update(request):
+    if request.method == 'POST':
+        print("i made it 1")
+        form = NewPatient(request.POST)
+        if form.is_valid():
+            # Clean form data and check that the username password pair is valid
+            cd = form.cleaned_data
+            print("i made it 2")
+
+            try:
+                # Get desired patient id from url
+                patient = Patients.objects.get(id=request.session['patient_id'])
+                patient.first_name = cd['first_name']
+                patient.last_name = cd['last_name']
+                patient.bday = cd['birth_date']
+                patient.save()
+                return redirect("/patients/profile/?id=" + str(patient.id), {"patient": patient})
+            except Patients.DoesNotExist:
+                # TODO: add in error message here
+                return redirect('/patients/')
+        else:
+            return redirect('/patients/')
+

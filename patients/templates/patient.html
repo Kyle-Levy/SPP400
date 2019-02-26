@@ -35,6 +35,9 @@
           <div class="col-sm-3 well">
             <div class="well">
               <h1>{{ patient.first_name }} {{ patient.last_name }}</h1>
+                <form action="/patients/profile/?id={{patient.id}}" method="POST"> {% csrf_token %}
+                    <button type="submit" class="btn btn-warning">Update Info</button>
+                </form>
             </div>
             <div class="thumbnail">
               <h3>Alerts:</h3>
