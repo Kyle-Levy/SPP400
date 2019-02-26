@@ -49,13 +49,10 @@ def profile(request):
 @login_required
 def update(request):
     if request.method == 'POST':
-        print("i made it 1")
         form = NewPatient(request.POST)
         if form.is_valid():
             # Clean form data and check that the username password pair is valid
             cd = form.cleaned_data
-            print("i made it 2")
-
             try:
                 # Get desired patient id from url
                 patient = Patients.objects.get(id=request.session['patient_id'])
@@ -68,5 +65,18 @@ def update(request):
                 # TODO: add in error message here
                 return redirect('/patients/')
         else:
+            return redirect('/patients/')
+
+@login_required
+def delete(request):
+    # TODO: This method can be dangerous if patient_id isnt properly set i think
+    if request.method == 'POST':
+        try:
+            # Get desired patient id from url
+            patient = Patients.objects.get(id=request.session['patient_id'])
+            patient.delete()
+            return redirect("/patients/")
+        except Patients.DoesNotExist:
+            # TODO: add in error message here
             return redirect('/patients/')
 
