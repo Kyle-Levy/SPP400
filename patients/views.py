@@ -23,3 +23,8 @@ def new_patient(request):
             return redirect('/homepage/')
         else:
             return render(request, 'new_patient.html', {'form': NewPatient(), 'failed_creation': True}, status=401)
+
+
+@login_required
+def profile(request):
+    return render(request, 'patient.html', {})
