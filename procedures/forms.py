@@ -1,6 +1,6 @@
 from django import forms
 
-class ProceduresTemplate(forms.Form):
+class NewProcedure(forms.Form):
 
     procedure_name = forms.CharField(
         label='Procedure Name',
