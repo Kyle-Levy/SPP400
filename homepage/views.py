@@ -27,6 +27,7 @@ def log_in(request):
         if form.is_valid():
             # Clean form data and check that the username password pair is valid
             cd = form.cleaned_data
+            cd['username'] = cd['username'].lower()
             user = authenticate(username=cd['username'], password=cd['password'])
             if user is not None:
                 if user.profile.expired():
