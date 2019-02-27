@@ -50,6 +50,28 @@ class TestLogin(TestCase):
 
         self.assertEqual(authResponse.status_code, 302)
 
+    def test_login_page_good_credentials_good_auth_case_mismatch(self):
+        request = self.factory.post('login/', {'username': 'testUSER', 'password': 'super_secret_pass'})
+        request.user = self.user
+        self.middleware.process_request(request)
+        request.session.save()
+
+        response = log_in(request)
+        self.assertEqual(response.status_code, 200)
+
+        userObj = authenticate(username=request.session['username'], password=request.session['password'])
+
+        authRequest = self.factory.post('authenticator/', {'key': userObj.profile.key})
+        authRequest.user = self.user
+
+        # Grab the session cookies from the previous post
+        authRequest.session = request.session
+        authRequest.session.save()
+
+        authResponse = authenticator(authRequest)
+
+        self.assertEqual(authResponse.status_code, 302)
+
     def test_login_page_good_credentials_bad_auth(self):
         request = self.factory.post('login/', {'username': 'testuser', 'password': 'super_secret_pass'})
         request.user = self.user
