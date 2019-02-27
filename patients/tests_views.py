@@ -24,7 +24,8 @@ class TestCreatePatient(TestCase):
         self.test_patient = Patients.objects.get(first_name='John', last_name='Smith', bday='1950-01-01')
 
     def test_valid_patient(self):
-        request = self.factory.post('create/', {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01'})
+        request = self.factory.post('create/',
+                                    {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
@@ -136,7 +137,7 @@ class TestCreatePatient(TestCase):
         profile(profile_request)
 
         request = self.factory.post('/patients/profile/update',
-                                    {'first_name': 'Bill', 'last_name': 'Jobs', 'birth_date':'2000-03-03'})
+                                    {'first_name': 'Bill', 'last_name': 'Jobs', 'birth_date': '2000-03-03'})
         request.user = self.user
         request.session = profile_request.session
         request.session.save()
@@ -157,7 +158,7 @@ class TestCreatePatient(TestCase):
         profile(profile_request)
 
         request = self.factory.post('/patients/profile/update',
-                                    {'first_name': 'Bill', 'last_name': 'Jobs', 'birth_date':'2000-03-03'})
+                                    {'first_name': 'Bill', 'last_name': 'Jobs', 'birth_date': '2000-03-03'})
         request.user = self.user
         request.session = profile_request.session
         request.session.save()
@@ -202,7 +203,55 @@ class TestCreatePatient(TestCase):
         except Patients.DoesNotExist:
             self.assertIsNone(updated_patient)
 
+    def test_post_delete_patient_valid_id(self):
+        profile_request = self.factory.post('/patients/profile/?id=' + str(self.test_patient.id))
+        profile_request.user = self.user
+        self.middleware.process_request(profile_request)
+        profile_request.session.save()
 
+        profile(profile_request)
+
+        request = self.factory.post('/patients/profile/delete')
+        request.user = self.user
+        request.session = profile_request.session
+        request.session.save()
+
+        response = delete(request)
+
+        self.assertEqual(response.status_code, 302)
+
+        # If an entry exists, it will overwrite None, thus failing the test
+        try:
+            updated_patient = None
+            updated_patient = Patients.objects.get(first_name='John', last_name='Smith', bday='1950-01-01')
+        except Patients.DoesNotExist:
+            self.assertIsNone(updated_patient)
+
+    def test_post_delete_patient_invalid_id(self):
+        profile_request = self.factory.post('/patients/profile/?id=' + str(self.test_patient.id))
+        profile_request.user = self.user
+        self.middleware.process_request(profile_request)
+        profile_request.session.save()
+
+        profile(profile_request)
+
+        request = self.factory.post('/patients/profile/delete')
+        request.user = self.user
+        request.session = profile_request.session
+        request.session.save()
+
+        # Fudge the id
+        request.session['patient_id'] = 9999999
+        request.session.save()
+
+        response = delete(request)
+
+        self.assertEqual(response.status_code, 302)
+
+        # If an entry exists, it will overwrite None, thus failing the test
+
+        updated_patient = Patients.objects.get(first_name='John', last_name='Smith', bday='1950-01-01')
+        self.assertIsNotNone(updated_patient)
 
 
 '''
