@@ -30,41 +30,26 @@
 
         {% include "menu_bar.html" %}
 
-
         <div class="container">
-
             <div class="row">
-                <div class="col" id="procedures-col">
-                    <div class="container">
-                        <h2>All Procedures</h2>
-                        <p>Search bar here probably</p>
-                        <a class="btn btn-success" href="create/" role="button">Add New Procedure</a>
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>Procedure Name</th>
-                                <th>More Info</th>
-                            </tr>
-                            </thead>
-                            <tbody style="overflow-y: scroll; height: 25px">
-                            {% for procedure in procedures %}
-                                <tr>
-                                    <td>{{ procedure.procedure_name }}</td>
-                                    <td>
-                                        <a class="text-primary" href="/procedures/view_procedure/?id={{ procedure.id }}">View
-                                            Procedure</a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="col">
+                    <h2>Procedure Name</h2>
+                    {{ procedure.procedure_name }}
+                </div>
+                <div class="col">
+                    <h2>Procedure Info</h2>
+                    {{ procedure.procedure_info }}
                 </div>
             </div>
-
-
+            <div class="row">
+                <div class="col">
+                    <button type="button" class="btn btn-warning">Change Procedure Info</button>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-danger">Delete Procedure</button>
+                </div>
+            </div>
         </div>
-
     </div>
 </div>
 

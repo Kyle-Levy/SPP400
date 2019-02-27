@@ -2,7 +2,7 @@ from django.test import RequestFactory, TestCase
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.contrib.auth.models import User
 from .views import index, new_procedure
-from .models import Procedures
+from .models import Procedure
 
 
 class TestProcedures(TestCase):
@@ -23,8 +23,8 @@ class TestProcedures(TestCase):
         response = new_procedure(request)
         self.assertEqual(response.status_code, 302)
 
-        created_procedure = Procedures.objects.get(procedure_name='Leeches',
-                                                   procedure_info='have been used for clinical bloodletting for at least 2,500 years')
+        created_procedure = Procedure.objects.get(procedure_name='Leeches',
+                                                  procedure_info='have been used for clinical bloodletting for at least 2,500 years')
         self.assertIsNotNone(created_procedure)
 
     def test_create_new_procedure_missing_name(self):
@@ -39,8 +39,8 @@ class TestProcedures(TestCase):
         #If an entry exists, it will overwrite None thus failing the test
         try:
             created_procedure = None
-            created_procedure = Procedures.objects.get(procedure_info='have been used for clinical bloodletting for at least 2,500 years')
-        except Procedures.DoesNotExist:
+            created_procedure = Procedure.objects.get(procedure_info='have been used for clinical bloodletting for at least 2,500 years')
+        except Procedure.DoesNotExist:
             self.assertIsNone(created_procedure)
 
 

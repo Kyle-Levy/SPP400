@@ -5,4 +5,5 @@ urlpatterns = [
     #path('code/', views.new_code),
     path('', views.index, name='index'),
     path('create/', views.new_procedure),
+    path('view_procedure/', views.view_procedure)
 ]
