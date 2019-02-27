@@ -127,6 +127,82 @@ class TestCreatePatient(TestCase):
         response = profile(request)
         self.assertEqual(response.status_code, 302)
 
+    def test_post_update_patient_valid_id(self):
+        profile_request = self.factory.post('/patients/profile/?id=' + str(self.test_patient.id))
+        profile_request.user = self.user
+        self.middleware.process_request(profile_request)
+        profile_request.session.save()
+
+        profile(profile_request)
+
+        request = self.factory.post('/patients/profile/update',
+                                    {'first_name': 'Bill', 'last_name': 'Jobs', 'birth_date':'2000-03-03'})
+        request.user = self.user
+        request.session = profile_request.session
+        request.session.save()
+
+        response = update(request)
+
+        self.assertEqual(response.status_code, 302)
+
+        updated_patient = Patients.objects.get(first_name='Bill', last_name='Jobs', bday='2000-03-03')
+        self.assertIsNotNone(updated_patient)
+
+    def test_post_update_patient_invalid_id(self):
+        profile_request = self.factory.post('/patients/profile/?id=' + str(self.test_patient.id))
+        profile_request.user = self.user
+        self.middleware.process_request(profile_request)
+        profile_request.session.save()
+
+        profile(profile_request)
+
+        request = self.factory.post('/patients/profile/update',
+                                    {'first_name': 'Bill', 'last_name': 'Jobs', 'birth_date':'2000-03-03'})
+        request.user = self.user
+        request.session = profile_request.session
+        request.session.save()
+
+        # Fudge the id
+        request.session['patient_id'] = 9999999
+        request.session.save()
+
+        response = update(request)
+
+        self.assertEqual(response.status_code, 302)
+
+        # If an entry exists, it will overwrite None, thus failing the test
+        try:
+            updated_patient = None
+            updated_patient = Patients.objects.get(first_name='Bill', last_name='Jobs', bday='2000-03-03')
+        except Patients.DoesNotExist:
+            self.assertIsNone(updated_patient)
+
+    def test_post_update_patient_invalid_form(self):
+        profile_request = self.factory.post('/patients/profile/?id=' + str(self.test_patient.id))
+        profile_request.user = self.user
+        self.middleware.process_request(profile_request)
+        profile_request.session.save()
+
+        profile(profile_request)
+
+        request = self.factory.post('/patients/profile/update',
+                                    {'first_name': 'Bill', 'birth_date': '2000-03-03'})
+        request.user = self.user
+        request.session = profile_request.session
+        request.session.save()
+
+        response = update(request)
+
+        self.assertEqual(response.status_code, 302)
+
+        # If an entry exists, it will overwrite None, thus failing the test
+        try:
+            updated_patient = None
+            updated_patient = Patients.objects.get(first_name='Bill', last_name='Jobs', bday='2000-03-03')
+        except Patients.DoesNotExist:
+            self.assertIsNone(updated_patient)
+
+
 
 
 '''
