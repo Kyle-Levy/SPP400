@@ -81,3 +81,21 @@ class TestProcedures(TestCase):
 
         response = view_procedure(request)
         self.assertEqual(response.status_code, 302)
+
+    def test_post_view_procedure_valid_id(self):
+        request = self.factory.post('/procedures/view_procedure/?id=' + str(self.test_procedure.id))
+        request.user = self.user
+        self.middleware.process_request(request)
+        request.session.save()
+
+        response = view_procedure(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_post_view_procedure_invalid_id(self):
+        request = self.factory.get('/procedures/view_procedure/?id=' + str(999999999999))
+        request.user = self.user
+        self.middleware.process_request(request)
+        request.session.save()
+
+        response = view_procedure(request)
+        self.assertEqual(response.status_code, 302)
