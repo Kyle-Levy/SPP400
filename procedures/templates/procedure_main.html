@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Helps scale for mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Procedure</title>
+    <title>Procedures</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -18,7 +18,9 @@
     <link rel="stylesheet" type="text/css" href={% static "homepage/sidebar.css" %}>
     <!-- Tutorial for creating sidebar can be found at: https://bootstrapious.com/p/bootstrap-sidebar -->
 </head>
+
 <body>
+
 <!-- Div holding the entire page -->
 <div class="wrapper">
 
@@ -27,21 +29,7 @@
     <div id="content">
 
         {% include "menu_bar.html" %}
-
-        <div class="container-fixed">
-            <h2> New Procedure </h2>
-            <form action="" method="POST"> {% csrf_token %}
-                <div class="form-group">
-                    <label for="procedure_name">Procedure Name</label>
-                    {{ form.procedure_name }}
-                </div>
-                <div class="form-group">
-                    <label for="notes">Notes</label>
-                    {{ form.notes }}
-                </div>
-                <button type="submit" class="btn btn-warning">Create New Procedure</button>
-            </form>
-        </div>
+        <a class="btn btn-success" href="create/" role="button">Add New Procedure</a>
     </div>
 
 </div>
@@ -66,5 +54,5 @@
 <!-- Personal JS -->
 <script src={% static "procedures/procedures.js" %}></script>
 <script src={% static "homepage/sidebar.js" %}></script>
-
 </body>
+</html>
