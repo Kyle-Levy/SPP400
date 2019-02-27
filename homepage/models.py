@@ -12,7 +12,7 @@ from django.utils import timezone
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     key = models.IntegerField(default=1)
-    key_expiration = models.DateTimeField(default=datetime.now)
+    key_expiration = models.DateTimeField(default=timezone.now)
 
     def new_key(self):
         user = self.user
