@@ -4,6 +4,7 @@ from patients.forms import NewPatient
 from patients.models import Patients
 
 
+@login_required
 def index(request):
     if request.method == 'GET':
         return render(request, 'landing_page.html', {'patients': Patients.objects.all()})
