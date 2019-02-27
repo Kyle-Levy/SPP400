@@ -30,7 +30,7 @@ def view_procedure(request):
             # Get desired procedure id from url
             procedure = Procedure.objects.get(id=request.GET.get('id'))
             request.session['procedure_id'] = request.GET.get('id')
-            return render(request, 'update_procedure.html', {'form': NewProcedure(), 'procedure': procedure})
+            return render(request, 'update_procedure.html', {'form': NewProcedure(initial={'procedure_name': procedure.procedure_name, 'notes' : procedure.procedure_info }), 'procedure': procedure})
         except Procedure.DoesNotExist:
             # TODO: add in error message here
             return redirect('/procedures/')
