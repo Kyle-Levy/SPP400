@@ -30,7 +30,7 @@
 
         <div class="container-fixed">
             <h2> Update Procedure: {{ procedure.procedure_name }}</h2>
-            <form action="" method="POST"> {% csrf_token %}
+            <form action="update/" method="POST"> {% csrf_token %}
                 <div class="form-group">
                     <label for="procedure_name">Procedure Name</label>
                     {{ form.procedure_name }}

@@ -4,10 +4,12 @@ from procedures.forms import NewProcedure
 from procedures.models import Procedure
 from django.http import HttpResponse
 
+
 @login_required
 def index(request):
     if request.method == 'GET':
-        return render(request, 'procedure_main.html', {'procedures':Procedure.objects.all()})
+        return render(request, 'procedure_main.html', {'procedures': Procedure.objects.all()})
+
 
 @login_required
 def new_procedure(request):
@@ -23,14 +25,17 @@ def new_procedure(request):
     else:
         return render(request, 'new_procedure.html', {'form': NewProcedure()})
 
+
 @login_required
 def view_procedure(request):
     if request.method == 'POST':
         try:
-            # Get desired procedure id from url
+            # Get desired procedure id from url and store into session for when page is updated
             procedure = Procedure.objects.get(id=request.GET.get('id'))
             request.session['procedure_id'] = request.GET.get('id')
-            return render(request, 'update_procedure.html', {'form': NewProcedure(initial={'procedure_name': procedure.procedure_name, 'notes' : procedure.procedure_info }), 'procedure': procedure})
+            return render(request, 'update_procedure.html', {'form': NewProcedure(
+                initial={'procedure_name': procedure.procedure_name, 'notes': procedure.procedure_info}),
+                                                             'procedure': procedure})
         except Procedure.DoesNotExist:
             # TODO: add in error message here
             return redirect('/procedures/')
@@ -42,4 +47,25 @@ def view_procedure(request):
             return render(request, 'view_procedure.html', {'procedure': procedure})
         except Procedure.DoesNotExist:
             # TODO: add in error message here
+            return redirect('/procedures/')
+
+
+@login_required
+def update_procedure(request):
+    if request.method == 'POST':
+        form = NewProcedure(request.POST)
+        if form.is_valid():
+            # Clean form data and check that the username password pair is valid
+            cd = form.cleaned_data
+            try:
+                # Get desired patient id from url
+                procedure = Procedure.objects.get(id=request.session['procedure_id'])
+                procedure.procedure_name = cd['procedure_name']
+                procedure.procedure_info = cd['notes']
+                procedure.save()
+                return redirect("/procedures/view_procedure/?id=" + str(procedure.id), {"procedure": procedure})
+            except procedure.DoesNotExist:
+                # TODO: add in error message here
+                return redirect('/procedures/')
+        else:
             return redirect('/procedures/')
