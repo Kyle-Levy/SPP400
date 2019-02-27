@@ -35,7 +35,7 @@ def view_procedure(request):
             request.session['procedure_id'] = request.GET.get('id')
             return render(request, 'update_procedure.html', {'form': NewProcedure(
                 initial={'procedure_name': procedure.procedure_name, 'notes': procedure.procedure_info}),
-                                                             'procedure': procedure})
+                'procedure': procedure})
         except Procedure.DoesNotExist:
             # TODO: add in error message here
             return redirect('/procedures/')
@@ -68,4 +68,17 @@ def update_procedure(request):
                 # TODO: add in error message here
                 return redirect('/procedures/')
         else:
+            return redirect('/procedures/')
+
+
+@login_required
+def delete_procedure(request):
+    if request.method == 'POST':
+        try:
+            # Get desired patient id from url
+            procedure = Procedure.objects.get(id=request.session['procedure_id'])
+            procedure.delete()
+            return redirect("/procedures/")
+        except Procedure.DoesNotExist:
+            # TODO: add in error message here
             return redirect('/procedures/')
