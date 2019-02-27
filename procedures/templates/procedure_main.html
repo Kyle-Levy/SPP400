@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Helps scale for mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Procedure</title>
+    <title>Procedures</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -18,7 +18,9 @@
     <link rel="stylesheet" type="text/css" href={% static "homepage/sidebar.css" %}>
     <!-- Tutorial for creating sidebar can be found at: https://bootstrapious.com/p/bootstrap-sidebar -->
 </head>
+
 <body>
+
 <!-- Div holding the entire page -->
 <div class="wrapper">
 
@@ -28,32 +30,43 @@
 
         {% include "menu_bar.html" %}
 
-        <div class="container-fixed">
-            <h2> New Procedure </h2>
-            <form action="submit/" method="POST"> {% csrf_token %}
-                <div class="form-group">
-                    <label for="procedure_name">Procedure Name</label>
-                    {{ form.procedure_name }}
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col" id="procedures-col">
+                    <div class="container">
+                        <h2>All Procedures</h2>
+                        <p>Search bar here probably</p>
+                        <a class="btn btn-success" href="create/" role="button">Add New Procedure</a>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Procedure Name</th>
+                                <th>More Info</th>
+                            </tr>
+                            </thead>
+                            <tbody style="overflow-y: scroll; height: 25px">
+                            {% for procedure in procedures %}
+                                <tr>
+                                    <td>{{ procedure.procedure_name }}</td>
+                                    <td>
+                                        <a class="text-primary" href="/procedures/view_procedure/?id={{ procedure.id }}">View
+                                            Procedure</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="procedure_date">Procedure Date</label>
-                    {{ form.procedure_date }}
-                </div>
-                <div class="form-group">
-                    <label for="expired_date">Expiration Date</label>
-                    {{ form.expired_time }}
-                </div>
-                <div class="form-group">
-                    <label for="notes">Notes</label>
-                    {{ form.notes }}
-                </div>
-                <button type="submit" class="btn btn-warning">Create New Procedure</button>
-            </form>
+            </div>
+
+
         </div>
+
     </div>
-
 </div>
-
 
 <!-- Optional JavaScript -->
 <!-- jQuery CDN - Slim version (=without AJAX) -->
@@ -74,5 +87,5 @@
 <!-- Personal JS -->
 <script src={% static "procedures/procedures.js" %}></script>
 <script src={% static "homepage/sidebar.js" %}></script>
-
 </body>
+</html>
