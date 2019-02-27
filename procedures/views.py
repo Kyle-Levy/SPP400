@@ -64,7 +64,7 @@ def update_procedure(request):
                 procedure.procedure_info = cd['notes']
                 procedure.save()
                 return redirect("/procedures/view_procedure/?id=" + str(procedure.id), {"procedure": procedure})
-            except procedure.DoesNotExist:
+            except Procedure.DoesNotExist:
                 # TODO: add in error message here
                 return redirect('/procedures/')
         else:

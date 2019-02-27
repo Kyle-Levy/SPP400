@@ -46,7 +46,7 @@ class TestProcedures(TestCase):
         response = new_procedure(request)
         self.assertEqual(response.status_code, 401)
 
-        # If an entry exists, it will overwrite None thus failing the test
+        # If an entry exists, it will overwrite None, thus failing the test
         try:
             created_procedure = None
             created_procedure = Procedure.objects.get(
@@ -74,7 +74,7 @@ class TestProcedures(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_get_view_procedure_invalid_id(self):
-        request = self.factory.get('/procedures/view_procedure/?id=' + str(999999999999) )
+        request = self.factory.get('/procedures/view_procedure/?id=' + str(999999999999))
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -99,3 +99,76 @@ class TestProcedures(TestCase):
 
         response = view_procedure(request)
         self.assertEqual(response.status_code, 302)
+
+    def test_post_update_procedure_valid_id(self):
+        view_request = self.factory.post('/procedures/view_procedure/?id=' + str(self.test_procedure.id))
+        view_request.user = self.user
+        self.middleware.process_request(view_request)
+        view_request.session.save()
+
+        view_procedure(view_request)
+
+        request = self.factory.post('/procedures/view_procedure/update', {'procedure_name':'Updated Procedure', 'notes': 'Updated Procedure Info'})
+        request.user = self.user
+        request.session = view_request.session
+        request.session.save()
+
+        response = update_procedure(request)
+
+        self.assertEqual(response.status_code, 302)
+
+
+        updated_procedure = Procedure.objects.get(procedure_name='Updated Procedure', procedure_info='Updated Procedure Info')
+        self.assertIsNotNone(updated_procedure)
+
+    def test_post_update_procedure_invalid_id(self):
+        view_request = self.factory.post('/procedures/view_procedure/?id=' + str(self.test_procedure.id))
+        view_request.user = self.user
+        self.middleware.process_request(view_request)
+        view_request.session.save()
+
+        view_procedure(view_request)
+
+        request = self.factory.post('/procedures/view_procedure/update', {'procedure_name':'Updated Procedure', 'notes': 'Updated Procedure Info'})
+        request.user = self.user
+        request.session = view_request.session
+        request.session.save()
+
+        #Fudge the id
+        request.session['procedure_id'] = 9999999
+        request.session.save()
+
+        response = update_procedure(request)
+
+        self.assertEqual(response.status_code, 302)
+
+        # If an entry exists, it will overwrite None, thus failing the test
+        try:
+            updated_procedure = None
+            updated_procedure = Procedure.objects.get(procedure_name='Updated Procedure', procedure_info='Updated Procedure Info')
+        except Procedure.DoesNotExist:
+            self.assertIsNone(updated_procedure)
+
+    def test_post_update_procedure_invalid_form(self):
+        view_request = self.factory.post('/procedures/view_procedure/?id=' + str(self.test_procedure.id))
+        view_request.user = self.user
+        self.middleware.process_request(view_request)
+        view_request.session.save()
+
+        view_procedure(view_request)
+
+        request = self.factory.post('/procedures/view_procedure/update', {'notes': 'Updated Procedure Info'})
+        request.user = self.user
+        request.session = view_request.session
+        request.session.save()
+
+        response = update_procedure(request)
+
+        self.assertEqual(response.status_code, 302)
+
+        # If an entry exists, it will overwrite None, thus failing the test
+        try:
+            updated_procedure = None
+            updated_procedure = Procedure.objects.get(procedure_info='Updated Procedure Info')
+        except Procedure.DoesNotExist:
+            self.assertIsNone(updated_procedure)
