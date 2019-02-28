@@ -29,12 +29,16 @@ def new_procedure(request):
 @login_required
 def view_procedure(request):
     if request.method == 'POST':
-        # Get desired procedure id from url and store into session for when page is updated
-        procedure = Procedure.objects.get(id=request.GET.get('id'))
-        request.session['procedure_id'] = request.GET.get('id')
-        return render(request, 'update_procedure.html', {'form': NewProcedure(
-            initial={'procedure_name': procedure.procedure_name, 'notes': procedure.procedure_info}),
-            'procedure': procedure})
+        try:
+            # Get desired procedure id from url and store into session for when page is updated
+            procedure = Procedure.objects.get(id=request.GET.get('id'))
+            request.session['procedure_id'] = request.GET.get('id')
+            return render(request, 'update_procedure.html', {'form': NewProcedure(
+                initial={'procedure_name': procedure.procedure_name, 'notes': procedure.procedure_info}),
+                'procedure': procedure})
+        except Procedure.DoesNotExist:
+            return redirect('/procedures/')
+
 
     if request.method == 'GET':
         try:

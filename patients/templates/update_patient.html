@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Helps scale for mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patients</title>
+    <title>New Patient</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -31,39 +31,30 @@
         {% include "menu_bar.html" %}
 
         <div class="container">
-            <div class="row">
-                <div class="col" id="patients-col">
-                    <div class="container">
-                      <h2>All Patients</h2>
-                      <p>Search bar here probably</p>
-                      <table class="table table-hover">
-                        <thead>
-                          <tr>
-                            <th>Last</th>
-                            <th>First</th>
-                            <th>Profile</th>
-                          </tr>
-                        </thead>
-                        <tbody style="overflow-y: scroll; height: 25px">
-                        {% for patient in patients %}
-                          <tr>
-                            <td>{{patient.last_name}}</td>
-                            <td>{{patient.first_name}}</td>
-                            <td>
-                                <a class="text-primary" href="/patients/profile/?id={{patient.id}}">View Profile</a>
-                            </td>
-                          </tr>
-                        {% endfor %}
-                        </tbody>
-                      </table>
-                    </div>
+            {% if failed_creation %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>Form requirements not met!</strong> Try entering your patient information again.
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <a class="btn btn-success" href="create/" role="button">Add New Patient</a>
+            {% endif %}
+            <h2> Update information for: {{patient.first_name}} {{patient.last_name}} </h2>
+            <form action="update/" method="POST"> {% csrf_token %}
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    {{ form.first_name }}
                 </div>
-            </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    {{ form.last_name }}
+                </div>
+                <div class="form-group">
+                    <label for="birthDate">Birthday </label>
+                    {{ form.birth_date }}
+                </div>
+                <button type="submit" class="btn btn-warning">Update Patient</button>
+            </form>
+            <form action="delete/" method="POST"> {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete Patient</button>
+            </form>
         </div>
     </div>
 
