@@ -33,6 +33,13 @@
         <div class="container">
             <div class="row">
                 <div class="col">
+                    <form action="/procedures/" method="get"> {% csrf_token %}
+                        <button type="submit" class="btn btn-warning">Return To Procedures</button>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
                     <h2>Procedure Name</h2>
                     {{ procedure.procedure_name }}
                 </div>
