@@ -17,6 +17,8 @@ class Patients(models.Model):
     today_flag_end = models.DateTimeField(default=timezone.now)
     today_flag_reason = models.CharField(max_length = 1000, default="")
 
+    procedure_step = models.ForeignKey('procedures.Procedure', on_delete=models.CASCADE,)
+
 
     @classmethod
     def create_patient(cls, first_name, last_name, birth_date):
