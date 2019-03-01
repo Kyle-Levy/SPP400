@@ -56,5 +56,6 @@ class Patients(models.Model):
     def __str__(self):
         return self.first_name + ' ' + self.last_name
 
-
-
+    def get_absolute_url(self):
+        # This returns the url for a patients profile when called on a patient
+        return 'patients/profile/?id=' % self.id

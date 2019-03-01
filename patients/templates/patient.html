@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Helps scale for mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ patient.last_name }}, {{ patient.first_name }} </title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <!-- Personal CSS -->
+    {% load octicons %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href={% static "homepage/sidebar.css" %}>
+    <!-- Tutorial for creating sidebar can be found at: https://bootstrapious.com/p/bootstrap-sidebar -->
+</head>
+
+<body>
+
+<!-- Div holding the entire page -->
+<div class="wrapper">
+
+    {% include "sidebar.html" %}
+
+    <div id="content">
+
+        {% include "menu_bar.html" %}
+
+      <div class="container text-center">
+          <div class="row">
+              <div class="col">
+                    <form action="/patients/" method="get"> {% csrf_token %}
+                        <button type="submit" class="btn btn-warning">Return To Patients</button>
+                    </form>
+              </div>
+          </div>
+        <div class="row">
+          <div class="col-sm-3 well">
+            <div class="well">
+              <h1>{{ patient.first_name }} {{ patient.last_name }}</h1>
+                <form action="/patients/profile/?id={{patient.id}}" method="POST"> {% csrf_token %}
+                    <button type="submit" class="btn btn-warning">Update Info</button>
+                </form>
+            </div>
+            <div class="thumbnail">
+              <h3>Alerts:</h3>
+                <p>Alerts go here</strong></p>
+
+            </div>
+            <div class="thumbnail">
+              <h3>Scheduled For:</h3>
+                <p>Procedure name</strong></p>
+            </div>
+            <div class="thumbnail">
+              <h3>Procedure Map:</h3>
+                <p>Procedure name</strong></p>
+            </div>
+          </div>
+          <div class="col-sm-9">
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="panel panel-default text-left">
+                  <div class="panel-body">
+                    <h1 align="center">Patient Records</h1>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-3">
+                 <h4>Next Procedures:</h4>
+              </div>
+              <div class="col-sm-9">
+                <div class="well">
+                  <p>I think this should be a list of procedures, most likely 1 or 2 in the next level of the workflow.</p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3">
+                 <h4>Procedures Remaining:</h4>
+              </div>
+              <div class="col-sm-9">
+                <div class="well">
+                  <p>I think this should be a list of procedures, all required to reach the end goal of the workflow.</p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3">
+                 <h4>Analytics:</h4>
+              </div>
+              <div class="col-sm-9">
+                <div class="well">
+                  <p>Im guessing something like average time to schedule, time since starting process, estimated time to complete procedure workflow can go here</p>
+                </div>
+              </div>
+            </div>
+
+            </div>
+          </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery CDN - Slim version (=without AJAX) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<!-- Popper.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+<!-- jQuery Custom Scroller CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+<!-- Personal JS -->
+<script src={% static "patients/patients.js" %}></script>
+<script src={% static "homepage/sidebar.js" %}></script>
+</body>
+</html>
