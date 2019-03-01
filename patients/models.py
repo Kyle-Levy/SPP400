@@ -53,6 +53,8 @@ class Patients(models.Model):
             self.flagged = True
             return True
 
+    def __str__(self):
+        return self.first_name + ' ' + self.last_name
 
 
 
