@@ -17,6 +17,9 @@ class Patients(models.Model):
     today_flag_end = models.DateTimeField(default=timezone.now)
     today_flag_reason = models.CharField(max_length = 1000, default="")
 
+    # Foreign key for a patent's procedure step.
+    procedure_step = models.CharField(max_length=1000, default="")
+
 
     @classmethod
     def create_patient(cls, first_name, last_name, birth_date):
@@ -49,6 +52,9 @@ class Patients(models.Model):
         elif self.flagged is False:
             self.flagged = True
             return True
+
+    def __str__(self):
+        return self.first_name + ' ' + self.last_name
 
     def get_absolute_url(self):
         # This returns the url for a patients profile when called on a patient
