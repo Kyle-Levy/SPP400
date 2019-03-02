@@ -28,7 +28,7 @@ def step_impl(context):
 def step_impl(context):
     br = context.browser
 
-    assert br.current_url.endswitch('/homepage/')
+    assert br.current_url.endswith('/homepage/')
 
 
 @when('I submit an invalid login page')
@@ -47,4 +47,4 @@ def step_impl(context):
 def step_impl(context):
     br = context.browser
 
-    assert br.current_url.endswitch('/login/')
+    assert br.current_url.endswith('/login/')
