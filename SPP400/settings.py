@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'octicons',
     'workflow',
     'procedures',
+    'behave_django',
 ]
 
 MIDDLEWARE = [
