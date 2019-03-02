@@ -18,6 +18,7 @@
       - pip install django-viewflow
       - pip install redgreenunittest
       - pip install django-octicons
+      - pip install behave_django
     before_script:
       - mysql -e 'create database test;' -u root
       -
