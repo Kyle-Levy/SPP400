@@ -7,5 +7,5 @@ class UserFactory(factory.django.DjangoModelFactory):
         model = User
         django_get_or_create = ('username', 'email')
 
-        username = 'johndoe'
-        email = 'johndoe@gmail.com'
+    username = 'johndoe'
+    email = 'johndoe@gmail.com'
