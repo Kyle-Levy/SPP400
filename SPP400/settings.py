@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'workflow',
     'procedures',
     'behave_django',
+    'test',
 ]
 
 MIDDLEWARE = [
