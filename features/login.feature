@@ -10,4 +10,4 @@ Feature: Login form
 
     Given an anonymous user
     When I submit an invalid login page
-    Then I am redirected to the login
+    Then I am redirected to the login page

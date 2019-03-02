@@ -28,7 +28,8 @@ def step_impl(context):
 def step_impl(context):
     br = context.browser
 
-    assert br.current_url.endswith('/homepage/')
+    # Still routes to login for 2-factor - fine for now will need another when/then
+    assert br.current_url.endswith('/login/')
 
 
 @when('I submit an invalid login page')
@@ -47,4 +48,5 @@ def step_impl(context):
 def step_impl(context):
     br = context.browser
 
+    print(br.current_url)
     assert br.current_url.endswith('/login/')
