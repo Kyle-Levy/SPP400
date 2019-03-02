@@ -8,7 +8,7 @@ def before_all(context):
     context.server_url = 'http://localhost:8000'
 
 def after_all(context):
-
+    # Required to explicitly quit browser, otherwise it won't upon completion.
     context.browser.quit()
 
 def before_feature(context, feature):
