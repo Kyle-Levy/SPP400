@@ -8,4 +8,7 @@
     <!-- Custom Scroll Bar -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href={% static "homepage/sidebar.css" %}>
+    <title>{{ title }}</title>
 {% endblock %}
