@@ -175,7 +175,7 @@ class TestProcedures(TestCase):
 
         response = update_procedure(request)
 
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 401)
 
         # If an entry exists, it will overwrite None, thus failing the test
         try:

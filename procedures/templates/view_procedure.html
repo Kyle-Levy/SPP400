@@ -16,6 +16,11 @@
 
         {% include "menu_bar.html" %}
 
+        {% if failed_update %}
+            <div class="alert alert-danger" role="alert">
+                <strong>Form requirements not met!</strong> Try updating your procedure information again.
+            </div>
+        {% endif %}
         <div class="container">
             <div class="row">
                 <div class="col">
@@ -36,7 +41,7 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <form action="?id={{ procedure.id }}" method="post"> {% csrf_token %}
+                    <form action="/procedures/view_procedure/?id={{ procedure.id }}" method="post"> {% csrf_token %}
                         <button type="submit" class="btn btn-warning">Change Procedure Info</button>
                     </form>
                 </div>

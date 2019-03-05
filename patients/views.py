@@ -71,7 +71,7 @@ def update(request):
             else:
                 return render(request, 'patient.html', {"patient": patient,
                                                         'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name,
-                                                        'failed_updated': True}, status=401)
+                                                        'failed_update': True}, status=401)
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
