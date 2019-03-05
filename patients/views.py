@@ -34,8 +34,10 @@ def profile(request):
             # Get desired patient id from url
             patient = Patients.objects.get(id=request.GET.get('id'))
             request.session['patient_id'] = request.GET.get('id')
-            return render(request, 'update_patient.html', {'form': NewPatient(), 'patient': patient,
-                                                           'title': 'Update: ' + patient.last_name + ', ' + patient.first_name})
+            return render(request, 'update_patient.html', {'form': NewPatient(
+                initial={'first_name': patient.first_name, 'last_name': patient.last_name, 'birth_date': patient.bday}),
+                'patient': patient,
+                'title': 'Update: ' + patient.last_name + ', ' + patient.first_name})
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
@@ -68,7 +70,8 @@ def update(request):
                 return redirect("/patients/profile/?id=" + str(patient.id))
             else:
                 return render(request, 'patient.html', {"patient": patient,
-                                                        'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name, 'failed_updated' : True}, status=401)
+                                                        'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name,
+                                                        'failed_updated': True}, status=401)
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
