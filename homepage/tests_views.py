@@ -157,7 +157,7 @@ class TestLogin(TestCase):
 
         response = log_in(request)
 
-        self.assertTrue(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_get_homepage(self):
         request = self.factory.get('/homepage/')
@@ -168,7 +168,7 @@ class TestLogin(TestCase):
 
         response = homepage(request)
 
-        self.assertTrue(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 class TestLogout(TestCase):
