@@ -32,7 +32,7 @@ class TestCreatePatient(TestCase):
 
         response = new_patient(request)
 
-        self.assertTrue(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         # If the patient does exist, the value of None will be overwritten
 
@@ -48,7 +48,7 @@ class TestCreatePatient(TestCase):
 
         response = new_patient(request)
 
-        self.assertTrue(response.status_code, 401)
+        self.assertEqual(response.status_code, 401)
 
     def test_missing_last_name(self):
         request = self.factory.post('create/', {'first_name': 'Marie', 'birth_date': '1950-02-01'})
@@ -58,7 +58,7 @@ class TestCreatePatient(TestCase):
 
         response = new_patient(request)
 
-        self.assertTrue(response.status_code, 401)
+        self.assertEqual(response.status_code, 401)
 
     def test_missing_bday(self):
         request = self.factory.post('create/', {'first_name': 'Marie', 'last_name': 'Smith'})
@@ -68,7 +68,7 @@ class TestCreatePatient(TestCase):
 
         response = new_patient(request)
 
-        self.assertTrue(response.status_code, 401)
+        self.assertEqual(response.status_code, 401)
 
     def test_get_patients(self):
         request = self.factory.get('/patients/')
@@ -79,7 +79,7 @@ class TestCreatePatient(TestCase):
 
         response = index(request)
 
-        self.assertTrue(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_get_new_patients(self):
         request = self.factory.get('/patients/create/')
@@ -90,7 +90,7 @@ class TestCreatePatient(TestCase):
 
         response = new_patient(request)
 
-        self.assertTrue(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_get_profile_valid_id(self):
         request = self.factory.get('/patients/profile/?id=' + str(self.test_patient.id))
