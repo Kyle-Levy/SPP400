@@ -8,7 +8,7 @@ from django.http import HttpResponse
 @login_required
 def index(request):
     if request.method == 'GET':
-        return render(request, 'procedure_main.html', {'procedures': Procedure.objects.all()})
+        return render(request, 'procedure_main.html', {'procedures': Procedure.objects.all(), 'title': 'Procedures'})
 
 
 @login_required
@@ -21,9 +21,10 @@ def new_procedure(request):
             procedure.save()
             return redirect('/procedures/')
         else:
-            return render(request, 'new_procedure.html', {'form': NewProcedure(), 'failed_creation': True}, status=401)
+            return render(request, 'new_procedure.html',
+                          {'form': NewProcedure(), 'failed_creation': True, 'title': 'New Procedure'}, status=401)
     else:
-        return render(request, 'new_procedure.html', {'form': NewProcedure()})
+        return render(request, 'new_procedure.html', {'form': NewProcedure(), 'title': 'New Procedure'})
 
 
 @login_required
@@ -35,16 +36,16 @@ def view_procedure(request):
             request.session['procedure_id'] = request.GET.get('id')
             return render(request, 'update_procedure.html', {'form': NewProcedure(
                 initial={'procedure_name': procedure.procedure_name, 'notes': procedure.procedure_info}),
-                'procedure': procedure})
+                'procedure': procedure, 'title': 'Update: ' + procedure.procedure_name})
         except Procedure.DoesNotExist:
             return redirect('/procedures/')
-
 
     if request.method == 'GET':
         try:
             # Get desired patient id from url
             procedure = Procedure.objects.get(id=request.GET.get('id'))
-            return render(request, 'view_procedure.html', {'procedure': procedure})
+            return render(request, 'view_procedure.html',
+                          {'procedure': procedure, 'title': 'View: ' + procedure.procedure_name})
         except Procedure.DoesNotExist:
             # TODO: add in error message here
             return redirect('/procedures/')
@@ -54,20 +55,22 @@ def view_procedure(request):
 def update_procedure(request):
     if request.method == 'POST':
         form = NewProcedure(request.POST)
-        if form.is_valid():
-            # Clean form data and check that the username password pair is valid
-            cd = form.cleaned_data
-            try:
+        try:
+            procedure = Procedure.objects.get(id=request.session['procedure_id'])
+            if form.is_valid():
+                # Clean form data and check that the username password pair is valid
+                cd = form.cleaned_data
                 # Get desired patient id from url
-                procedure = Procedure.objects.get(id=request.session['procedure_id'])
                 procedure.procedure_name = cd['procedure_name']
                 procedure.procedure_info = cd['notes']
                 procedure.save()
-                return redirect("/procedures/view_procedure/?id=" + str(procedure.id), {"procedure": procedure})
-            except Procedure.DoesNotExist:
-                # TODO: add in error message here
-                return redirect('/procedures/')
-        else:
+                return redirect("/procedures/view_procedure/?id=" + str(procedure.id))
+            else:
+                return render(request, 'view_procedure.html',
+                              {'procedure': procedure, 'title': 'View: ' + procedure.procedure_name,
+                               'failed_update': True}, status=401)
+        except Procedure.DoesNotExist:
+            # TODO: add in error message here
             return redirect('/procedures/')
 
 
