@@ -32,7 +32,7 @@ class TestCreatePatient(TestCase):
 
         response = new_patient(request)
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
         # If the patient does exist, the value of None will be overwritten
 
@@ -194,7 +194,7 @@ class TestCreatePatient(TestCase):
 
         response = update(request)
 
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 401)
 
         # If an entry exists, it will overwrite None, thus failing the test
         try:

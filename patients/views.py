@@ -55,21 +55,22 @@ def profile(request):
 def update(request):
     if request.method == 'POST':
         form = NewPatient(request.POST)
-        if form.is_valid():
-            # Clean form data and check that the username password pair is valid
-            cd = form.cleaned_data
-            try:
+        try:
+            patient = Patients.objects.get(id=request.session['patient_id'])
+            if form.is_valid():
+                # Clean form data and check that the username password pair is valid
+                cd = form.cleaned_data
                 # Get desired patient id from url
-                patient = Patients.objects.get(id=request.session['patient_id'])
                 patient.first_name = cd['first_name']
                 patient.last_name = cd['last_name']
                 patient.bday = cd['birth_date']
                 patient.save()
                 return redirect("/patients/profile/?id=" + str(patient.id))
-            except Patients.DoesNotExist:
-                # TODO: add in error message here
-                return redirect('/patients/')
-        else:
+            else:
+                return render(request, 'patient.html', {"patient": patient,
+                                                        'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name, 'failed_updated' : True}, status=401)
+        except Patients.DoesNotExist:
+            # TODO: add in error message here
             return redirect('/patients/')
 
 
