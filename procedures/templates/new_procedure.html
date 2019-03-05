@@ -14,7 +14,11 @@
     <div id="content">
 
         {% include "menu_bar.html" %}
-
+        {% if failed_creation %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>Form requirements not met!</strong> Try entering your procedure data again.
+                </div>
+            {% endif %}
         <div class="container-fixed">
             <h2> New Procedure </h2>
             <form action="" method="POST"> {% csrf_token %}
