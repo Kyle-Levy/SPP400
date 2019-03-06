@@ -3,9 +3,8 @@
 <head>
     {% load static %}
     {% include "global_styles.html" %}
+    <link rel="stylesheet" type="text/css" href={% static "homepage/homepage.css" %}>
     <link rel="shortcut icon" type="image/x-icon" href={% static "homepage/home.ico" %}>
-    <link rel="stylesheet" type="text/css" href={% static "homepage/sidebar.css" %}>
-    <title>{{ title }}</title>
 </head>
 
 <body>
@@ -28,7 +27,21 @@
                     Today's patients go here
                 </div>
                 <div class="col-sm" id="patients-col">
-                    All patients go here
+
+                    <h2>All Patients</h2>
+                    <div class="list-group">
+                        {% for current_patient in patients %}
+                        <a href="/patients/profile/?id={{ current_patient.id }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ current_patient.last_name }}, {{ current_patient.first_name }}</h5>
+                                <small>3 days ago</small>
+                            </div>
+                            <p class="mb-1">Procedure Roadmap Title</p>
+                            <small>Donec id elit non mi porta.</small>
+                        </a>
+                        {% endfor %}
+                    </div>
+
                 </div>
             </div>
             <div class="row" id="analytics-glance">
