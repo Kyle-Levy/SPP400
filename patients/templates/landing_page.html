@@ -21,7 +21,14 @@
                 <div class="col" id="patients-col">
                     <div class="container">
                       <h2>All Patients</h2>
-                      <p>Search bar here probably</p>
+                          <form action="/patients/" method="POST"> {% csrf_token %}
+                              <div class="float-left" align="left">
+                                {{ form.search_terms }}
+                              </div>
+                              <div class="float-left" align="right">
+                                <button type="submit" name="submit" class="btn btn-warning">Search</button>
+                              </div>
+                          </form>
                       <table class="table table-hover">
                         <thead>
                           <tr>

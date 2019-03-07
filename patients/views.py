@@ -1,13 +1,16 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from patients.forms import NewPatient
+from patients.forms import NewPatient, SearchPatients
 from patients.models import Patients
 
 
 @login_required
 def index(request):
+    if request.method == 'POST':
+        return render(request, 'new_patient.html', {'patients': Patients.objects.all(), 'form': NewPatient(), 'title': 'Patients'})
+
     if request.method == 'GET':
-        return render(request, 'landing_page.html', {'patients': Patients.objects.all(), 'title': 'Patients'})
+        return render(request, 'landing_page.html', {'patients': Patients.objects.all(), 'form': SearchPatients(), 'title': 'Patients'})
 
 
 @login_required
