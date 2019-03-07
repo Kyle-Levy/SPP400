@@ -11,6 +11,7 @@ def index(request):
         if form.is_valid():
             cd = form.cleaned_data
             search_regex = re.sub(r'\W+', '', cd['search_terms'])
+            search_regex = "(?i)" + search_regex
             patients = Patients.objects.filter(search_field__regex=search_regex)
             return render(request, 'landing_page.html', {'patients': patients, 'form': SearchPatients(), 'title': 'Patients'})
 
