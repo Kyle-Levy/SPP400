@@ -29,17 +29,31 @@
                 <div class="col-sm" id="patients-col">
 
                     <h2>All Patients</h2>
-                    <button type="button" class="btn btn-info" id="sortAll">Sort</button>
+
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownSortButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Sort By
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownSortButton">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <button type="button" class="btn btn-info dropdown-item" id="sortAll">Last Name</button>
+                        </div>
+                    </div>
                     <div class="list-group">
                         {% for current_patient in patients %}
-                        <a href="/patients/profile/?id={{ current_patient.id }}" class="list-group-item list-group-item-action flex-column align-items-start">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">{{ current_patient.last_name }}, {{ current_patient.first_name }}</h5>
-                                <small>3 days ago</small>
-                            </div>
-                            <p class="mb-1">Procedure Roadmap Title</p>
-                            <small>Donec id elit non mi porta.</small>
-                        </a>
+                            <a href="/patients/profile/?id={{ current_patient.id }}"
+                               class="list-group-item list-group-item-action {% cycle 'list-group-item-danger' 'list-group-item-warning' 'list-group-item-success' 'list-group-item-dark' %} flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ current_patient.last_name }}, {{ current_patient.first_name }}</h5>
+                                    <small>03/07/2019</small>
+                                </div>
+                                <h6>MRN: #13247568</h6>
+                                <h6 class="mb-1">Procedure Roadmap Title</h6>
+                                <p class="mb-1">Next Procedure(s): {% cycle 'Bloodwork' 'Ekg' 'TAVR' '' %}</p>
+                                <small>{% cycle 'Referred' 'In-Progress' 'Ready' 'Done' %}</small>
+                            </a>
                         {% endfor %}
                     </div>
 
