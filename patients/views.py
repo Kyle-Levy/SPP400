@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from patients.forms import NewPatient, SearchPatients
 from patients.models import Patients
-
+import re
 
 @login_required
 def index(request):
@@ -10,8 +10,9 @@ def index(request):
         form = SearchPatients(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            patients = Patients.objects.filter(first_name= cd['search_terms'])
-        return render(request, 'landing_page.html', {'patients': patients, 'form': SearchPatients(), 'title': 'Patients'})
+            search_regex = re.sub(r'\W+', '', cd['search_terms'])
+            patients = Patients.objects.filter(search_field__regex=search_regex)
+            return render(request, 'landing_page.html', {'patients': patients, 'form': SearchPatients(), 'title': 'Patients'})
 
     if request.method == 'GET':
         return render(request, 'landing_page.html', {'patients': Patients.objects.all(), 'form': SearchPatients(), 'title': 'Patients'})
