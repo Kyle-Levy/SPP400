@@ -47,11 +47,14 @@
                                class="list-group-item list-group-item-action {% cycle 'list-group-item-danger' 'list-group-item-warning' 'list-group-item-success' 'list-group-item-dark' %} flex-column align-items-start">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h5 class="mb-1">{{ current_patient.last_name }}, {{ current_patient.first_name }}</h5>
-                                    <small>03/07/2019</small>
+                                    <small>{% cycle '01/01/2019' '01/18/2019' '02/01/2019' '02/22/2019' %}</small>
                                 </div>
                                 <h6>MRN: #13247568</h6>
                                 <h6 class="mb-1">Procedure Roadmap Title</h6>
-                                <p class="mb-1">Next Procedure(s): {% cycle 'Bloodwork' 'Ekg' 'TAVR' '' %}</p>
+                                <div class="d-flex w-100 justify-content-between">
+                                    <p class="mb-1">Next Procedure(s): {% cycle 'Bloodwork' 'Ekg' 'TAVR' '' %}</p>
+                                    <small>{% cycle '01/18/2019' '02/01/2019' '02/22/2019' '03/01/2019' %}</small>
+                                </div>
                                 <small>{% cycle 'Referred' 'In-Progress' 'Ready' 'Done' %}</small>
                             </a>
                         {% endfor %}
