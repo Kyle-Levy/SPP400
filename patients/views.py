@@ -7,7 +7,11 @@ from patients.models import Patients
 @login_required
 def index(request):
     if request.method == 'POST':
-        return render(request, 'new_patient.html', {'patients': Patients.objects.all(), 'form': NewPatient(), 'title': 'Patients'})
+        form = SearchPatients(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            patients = Patients.objects.filter(first_name= cd['search_terms'])
+        return render(request, 'landing_page.html', {'patients': patients, 'form': SearchPatients(), 'title': 'Patients'})
 
     if request.method == 'GET':
         return render(request, 'landing_page.html', {'patients': Patients.objects.all(), 'form': SearchPatients(), 'title': 'Patients'})
