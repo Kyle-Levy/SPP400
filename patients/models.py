@@ -17,7 +17,6 @@ class Patients(models.Model):
     today_flag_end = models.DateTimeField(default=timezone.now)
     today_flag_reason = models.CharField(max_length = 1000, default="")
     record_number = models.CharField(max_length=150, default="Unassigned")
-    search_field = models.CharField(max_length=500, default="")
     # Foreign key for a patent's procedure step.
     procedure_step = models.CharField(max_length=1000, default="")
 

@@ -10,9 +10,14 @@ def index(request):
         form = SearchPatients(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            search_regex = re.sub(r'\W+', '', cd['search_terms'])
-            search_regex = "(?i)" + search_regex
-            patients = Patients.objects.filter(search_field__regex=search_regex)
+            search = cd['search_terms']
+            patients = []
+            for patient in Patients.objects.all():
+                if search in patient.first_name or search in patient.last_name or search in patient.record_number or patient.first_name in search or patient.last_name in search or patient.record_number in search:
+                    patients.append(patient)
+            # search_regex = re.sub(r'\W+', '', cd['search_terms'])
+            # search_regex = "(?i)" + search_regex
+            # patients = Patients.objects.filter(search_field__regex=search_regex)
             return render(request, 'landing_page.html', {'patients': patients, 'form': SearchPatients(), 'title': 'Patients'})
 
     if request.method == 'GET':
