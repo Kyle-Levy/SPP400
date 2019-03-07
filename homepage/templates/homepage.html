@@ -29,6 +29,7 @@
                 <div class="col-sm" id="patients-col">
 
                     <h2>All Patients</h2>
+                    <button type="button" class="btn btn-info" id="sortAll">Sort</button>
                     <div class="list-group">
                         {% for current_patient in patients %}
                         <a href="/patients/profile/?id={{ current_patient.id }}" class="list-group-item list-group-item-action flex-column align-items-start">
