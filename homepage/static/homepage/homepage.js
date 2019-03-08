@@ -65,7 +65,7 @@ $(document).ready(function () {
     //Apply the function as a listener to the checkboxes themselves
     $("#patients-col > label > input").change(show_checked);
 
-    let sort_list_group = function () {
+    let sort_list_group = function (event) {
 
         //Comparator function between a's text and b's text
         let sort_by_last_name = function (a, b) {
@@ -76,12 +76,17 @@ $(document).ready(function () {
             return a.innerHTML.substring(a.innerHTML.indexOf(',') + 1).localeCompare(b.innerHTML.substring(b.innerHTML.indexOf(',') + 1));
         };
 
+        
+
         let list = $("a > div > h5").get();
 
-        list = list.sort(sort_by_last_name);
+        if (event.data.sort_method === "last") {
+            list = list.sort(sort_by_last_name);
+        }else if(event.data.sort_method === "first"){
+            list = list.sort(sort_by_first_name)
+        }
 
-
-        if (!backwards) {
+        if (!false) {
             for (let i = 0; i < list.length; i++) {
                 //list-group.append <a> of list[i]
                 list[i].parentNode.parentNode.parentNode.append(list[i].parentNode.parentNode);
@@ -94,9 +99,12 @@ $(document).ready(function () {
         }
         backwards = !backwards;
 
-    }
+    };
+    //Sort the patients by first name
+    $("#sortByFirst").click({sort_method: "first"}, sort_list_group);
     //Sort the patients by last name
-    $("#sortAll").click(sort_list_group);
+    $("#sortByLast").click({sort_method: "last"}, sort_list_group);
+
 
 
 });
