@@ -32,8 +32,18 @@
                                 <div>
                                 <strong class="ml-2">Showing results for search: </strong> {{ filter }}
                                 </div>
+                              {% else %}
+                                <div>
+                                <a class="ml-2">Showing all patients. </a>
+                                </div>
                               {% endif %}
                           </form>
+
+                      {% if not patients %}
+                        <div class="alert alert-danger" role="alert" style="margin-top:20px">
+                            <strong>No patients found.</strong>
+                        </div>
+                      {% else %}
                       <table class="table table-hover">
                         <thead>
                           <tr>
@@ -54,6 +64,7 @@
                         {% endfor %}
                         </tbody>
                       </table>
+                      {% endif %}
                     </div>
                 </div>
             </div>
