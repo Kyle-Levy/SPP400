@@ -26,7 +26,7 @@
             <div class="row">
                 <div class="col">
 
-                        <a class="btn btn-warning mb-4" href="/patients/" role="button">Return To Patients</a>
+                    <a class="btn btn-warning mb-4" href="/patients/" role="button">Return To Patients</a>
 
                 </div>
             </div>
@@ -68,6 +68,11 @@
                                     <p class="card-text">Procedure Name</p>
                                 </div>
                             </div>
+
+                            <form action="/patients/profile/?id={{ patient.id }}" method="post">{% csrf_token %}
+                                <button type="submit" class="btn btn-warning">Update Patient</button>
+                            </form>
+
                         </div>
                     </div>
                 </div>
@@ -103,8 +108,9 @@
                                 <div class="card-header">Analytics</div>
                                 <div class="card-body">
                                     <h5 class="card-title">Analytic Name</h5>
-                                    <p class="card-text">Im guessing something like average time to schedule, time since starting process,
-                                    estimated time to complete procedure workflow can go here</p>
+                                    <p class="card-text">Im guessing something like average time to schedule, time since
+                                        starting process,
+                                        estimated time to complete procedure workflow can go here</p>
                                 </div>
                             </div>
 

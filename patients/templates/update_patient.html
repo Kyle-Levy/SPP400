@@ -36,7 +36,7 @@
                     <label for="birthDate">Birthday </label>
                     {{ form.birth_date }}
                 </div>
-                <button type="submit" class="btn btn-warning">Update Patient</button>
+                <button type="submit" class="btn btn-warning mb-4">Update Patient</button>
             </form>
             <form action="delete/" method="POST"> {% csrf_token %}
                 <button type="submit" class="btn btn-danger">Delete Patient</button>
