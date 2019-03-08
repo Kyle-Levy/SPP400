@@ -20,38 +20,97 @@
                 <strong>Form requirements not met!</strong> Try updating your patient information again.
             </div>
         {% endif %}
-        <div class="container text-center">
+
+
+        <div class="container-fluid">
             <div class="row">
                 <div class="col">
                     <form action="/patients/" method="get"> {% csrf_token %}
-                        <button type="submit" class="btn btn-warning">Return To Patients</button>
+                        <button type="submit" class="btn btn-warning mb-4">Return To Patients</button>
                     </form>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-3 well">
-                    <div class="well">
-                        <h1>{{ patient.first_name }} {{ patient.last_name }}</h1>
-                        <form action="/patients/profile/?id={{ patient.id }}" method="POST"> {% csrf_token %}
-                            <button type="submit" class="btn btn-warning">Update Info</button>
-                        </form>
-                    </div>
-                    <div class="thumbnail">
-                        <h3>Alerts:</h3>
-                        <p>Alerts go here</p>
+                <div class="col-sm-3">
+                    <div class="card bg-light mb-3">
+                        <div class="card-header">
+                            <div style="font-size: 200%;">
+                                {{ patient.first_name }} {{ patient.last_name }}
+                            </div>
+                            <div>
+                                MRN: ########
+                            </div>
+                        </div>
 
-                    </div>
-                    <div class="thumbnail">
-                        <h3>Scheduled For:</h3>
-                        <p>Procedure name</p>
-                    </div>
-                    <div class="thumbnail">
-                        <h3>Procedure Map:</h3>
-                        <p>Procedure name</p>
+                        <div class="card-body">
+
+                            <div class="card bg-light my-3">
+
+                                <div class="card-header">Alerts</div>
+                                <div class="card-body">
+                                    <p class="card-text">Alerts go here</p>
+                                </div>
+                            </div>
+
+                            <div class="card bg-light my-3">
+
+                                <div class="card-header">Scheduled For</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Procedure Name</h5>
+                                    <p class="card-text">Procedure Date</p>
+                                </div>
+                            </div>
+
+                            <div class="card bg-light my-3">
+
+                                <div class="card-header">Procedure Map(s)</div>
+                                <div class="card-body">
+                                    <p class="card-text">Procedure Name</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
                 <div class="col-sm-9">
 
+                    <div class="card bg-light mb-3">
+                        <div class="card-header text-center" style="font-size:250%;">Patient Records</div>
+                        <div class="card-body">
+
+                            <div class="card bg-light my-3">
+
+                                <div class="card-header">Next Procedures</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Procedure Name</h5>
+                                    <p class="card-text">Procedure Date</p>
+                                    <h5 class="card-title">Procedure Name</h5>
+                                    <p class="card-text">Procedure Date</p>
+                                </div>
+                            </div>
+
+                            <div class="card bg-light my-3">
+
+                                <div class="card-header">Remaining Procedures</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Procedure Name</h5>
+                                    <h5 class="card-title">Procedure Name</h5>
+                                </div>
+                            </div>
+
+                            <div class="card bg-light my-3">
+
+                                <div class="card-header">Analytics</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Analytic Name</h5>
+                                    <p class="card-text">Im guessing something like average time to schedule, time since starting process,
+                                    estimated time to complete procedure workflow can go here</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="panel panel-default text-left">
@@ -95,7 +154,7 @@
                             </div>
                         </div>
                     </div>
-
+-->
                 </div>
             </div>
         </div>
