@@ -21,12 +21,10 @@
                 <strong>Form requirements not met!</strong> Try updating your procedure information again.
             </div>
         {% endif %}
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
                 <div class="col">
-                    <form action="/procedures/" method="get"> {% csrf_token %}
-                        <button type="submit" class="btn btn-warning">Return To Procedures</button>
-                    </form>
+                    <a class="btn btn-warning mb-4" href="/procedures/" role="button">Return To Procedures</a>
                 </div>
             </div>
             <div class="row">
