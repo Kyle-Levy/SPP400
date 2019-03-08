@@ -3,6 +3,7 @@ from homepage.forms import LoginForm, NewKeyForm, AuthenticateForm
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from patients.models import Patients
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -11,7 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 @login_required()
 def homepage(request):
     if request.method == 'GET':
-        return render(request, 'homepage.html', {'title':'Home'})
+        return render(request, 'homepage.html', {'title':'Home', 'patients' : Patients.objects.all()})
 
 
 def log_in(request):
