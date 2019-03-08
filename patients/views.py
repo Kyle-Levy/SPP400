@@ -13,7 +13,7 @@ def index(request):
             search = cd['search_terms']
             patients = []
             for patient in Patients.objects.all():
-                if search in patient.first_name or search in patient.last_name or search in patient.record_number or patient.first_name in search or patient.last_name in search or patient.record_number in search:
+                if search.lower() in patient.first_name.lower() or search.lower() in patient.last_name.lower() or search.lower() in patient.record_number.lower() or patient.first_name.lower() in search.lower() or patient.last_name.lower() in search.lower() or patient.record_number.lower() in search.lower():
                     patients.append(patient)
             return render(request, 'landing_page.html', {'patients': patients, 'form': SearchPatients(), 'filter': cd['search_terms'], 'title': 'Patients'})
 

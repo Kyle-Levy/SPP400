@@ -14,7 +14,7 @@ def index(request):
             search = cd['search_terms']
             procedures = []
             for procedure in Procedure.objects.all():
-                if search in procedure.procedure_name or procedure.procedure_name in search:
+                if search.lower() in procedure.procedure_name.lower() or procedure.procedure_name.lower() in search.lower():
                     procedures.append(procedure)
             return render(request, 'procedure_main.html', {'procedures': procedures, 'form': SearchProcedures(), 'filter': cd['search_terms'], 'title': 'Procedures'})
 
