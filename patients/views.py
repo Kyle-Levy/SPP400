@@ -1,13 +1,24 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from patients.forms import NewPatient
+from patients.forms import NewPatient, SearchPatients
 from patients.models import Patients
-
+import re
 
 @login_required
 def index(request):
+    if request.method == 'POST':
+        form = SearchPatients(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            search = cd['search_terms']
+            patients = []
+            for patient in Patients.objects.all():
+                if search.lower() in patient.first_name.lower() or search.lower() in patient.last_name.lower() or search.lower() in patient.record_number.lower() or patient.first_name.lower() in search.lower() or patient.last_name.lower() in search.lower() or patient.record_number.lower() in search.lower():
+                    patients.append(patient)
+            return render(request, 'landing_page.html', {'patients': patients, 'form': SearchPatients(), 'filter': cd['search_terms'], 'title': 'Patients'})
+
     if request.method == 'GET':
-        return render(request, 'landing_page.html', {'patients': Patients.objects.all(), 'title': 'Patients'})
+        return render(request, 'landing_page.html', {'patients': Patients.objects.all(), 'form': SearchPatients(), 'title': 'Patients'})
 
 
 @login_required

@@ -232,5 +232,13 @@ class TestProcedures(TestCase):
 
         deleted_procedure = Procedure.objects.get(procedure_name='View Procedure',
                                                   procedure_info='These are test notes')
-        #deleted_procedure can still be retrieved since the wrong ID was used.
+        # deleted_procedure can still be retrieved since the wrong ID was used.
         self.assertIsNotNone(deleted_procedure)
+
+    def test_search_procedures(self):
+        request = self.factory.post('/procedures/', {'search_terms': 'john'})
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+        response = index(request)
+        self.assertEqual(response.status_code, 200)

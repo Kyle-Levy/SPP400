@@ -23,8 +23,28 @@
                 <div class="col" id="procedures-col">
                     <div class="container">
                         <h2>All Procedures</h2>
-                        <p>Search bar here probably</p>
-                        <a class="btn btn-success" href="create/" role="button">Add New Procedure</a>
+                          <form action="/procedures/" method="POST"> {% csrf_token %}
+                              <div class="float-left" align="left">
+                                {{ form.search_terms }}
+                              </div>
+                              <div class="float-left" align="right">
+                                <button type="submit" name="submit" class="btn btn-warning">Search</button>
+                              </div>
+                              {% if filter %}
+                                <div>
+                                <strong class="ml-2">Showing results for search: </strong> {{ filter }}
+                                </div>
+                              {% else %}
+                                <div>
+                                <a class="ml-2">Showing all procedures. </a>
+                                </div>
+                              {% endif %}
+                          </form>
+                      {% if not procedures %}
+                        <div class="alert alert-danger" role="alert" style="margin-top:20px">
+                            <strong>Error: </strong>No procedures found.
+                        </div>
+                      {% else %}
                         <table class="table table-hover">
                             <thead>
                             <tr>
@@ -44,6 +64,9 @@
                             {% endfor %}
                             </tbody>
                         </table>
+                      {% endif %}
+                    <a class="btn btn-success" href="create/" role="button">Add New Procedure</a>
+
                     </div>
                 </div>
             </div>

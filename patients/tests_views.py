@@ -253,6 +253,14 @@ class TestCreatePatient(TestCase):
         updated_patient = Patients.objects.get(first_name='John', last_name='Smith', bday='1950-01-01')
         self.assertIsNotNone(updated_patient)
 
+    def test_search_patients(self):
+        request = self.factory.post('/patients/', {'search_terms': 'john'})
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+        response = index(request)
+        self.assertEqual(response.status_code, 200)
+
 
 '''
 #If the patient does exist, the value of None will be overwritten.

@@ -1,14 +1,25 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from procedures.forms import NewProcedure
+from procedures.forms import NewProcedure, SearchProcedures
 from procedures.models import Procedure
 from django.http import HttpResponse
 
 
 @login_required
 def index(request):
+    if request.method == 'POST':
+        form = SearchProcedures(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            search = cd['search_terms']
+            procedures = []
+            for procedure in Procedure.objects.all():
+                if search.lower() in procedure.procedure_name.lower() or procedure.procedure_name.lower() in search.lower():
+                    procedures.append(procedure)
+            return render(request, 'procedure_main.html', {'procedures': procedures, 'form': SearchProcedures(), 'filter': cd['search_terms'], 'title': 'Procedures'})
+
     if request.method == 'GET':
-        return render(request, 'procedure_main.html', {'procedures': Procedure.objects.all(), 'title': 'Procedures'})
+        return render(request, 'procedure_main.html', {'procedures': Procedure.objects.all(), 'form': SearchProcedures(), 'title': 'Procedures'})
 
 
 @login_required

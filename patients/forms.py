@@ -1,6 +1,21 @@
 from django import forms
 
 
+class SearchPatients(forms.Form):
+    search_terms = forms.CharField(
+        label='First Name',
+        required=False,
+        max_length=100,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'id': 'searchTerms',
+                'placeholder': "Enter search terms"
+            }
+        )
+    )
+
+
 class NewPatient(forms.Form):
     first_name = forms.CharField(
         label='First Name',

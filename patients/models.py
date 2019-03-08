@@ -16,7 +16,7 @@ class Patients(models.Model):
     today_flag = models.BooleanField(default=False)
     today_flag_end = models.DateTimeField(default=timezone.now)
     today_flag_reason = models.CharField(max_length = 1000, default="")
-
+    record_number = models.CharField(max_length=150, default="########")
     # Foreign key for a patent's procedure step.
     procedure_step = models.CharField(max_length=1000, default="")
 
@@ -59,3 +59,9 @@ class Patients(models.Model):
     def get_absolute_url(self):
         # This returns the url for a patients profile when called on a patient
         return 'patients/profile/?id=' % self.id
+
+    def save(self, *args, **kwargs):
+        self.search_field = str(self.first_name) + str(self.last_name) + str(self.record_number)
+        super(Patients, self).save(*args, **kwargs)
+
+
