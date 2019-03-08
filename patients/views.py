@@ -15,9 +15,6 @@ def index(request):
             for patient in Patients.objects.all():
                 if search in patient.first_name or search in patient.last_name or search in patient.record_number or patient.first_name in search or patient.last_name in search or patient.record_number in search:
                     patients.append(patient)
-            # search_regex = re.sub(r'\W+', '', cd['search_terms'])
-            # search_regex = "(?i)" + search_regex
-            # patients = Patients.objects.filter(search_field__regex=search_regex)
             return render(request, 'landing_page.html', {'patients': patients, 'form': SearchPatients(), 'filter': cd['search_terms'], 'title': 'Patients'})
 
     if request.method == 'GET':
