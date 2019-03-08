@@ -18,7 +18,7 @@ def index(request):
             # search_regex = re.sub(r'\W+', '', cd['search_terms'])
             # search_regex = "(?i)" + search_regex
             # patients = Patients.objects.filter(search_field__regex=search_regex)
-            return render(request, 'landing_page.html', {'patients': patients, 'form': SearchPatients(), 'title': 'Patients'})
+            return render(request, 'landing_page.html', {'patients': patients, 'form': SearchPatients(), 'filter': cd['search_terms'], 'title': 'Patients'})
 
     if request.method == 'GET':
         return render(request, 'landing_page.html', {'patients': Patients.objects.all(), 'form': SearchPatients(), 'title': 'Patients'})
