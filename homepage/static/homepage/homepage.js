@@ -6,91 +6,97 @@ $(document).ready(function () {
     $("#home > a:nth-child(1)").attr("href", "#");
 
 
-    var backwards = false;
-    $('#testeroonie').text("TEST GOOD");
+    let backwards = false;
 
-    
-    var show_checked = function () {
-        var checkList = $("#patients-col > label > input").get();
+    //Create function show_checked that grabs whether the checkboxes are checked or not, then only shows the checked catagories.
+    //Might give a couple inputs later that allow it to be used on different checklists & different patient panels
+    let show_checked = function () {
+        let checkList = $("#patients-col > label > input").get();
 
-        var referred = "none";
-        var inprogress = "none";
-        var ready = "none";
-        var done = "none";
+        //Default values for checks
+        let referred = "none";
+        let inprogress = "none";
+        let ready = "none";
+        let done = "none";
 
-        if(checkList[0].checked){
+        //If checked, the elements should be displayed so display attribute is empty
+        if (checkList[0].checked) {
             referred = "";
         }
 
-        if(checkList[1].checked){
+        if (checkList[1].checked) {
             inprogress = "";
         }
 
-        if(checkList[2].checked){
+        if (checkList[2].checked) {
             ready = "";
         }
 
-        if(checkList[3].checked){
+        if (checkList[3].checked) {
             done = "";
         }
 
-        patient_statuses = $("a > small").get();
+        //Get all of the 'statuses' of the patients in the list group
+        let patient_statuses = $("a > small").get();
 
-        console.log(patient_statuses);
 
-        for(var i = 0; i < patient_statuses.length; i++){
-            if(patient_statuses[i].innerHTML == "Referred"){
+        //For all of the elements, set the display attr
+        for (let i = 0; i < patient_statuses.length; i++) {
+            if (patient_statuses[i].innerHTML === "Referred") {
                 patient_statuses[i].parentNode.style.display = referred;
             }
-            if(patient_statuses[i].innerHTML == "In-Progress"){
+            if (patient_statuses[i].innerHTML === "In-Progress") {
                 patient_statuses[i].parentNode.style.display = inprogress;
             }
-            if(patient_statuses[i].innerHTML == "Ready"){
+            if (patient_statuses[i].innerHTML === "Ready") {
                 patient_statuses[i].parentNode.style.display = ready;
             }
-            if(patient_statuses[i].innerHTML == "Done"){
+            if (patient_statuses[i].innerHTML === "Done") {
                 patient_statuses[i].parentNode.style.display = done;
             }
         }
 
-        console.log(document.getElementById("kylelevy").style.display);
 
+    };
 
-
-    }
-
+    //Call the function on document ready because checkbox check status is cached when page is refreshed
     show_checked();
 
+    //Apply the function as a listener to the checkboxes themselves
     $("#patients-col > label > input").change(show_checked);
 
-    $("#sortAll").click(function () {
-        var sort_by_last_name = function (a, b) {
-            return a.innerHTML.toLowerCase().localeCompare(b.innerHTML.toLowerCase());
-        }
+    let sort_list_group = function () {
 
-        console.log(backwards);
+        //Comparator function between a's text and b's text
+        let sort_by_last_name = function (a, b) {
+            return a.innerHTML.localeCompare(b.innerHTML, {sensitivity: 'base'});
+        };
 
-        var list = $("a > div > h5").get();
+        let sort_by_first_name = function (a, b) {
+            return a.innerHTML.substring(a.innerHTML.indexOf(',') + 1).localeCompare(b.innerHTML.substring(b.innerHTML.indexOf(',') + 1));
+        };
+
+        let list = $("a > div > h5").get();
 
         list = list.sort(sort_by_last_name);
 
 
         if (!backwards) {
-            for (var i = 0; i < list.length; i++) {
+            for (let i = 0; i < list.length; i++) {
                 //list-group.append <a> of list[i]
                 list[i].parentNode.parentNode.parentNode.append(list[i].parentNode.parentNode);
             }
-        }
-        else if(backwards){
-            for (var i = 0; i < list.length; i++) {
+        } else if (backwards) {
+            for (let i = 0; i < list.length; i++) {
                 //list-group.append <a> of list[i]
                 list[i].parentNode.parentNode.parentNode.prepend(list[i].parentNode.parentNode);
             }
         }
         backwards = !backwards;
 
-    });
-
+    }
+    //Sort the patients by last name
+    $("#sortAll").click(sort_list_group);
 
 
 });
