@@ -23,9 +23,12 @@
                 </div>
                 <div class="form-group">
                     <label for="notes">Notes</label>
-                    {{ form.notes}}
+                    {{ form.notes }}
                 </div>
-                <button type="submit" class="btn btn-warning">Update {{ procedure.procedure_name }}</button>
+                <button type="submit" class="btn btn-warning mb-4">Update {{ procedure.procedure_name }}</button>
+            </form>
+            <form action="delete/" method="post">{% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete Procedure</button>
             </form>
         </div>
     </div>
