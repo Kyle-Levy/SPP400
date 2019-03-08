@@ -29,19 +29,29 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <h2>Procedure Name</h2>
-                    {{ procedure.procedure_name }}
-                </div>
-                <div class="col">
-                    <h2>Procedure Info</h2>
-                    {{ procedure.procedure_info }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <form action="/procedures/view_procedure/?id={{ procedure.id }}" method="post"> {% csrf_token %}
-                        <button type="submit" class="btn btn-warning">Change Procedure Info</button>
-                    </form>
+                    <div class="card bg-light mb-3">
+                        <div class="card-header">Procedure Info</div>
+                        <div class="card-body">
+                            <div class="card bg-light mb-3">
+                                <div class="card-header">Procedure Name</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ procedure.procedure_name }}</h5>
+                                </div>
+                            </div>
+                            <div class="card bg-light mb-3">
+                                <div class="card-header">Procedure Description</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ procedure.procedure_info |default:"Description not provided" }}</h5>
+                                </div>
+
+                            </div>
+                            <form action="/procedures/view_procedure/?id={{ procedure.id }}"
+                                  method="post"> {% csrf_token %}
+                                <button type="submit" class="btn btn-warning">Change Procedure Info</button>
+                            </form>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
