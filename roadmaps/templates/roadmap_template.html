@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Roadmaps</title>
 </head>
 <body>
+
+<form method="post" >
+    {% csrf_token %}
+    {{ form }}
+
+    <button type="submit" class="btn btn-warning">Create New Roadmap</button>
+</form>
 
 </body>
 </html>
