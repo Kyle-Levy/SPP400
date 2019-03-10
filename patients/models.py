@@ -7,6 +7,7 @@ from django.utils.timezone import now
 
 
 class Patients(models.Model):
+    patient_id = models.CharInteger
     first_name = models.CharField(max_length=150, default="")
     last_name = models.CharField(max_length=150, default="")
     bday = models.DateField(auto_now=False, auto_now_add=False)
