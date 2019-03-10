@@ -1,11 +1,13 @@
+from patients import models
+from patients.models import Patients
+from procedures import models
+from procedures.models import Procedure
 from django.db import models
-import procedures
-import patients
 
 # Create your models here.
 class AssignedProcedures(models.Model):
-    patients = models.ManyToManyField(patients)
-    procedures = models.ManyToManyField(procedures)
+    patient = models.ManyToManyField(Patients)
+    procedure = models.ManyToManyField(Procedure)
     #procedure steps that share the same visitID and number are concurrent
     procedureStep = models.IntegerField()
     #visitID is a way to distinguish what step a patient is on
@@ -14,12 +16,19 @@ class AssignedProcedures(models.Model):
     completed = models.BooleanField(default=False)
 
     @classmethod
-    def assign_procedure_to_patient(cls, patient, procedure, step, return_visit=False):
+    def assign_procedure_to_patient(cls, step, patientToLink,procedureToLink, return_visit=False):
         if return_visit is True:
-            new_visit_id = AssignedProcedures.last_visit_id(patient)
-            new_assignment = cls(patients=patient, procedures=procedure, step=step, visitID=new_visit_id)
+            new_visit_id = AssignedProcedures.last_visit_id(patientToLink)
+            new_assignment = cls(procedureStep=step, visitID=new_visit_id)
+            new_assignment.patient.add(patientToLink)
+            new_assignment.procedure.add(procedureToLink)
+            new_assignment.save()
         else:
-            new_assignment = cls(patients=patient, procedures=procedure,step=step)
+            new_assignment = AssignedProcedures.objects.create(procedureStep=step)
+            new_assignment.patient.add(patientToLink)
+            new_assignment.procedure.add(procedureToLink)
+            new_assignment.save()
+
         return new_assignment
 
     @staticmethod
