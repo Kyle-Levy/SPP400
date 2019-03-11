@@ -11,8 +11,8 @@ from datetime import datetime
 # Create your tests here.
 class TestAssignedProcedures(TestCase):
 
-    def create_assignedProcedure(self):
-        tPatient = Patients.objects.create(first_name="Kyle", last_name="Dorce", bday=datetime(1996, 10, 24))
+    def create_assignedProcedure(self, first_name="Kyle", last_name="Dorce", bday=datetime(1996, 10, 24)):
+        tPatient = Patients.objects.create(first_name=first_name, last_name=last_name, bday=bday)
         tPatient.save()
         tProcedure = Procedure.objects.create(procedure_name="leeches")
         tAssignment = AssignedProcedures.assign_procedure_to_patient(1, tPatient, tProcedure)
@@ -27,5 +27,10 @@ class TestAssignedProcedures(TestCase):
     def test_last_visit_id(self):
         testAssign, testPatient, testProcedure = self.create_assignedProcedure()
         self.assertEqual(AssignedProcedures.last_visit_id(testPatient), 1)
+        #newTestAssignment = AssignedProcedures.assign_procedure_to_patient(1, testPatient, testProcedure, True)
+        #self.assertEqual(AssignedProcedures.last_visit_id(testPatient), 2)
 
-
+    def test_get_all_procedures(self):
+        testAssign, testPatient, testProcedure = self.create_assignedProcedure()
+        quiriedProcedure = AssignedProcedures.get_all_procedures(testPatient)
+        self.assertEqual(quiriedProcedure[0],testProcedure)
