@@ -31,6 +31,7 @@ class AssignedProcedures(models.Model):
 
         return new_assignment
 
+    #this method is used when a patient is returning for a new procedure
     @staticmethod
     def last_visit_id( plz):
         assignments =AssignedProcedures.objects.filter(patient=plz.id)
@@ -41,3 +42,15 @@ class AssignedProcedures(models.Model):
 
 
         return maxVisitID
+
+    #returns list of procedures associated with a patient/visitID
+    @staticmethod
+    def get_all_procedures(searchPatient, searchVisitID=1):
+        quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, visitID=searchVisitID)
+        procedureList = []
+        for assignedProcedures in quiriedAssignedProcedures:
+            quiriedProcedures = assignedProcedures.procedure.all()
+            for procedures in quiriedProcedures:
+                procedureList.append(procedures)
+
+        return procedureList
