@@ -32,5 +32,12 @@ class AssignedProcedures(models.Model):
         return new_assignment
 
     @staticmethod
-    def last_visit_id(patient):
-        return 1
+    def last_visit_id( plz):
+        assignments =AssignedProcedures.objects.filter(patient=plz.id)
+        maxVisitID = 0
+        for retrieved in assignments:
+            if retrieved.visitID > maxVisitID:
+                maxVisitID = retrieved.visitID
+
+
+        return maxVisitID
