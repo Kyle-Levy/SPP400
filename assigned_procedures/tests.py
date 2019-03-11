@@ -16,13 +16,15 @@ class TestAssignedProcedures(TestCase):
         tPatient.save()
         tProcedure = Procedure.objects.create(procedure_name="leeches")
         tAssignment = AssignedProcedures.assign_procedure_to_patient(1, tPatient, tProcedure)
-        return tAssignment
+        return tAssignment, tPatient, tProcedure
 
     def create_assignedProcedureReturnVisit(self):
         tPatient = Patients.objects.create(first_name="Kyle", last_name="Dorce", bday=datetime(1996, 10, 24))
         tProcedure = Procedure.objects.create(procedure_name="leeches")
-        tAssignment = AssignedProcedures(patient=tPatient, procedure=tProcedure, step=1, return_visit=True)
+        tAssignment = AssignedProcedures.assign_procedure_to_patient(1, tPatient, tProcedure, True)
+        return tAssignment, tPatient, tProcedure
 
     def test_last_visit_id(self):
-        testCase = self.create_assignedProcedure()
-        self.assertEqual(AssignedProcedures.last_visit_id(testCase.patient), 2)
+        testAssign, testPatient, testProcedure = self.create_assignedProcedure()
+
+        self.assertEqual(AssignedProcedures.last_visit_id(testPatient), 1)
