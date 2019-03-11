@@ -26,5 +26,6 @@ class TestAssignedProcedures(TestCase):
 
     def test_last_visit_id(self):
         testAssign, testPatient, testProcedure = self.create_assignedProcedure()
-
         self.assertEqual(AssignedProcedures.last_visit_id(testPatient), 1)
+
+
