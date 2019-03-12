@@ -55,3 +55,18 @@ class AssignedProcedures(models.Model):
                 procedureList.append( (procStep,procedures) )
         return procedureList
 
+
+    @staticmethod
+    def toggle_completed(searchPatient, searchProcedure, searchVisitID=1):
+        quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, procedure=searchProcedure, visitID=searchVisitID)
+
+        for assignedProc in quiriedAssignedProcedures:
+            if assignedProc.completed is False:
+                assignedProc.completed = True
+                assignedProc.save()
+                return True
+            elif assignedProc.completed is True:
+                assignedProc.completed = False
+                assignedProc.save()
+                return False
+
