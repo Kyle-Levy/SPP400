@@ -27,8 +27,6 @@ class TestAssignedProcedures(TestCase):
     def test_last_visit_id(self):
         testAssign, testPatient, testProcedure = self.create_assignedProcedure()
         self.assertEqual(AssignedProcedures.last_visit_id(testPatient), 1)
-        #newTestAssignment = AssignedProcedures.assign_procedure_to_patient(1, testPatient, testProcedure, True)
-        #self.assertEqual(AssignedProcedures.last_visit_id(testPatient), 2)
 
     def test_get_all_procedures(self):
         #one linked procedure case
@@ -47,3 +45,9 @@ class TestAssignedProcedures(TestCase):
         self.assertTrue(result)
         result = AssignedProcedures.toggle_completed(searchPatient=testPatient,searchProcedure=testProcedure)
         self.assertFalse(result)
+
+    def test_update_procedure_step(self):
+        testAssign, testPatient, testProcedure = self.create_assignedProcedure()
+        AssignedProcedures.update_procedure_step(2, testPatient,testProcedure)
+        toCheck = AssignedProcedures.objects.get(patient=testPatient,procedure=testProcedure)
+        self.assertEqual(toCheck.procedureStep,2)
