@@ -31,7 +31,15 @@ class TestAssignedProcedures(TestCase):
         #self.assertEqual(AssignedProcedures.last_visit_id(testPatient), 2)
 
     def test_get_all_procedures(self):
+        #one linked procedure case
         testAssign, testPatient, testProcedure = self.create_assignedProcedure()
         quiriedProcedure = AssignedProcedures.get_all_procedures(testPatient)
         self.assertEqual(quiriedProcedure[0],(1,testProcedure))
+        #two linked procedures case
+        tProcedure = Procedure.objects.create(procedure_name="bloodwork")
+        AssignedProcedures.assign_procedure_to_patient(2,testPatient,tProcedure)
+        quiriedProcedure = AssignedProcedures.get_all_procedures(testPatient)
+        self.assertEqual(quiriedProcedure,[(1,testProcedure),(2,tProcedure)])
+
+
 
