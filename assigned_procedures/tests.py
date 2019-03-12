@@ -33,4 +33,5 @@ class TestAssignedProcedures(TestCase):
     def test_get_all_procedures(self):
         testAssign, testPatient, testProcedure = self.create_assignedProcedure()
         quiriedProcedure = AssignedProcedures.get_all_procedures(testPatient)
-        self.assertEqual(quiriedProcedure[0],testProcedure)
+        self.assertEqual(quiriedProcedure[0],(1,testProcedure))
+
