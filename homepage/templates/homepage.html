@@ -59,7 +59,7 @@
                                     <h5 class="mb-1">{{ current_patient.last_name }}, {{ current_patient.first_name }}</h5>
                                     <small>{% cycle '01/01/2019' '01/18/2019' '02/01/2019' '02/22/2019' %}</small>
                                 </div>
-                                <h6>MRN: #13247568</h6>
+                                <h6>MRN: {{ current_patient.record_number }}</h6>
                                 <h6 class="mb-1">Procedure Roadmap Title</h6>
                                 <div class="d-flex w-100 justify-content-between">
                                     <p class="mb-1">Next Procedure(s): {% cycle 'Bloodwork' 'Ekg' 'TAVR' '' %}</p>

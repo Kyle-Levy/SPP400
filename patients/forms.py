@@ -41,6 +41,18 @@ class NewPatient(forms.Form):
         )
     )
 
+    record_number = forms.CharField(
+        label='Record Number',
+        max_length=100,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'id': 'recordNumber',
+                'placeholder': "Medical record number"
+            }
+        )
+    )
+
     birth_date = forms.DateField(
         label='Birthday',
         widget=forms.DateInput(
