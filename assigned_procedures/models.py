@@ -43,14 +43,17 @@ class AssignedProcedures(models.Model):
 
         return maxVisitID
 
-    #returns list of procedures associated with a patient/visitID
+    #returns list of tuples structured: (step number, procedure object)
     @staticmethod
     def get_all_procedures(searchPatient, searchVisitID=1):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, visitID=searchVisitID)
         procedureList = []
+
         for assignedProcedures in quiriedAssignedProcedures:
+            procStep = assignedProcedures.procedureStep
             quiriedProcedures = assignedProcedures.procedure.all()
             for procedures in quiriedProcedures:
-                procedureList.append(procedures)
+                procedureList.append( (procStep,procedures) )
 
         return procedureList
+
