@@ -59,7 +59,6 @@ class AssignedProcedures(models.Model):
     @staticmethod
     def toggle_completed(searchPatient, searchProcedure, searchVisitID=1):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, procedure=searchProcedure, visitID=searchVisitID)
-
         for assignedProc in quiriedAssignedProcedures:
             if assignedProc.completed is False:
                 assignedProc.completed = True
@@ -69,4 +68,11 @@ class AssignedProcedures(models.Model):
                 assignedProc.completed = False
                 assignedProc.save()
                 return False
+
+    @staticmethod
+    def update_procedure_step(newStepNumber, searchPatient, searchProcedure, searchVisitID=1):
+        quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, procedure=searchProcedure, visitID=searchVisitID)
+        for assignedProc in quiriedAssignedProcedures:
+            assignedProc.procedureStep = newStepNumber
+            assignedProc.save()
 
