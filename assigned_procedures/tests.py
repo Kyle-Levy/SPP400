@@ -41,5 +41,9 @@ class TestAssignedProcedures(TestCase):
         quiriedProcedure = AssignedProcedures.get_all_procedures(testPatient)
         self.assertEqual(quiriedProcedure,[(1,testProcedure),(2,tProcedure)])
 
-
-
+    def test_toggle_completed(self):
+        testAssign, testPatient, testProcedure = self.create_assignedProcedure()
+        result = AssignedProcedures.toggle_completed(searchPatient=testPatient,searchProcedure=testProcedure)
+        self.assertTrue(result)
+        result = AssignedProcedures.toggle_completed(searchPatient=testPatient,searchProcedure=testProcedure)
+        self.assertFalse(result)
