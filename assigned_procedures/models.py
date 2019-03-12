@@ -48,12 +48,10 @@ class AssignedProcedures(models.Model):
     def get_all_procedures(searchPatient, searchVisitID=1):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, visitID=searchVisitID)
         procedureList = []
-
         for assignedProcedures in quiriedAssignedProcedures:
             procStep = assignedProcedures.procedureStep
             quiriedProcedures = assignedProcedures.procedure.all()
             for procedures in quiriedProcedures:
                 procedureList.append( (procStep,procedures) )
-
         return procedureList
 
