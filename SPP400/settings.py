@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'procedures',
     'behave_django',
     'assigned_procedures',
+    'errorpage',
 ]
 
 MIDDLEWARE = [
