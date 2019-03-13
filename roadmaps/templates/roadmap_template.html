@@ -30,7 +30,16 @@
         </div>
 
 
-        <button type="button" class="btn btn-warning" id="addSelection">Add to Roadmap</button>
+        <button type="button" class="btn btn-warning mb-4" id="addSelection">Add to Roadmap</button>
+
+    <form>
+        <div class="form-group">
+            {{ form.roadmap_name }}
+        </div>
+        {{ form.procedure_phase_pairs }}
+        <button type="submit" class="btn btn-warning my-4" id="createRoadmap">Create Roadmap</button>
+    </form>
+
     </div>
 </div>
 {% include "global_js.html" %}
