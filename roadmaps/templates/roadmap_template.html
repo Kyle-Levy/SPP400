@@ -1,17 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Roadmaps</title>
+    {% load static %}
+    {% include "global_styles.html" %}
 </head>
+
 <body>
 
-<form method="post" >
-    {% csrf_token %}
-    {{ form }}
+<!-- Div holding the entire page -->
+<div class="wrapper">
 
-    <button type="submit" class="btn btn-warning">Create New Roadmap</button>
-</form>
+    {% include "sidebar.html" %}
 
+    <div id="content">
+
+        {% include "menu_bar.html" %}
+
+        <div class="form-group">
+            <label for="selectProcedures">Procedures</label>
+            <select multiple class="form-control" id="selectProcedures">
+                {% for procedure in procedures %}
+                    <option value="{{ procedure.id }}">{{ procedure.procedure_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="procedurePhase">Phase Number</label>
+            <input type="number" class="form-control" id="procedurePhase" placeholder="0-99" min="1" step="1">
+        </div>
+
+
+        <button type="button" class="btn btn-warning" id="addSelection">Add to Roadmap</button>
+    </div>
+</div>
+{% include "global_js.html" %}
 </body>
 </html>
