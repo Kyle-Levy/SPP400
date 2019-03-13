@@ -25,5 +25,5 @@ urlpatterns = [
     url(r'^$', generic.RedirectView.as_view(url='/homepage/', permanent=False)),
     path('procedures/', include('procedures.urls')),
     path('patients/', include('patients.urls')),
-    path('error', include('errorpage.urls')),
+    path('errorpage/', include('errorpage.urls')),
 ]
