@@ -17,3 +17,11 @@ def add_model(request):
     else:
         form = RoadmapForm()
         return render(request, "roadmap_template.html", {'form': form})
+
+def create_roadmap(request):
+    if request.method == "GET":
+        form = RoadmapForm()
+        return render(request, "create_roadmap.html", {'form':form, 'title' : 'Create Roadmap'})
+    if request.method == "POST":
+        form = RoadmapForm()
+        return render(request, "create_roadmap.html", {'form': form, 'title': 'Create Roadmap'})

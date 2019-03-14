@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% include "global_styles.html" %}
+</head>
+
+<body>
+<!-- Div holding the entire page -->
+<div class="wrapper">
+
+    {% include "sidebar.html" %}
+
+    <div id="content">
+
+        {% include "menu_bar.html" %}
+        {% if failed_creation %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>Form requirements not met!</strong> Try entering your roadmap data again.
+                </div>
+            {% endif %}
+        <div class="container-fixed">
+            <h2> New Roadmap </h2>
+            <form action="" method="POST"> {% csrf_token %}
+                <div class="form-group">
+                    <label for="roadmapName">Roadmap Name</label>
+                    {{ form.roadmap_name }}
+                </div>
+                <button type="submit" class="btn btn-warning">Create Empty Roadmap</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+{% include "global_js.html" %}
+<!-- Personal JS -->
+</body>

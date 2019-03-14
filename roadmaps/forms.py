@@ -15,9 +15,6 @@ class RoadmapForm(forms.Form):
             }
         )
     )
-    procedure_phase_pairs = forms.MultipleChoiceField(required=True, widget=forms.SelectMultiple(attrs={
-        'id': 'procedurePairs'
-    }))
 
 
 class RoadmapProcedureLinkForm(forms.Form):
