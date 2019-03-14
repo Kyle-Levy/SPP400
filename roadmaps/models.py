@@ -3,11 +3,11 @@ from procedures.models import Procedure
 
 
 PHASE_CHOICES = (
-    ('ONE', '1'),
-    ('TWO', '2'),
-    ('THREE', '3'),
-    ('FOUR', '4'),
-    ('FIVE', '5'),
+    ('1', '1'),
+    ('2', '2'),
+    ('3', '3'),
+    ('4', '4'),
+    ('5', '5'),
 )
 
 
@@ -19,6 +19,6 @@ class Roadmap(models.Model):
 
 
 class RoadmapProcedureLink(models.Model):
-    procedure = models.ManyToManyField(Procedure.procedure_name)
-    phases = models.CharField(max_length=5, choices=PHASE_CHOICES)
     roadmap = models.ManyToManyField(Roadmap)
+    procedure = models.ManyToManyField(Procedure)
+    phase = models.CharField(max_length=5, choices=PHASE_CHOICES, default='')
