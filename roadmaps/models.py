@@ -13,8 +13,12 @@ PHASE_CHOICES = (
 
 class Roadmap(models.Model):
     roadmap_name = models.CharField(max_length=100)
-    procedures = models.ManyToManyField(Procedure)
-    phases = models.CharField(max_length=5, choices=PHASE_CHOICES)
 
     def __str__(self):
         return self.roadmap_name
+
+
+class RoadmapProcedureLink(models.Model):
+    procedure = models.ManyToManyField(Procedure.procedure_name)
+    phases = models.CharField(max_length=5, choices=PHASE_CHOICES)
+    roadmap = models.ManyToManyField(Roadmap)

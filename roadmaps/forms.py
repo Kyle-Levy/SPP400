@@ -18,3 +18,24 @@ class RoadmapForm(forms.Form):
     procedure_phase_pairs = forms.MultipleChoiceField(required=True, widget=forms.SelectMultiple(attrs={
         'id': 'procedurePairs'
     }))
+
+
+class RoadmapProcedureLinkForm(forms.Form):
+    procedures = forms.MultipleChoiceField(
+        required=True,
+        widget=forms.SelectMultiple(attrs={
+            'id': 'procedures'
+        })
+    )
+    phases = forms.ChoiceField(
+        required=True,
+        widget=forms.Select(attrs={
+            'id': 'phases'
+        })
+    )
+    roadmaps = forms.ChoiceField(
+        required=True,
+        widget=forms.Select(attrs={
+            'id': 'roadmaps'
+        })
+    )
