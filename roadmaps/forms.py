@@ -19,20 +19,26 @@ class RoadmapForm(forms.Form):
 
 class RoadmapProcedureLinkForm(forms.Form):
     procedures = forms.MultipleChoiceField(
+        label='Procedures',
         required=True,
         widget=forms.SelectMultiple(attrs={
+            'class': 'form-control',
             'id': 'procedures'
         })
     )
-    phases = forms.ChoiceField(
+    phases = forms.IntegerField(
+        label='Phases',
         required=True,
-        widget=forms.Select(attrs={
-            'id': 'phases'
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'id': 'phase_number'
         })
     )
     roadmaps = forms.ChoiceField(
+        label='Roadmaps',
         required=True,
         widget=forms.Select(attrs={
+            'class': 'form-control',
             'id': 'roadmaps'
         })
     )

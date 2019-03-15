@@ -2,15 +2,6 @@ from django.db import models
 from procedures.models import Procedure
 
 
-PHASE_CHOICES = (
-    ('1', '1'),
-    ('2', '2'),
-    ('3', '3'),
-    ('4', '4'),
-    ('5', '5'),
-)
-
-
 class Roadmap(models.Model):
     roadmap_name = models.CharField(max_length=100)
 
@@ -21,4 +12,13 @@ class Roadmap(models.Model):
 class RoadmapProcedureLink(models.Model):
     roadmap = models.ManyToManyField(Roadmap)
     procedure = models.ManyToManyField(Procedure)
-    phase = models.CharField(max_length=5, choices=PHASE_CHOICES, default='')
+    phase = models.IntegerField(default=1)
+
+    @classmethod
+    def link_procedure_to_roadmap(cls, procedure, roadmap, phase):
+        new_link = RoadmapProcedureLink.objects.create(phase=phase)
+        new_link.roadmap.add(roadmap)
+        new_link.procedure.add(procedure)
+        new_link.save()
+
+        return new_link
