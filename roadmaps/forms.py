@@ -17,9 +17,19 @@ class RoadmapForm(forms.Form):
         )
     )
 
-#Going to need to do this to assign classes to these elements
+
+# Followed this to assign classes to these elements
 # https://stackoverflow.com/questions/3679431/how-do-i-set-default-widget-attributes-for-a-django-modelform
 class RoadmapProcedureLinkForm(ModelForm):
+    #Add classes to the fields on initialization of the form
+    def __init__(self, *args, **kwargs):
+        super(RoadmapProcedureLinkForm, self).__init__(*args, **kwargs)
+        for name, field in self.fields.items():
+            if 'class' in field.widget.attrs:
+                field.widget.attrs['class'] += ' form-control'
+            else:
+                field.widget.attrs.update({'class': 'form-control'})
+
     class Meta:
         model = RoadmapProcedureLink
         fields = ['procedure', 'phase']
