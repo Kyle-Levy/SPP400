@@ -2,15 +2,6 @@ from django.db import models
 from procedures.models import Procedure
 
 
-PHASE_CHOICES = (
-    ('1', '1'),
-    ('2', '2'),
-    ('3', '3'),
-    ('4', '4'),
-    ('5', '5'),
-)
-
-
 class Roadmap(models.Model):
     roadmap_name = models.CharField(max_length=100)
 
