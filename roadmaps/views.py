@@ -18,6 +18,13 @@ def add_model(request):
         form = RoadmapForm()
         return render(request, "roadmap_template.html", {'form': form})
 
+def index(request):
+    if request.method == 'POST':
+        #Handle searching for roadmaps
+        return redirect('/roadmaps/')
+    if request.method == 'GET':
+        return render(request, 'roadmaps_main.html', {'roadmaps': Roadmap.objects.all(), 'title': 'Roadmaps'})
+
 
 def create_roadmap(request):
     if request.method == "POST":

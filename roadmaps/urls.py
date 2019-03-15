@@ -3,6 +3,6 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.add_model, name='index'),
+    path('', views.index, name='index'),
     path('create/', views.create_roadmap),
 ]

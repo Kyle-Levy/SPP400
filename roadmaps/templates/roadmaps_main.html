@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% include "global_styles.html" %}
+</head>
+
+<body>
+
+<!-- Div holding the entire page -->
+<div class="wrapper">
+
+    {% include "sidebar.html" %}
+
+    <div id="content">
+
+        {% include "menu_bar.html" %}
+
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col" id="procedures-col">
+                    <div class="container">
+                        <h2>All Roadmaps</h2>
+                        <table class="table table-hover border">
+                            <thead>
+                            <tr>
+                                <th>Roadmap Name</th>
+                                <th>More Info</th>
+                            </tr>
+                            </thead>
+                            <tbody style="overflow-y: scroll; height: 25px">
+                            {% for roadmap in roadmaps %}
+                                <tr>
+                                    <td>{{ roadmap.roadmap_name }}</td>
+                                    <td>
+                                        <a class="text-primary" href="/roadmaps/view_roadmap/?id={{ roadmap.id }}">View
+                                            Roadmap</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    <a class="btn btn-success" href="create/" role="button">Add New Roadmap</a>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+{% include "global_js.html" %}
+<!-- Personal JS -->
+</body>
+</html>
