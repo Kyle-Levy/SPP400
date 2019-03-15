@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django import forms
 from django.utils import timezone
 from roadmaps.forms import RoadmapForm, RoadmapProcedureLinkForm
-from roadmaps.models import Roadmap
+from roadmaps.models import Roadmap, RoadmapProcedureLink
 
 
 def add_model(request):
@@ -66,6 +66,8 @@ def add_to_roadmap(request):
         form = RoadmapProcedureLinkForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            print(request.session['roadmap_id'])
-            print(cd)
+            roadmap_id = request.session['roadmap_id']
+            for procedure_item in cd['procedure']:
+                print(procedure_item.id)
+                RoadmapProcedureLink.link_procedure_to_roadmap(procedure_item.id, roadmap_id, cd['phase'])
             return redirect('/homepage/')
