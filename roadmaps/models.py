@@ -23,3 +23,13 @@ class RoadmapProcedureLink(models.Model):
         new_link.save()
 
         return new_link
+
+    @staticmethod
+    def get_procedures_from_roadmap(searchRoadmap):
+        quiried_roadmap = RoadmapProcedureLink.objects.filter(roadmap=searchRoadmap.id)
+        procedure_phase_list = []
+        for procedures in quiried_roadmap:
+            proc_name = procedures.procedure.__str__()
+            proc_phase = procedures.phase
+            procedure_phase_list.append((proc_name, proc_phase))
+        return procedure_phase_list
