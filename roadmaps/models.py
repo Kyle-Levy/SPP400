@@ -21,4 +21,4 @@ class Roadmap(models.Model):
 class RoadmapProcedureLink(models.Model):
     roadmap = models.ManyToManyField(Roadmap)
     procedure = models.ManyToManyField(Procedure)
-    phase = models.CharField(max_length=5, choices=PHASE_CHOICES, default='')
+    phase = models.IntegerField(default=1)
