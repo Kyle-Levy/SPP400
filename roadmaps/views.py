@@ -33,7 +33,7 @@ def create_roadmap(request):
             cd = form.cleaned_data
             roadmap = Roadmap(roadmap_name=cd['roadmap_name'])
             roadmap.save()
-            return redirect('/homepage/')
+            return redirect('/roadmaps/')
         else:
             return render(request, "create_roadmap.html",
                           {'form': RoadmapForm(), 'title': 'Create Roadmap', 'failed_creation': True})
