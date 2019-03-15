@@ -12,6 +12,7 @@ class Roadmap(models.Model):
 class RoadmapProcedureLink(models.Model):
     roadmap = models.ManyToManyField(Roadmap)
     procedure = models.ManyToManyField(Procedure)
+    #TODO phase should only allow values between 1 & some decided upper bound
     phase = models.IntegerField(default=1)
 
     @classmethod

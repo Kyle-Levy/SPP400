@@ -18,9 +18,10 @@ def add_model(request):
         form = RoadmapForm()
         return render(request, "roadmap_template.html", {'form': form})
 
+
 def index(request):
     if request.method == 'POST':
-        #Handle searching for roadmaps
+        # Handle searching for roadmaps
         return redirect('/roadmaps/')
     if request.method == 'GET':
         return render(request, 'roadmaps_main.html', {'roadmaps': Roadmap.objects.all(), 'title': 'Roadmaps'})
@@ -40,11 +41,22 @@ def create_roadmap(request):
     if request.method == "GET":
         return render(request, "create_roadmap.html", {'form': RoadmapForm(), 'title': 'Create Roadmap'})
 
+
 def view_roadmap(request):
+    # User wants to update the roadmap currently being viewed
+    if request.method == 'POST':
+        try:
+            # Get the roadmap and place its id into the session
+            roadmap = Roadmap.objects.get(id=request.GET.get('id'))
+            request.session['roadmap_id'] = request.GET.get('id')
+            return render(request, 'modify_roadmap.html', {'form': RoadmapProcedureLinkForm(), 'roadmap': roadmap, 'title':'Modifying: ' + roadmap.roadmap_name})
+        except Roadmap.DoesNotExist:
+            return redirect('/roadmaps/')
+
     if request.method == 'GET':
         try:
             roadmap = Roadmap.objects.get(id=request.GET.get('id'))
-            return render(request, 'view_roadmap.html', {'roadmap': roadmap, 'title': 'View: ' + roadmap.roadmap_name, 'form':RoadmapProcedureLinkForm()})
+            return render(request, 'view_roadmap.html', {'roadmap': roadmap, 'title': 'View: ' + roadmap.roadmap_name,})
         except Roadmap.DoesNotExist:
-            #Roadmap object doesn't exist
+            # Roadmap object doesn't exist
             return redirect('/roadmaps/')
