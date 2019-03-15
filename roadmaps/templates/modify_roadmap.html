@@ -7,6 +7,15 @@
 </head>
 <body>
 {{ roadmap.roadmap_name }}
-{{ form }}
+<form action="add/" method="POST"> {% csrf_token %}
+    <div class="form-group">
+        {{ form.procedure }}
+    </div>
+
+    <div class="form-group">
+        {{ form.phase }}
+    </div>
+    <button type="submit" class="btn btn-warning mb-4">Add to Roadmap</button>
+</form>
 </body>
 </html>

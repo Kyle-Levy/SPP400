@@ -8,8 +8,8 @@
 <body>
 {{ roadmap.roadmap_name }}
 <form action="/roadmaps/view_roadmap/?id={{ roadmap.id }}"
-                                  method="post"> {% csrf_token %}
-                                <button type="submit" class="btn btn-warning">Modify Roadmap</button>
-                            </form>
+      method="post"> {% csrf_token %}
+    <button type="submit" class="btn btn-warning">Modify Roadmap</button>
+</form>
 </body>
 </html>

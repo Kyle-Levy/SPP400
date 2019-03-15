@@ -60,3 +60,12 @@ def view_roadmap(request):
         except Roadmap.DoesNotExist:
             # Roadmap object doesn't exist
             return redirect('/roadmaps/')
+
+def add_to_roadmap(request):
+    if request.method == 'POST':
+        form = RoadmapProcedureLinkForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            print(request.session['roadmap_id'])
+            print(cd)
+            return redirect('/homepage/')
