@@ -1,15 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-
+    {% load static %}
+    {% include "global_styles.html" %}
 </head>
+
 <body>
-{{ roadmap.roadmap_name }}
-<form action="/roadmaps/view_roadmap/?id={{ roadmap.id }}"
-      method="post"> {% csrf_token %}
-    <button type="submit" class="btn btn-warning">Modify Roadmap</button>
-</form>
+<!-- Div holding the entire page -->
+<div class="wrapper">
+
+    {% include "sidebar.html" %}
+
+    <div id="content">
+
+        {% include "menu_bar.html" %}
+        
+        <div class="container-fixed">
+            {{ roadmap.roadmap_name }}
+            <form action="/roadmaps/view_roadmap/?id={{ roadmap.id }}"
+                  method="post"> {% csrf_token %}
+                <button type="submit" class="btn btn-warning">Modify Roadmap</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% include "global_js.html" %}
 </body>
 </html>
