@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django import forms
 from django.utils import timezone
-from roadmaps.forms import RoadmapForm
+from roadmaps.forms import RoadmapForm, RoadmapProcedureLinkForm
 from roadmaps.models import Roadmap
 
 
@@ -39,3 +39,12 @@ def create_roadmap(request):
                           {'form': RoadmapForm(), 'title': 'Create Roadmap', 'failed_creation': True})
     if request.method == "GET":
         return render(request, "create_roadmap.html", {'form': RoadmapForm(), 'title': 'Create Roadmap'})
+
+def view_roadmap(request):
+    if request.method == 'GET':
+        try:
+            roadmap = Roadmap.objects.get(id=request.GET.get('id'))
+            return render(request, 'view_roadmap.html', {'roadmap': roadmap, 'title': 'View: ' + roadmap.roadmap_name, 'form':RoadmapProcedureLinkForm()})
+        except Roadmap.DoesNotExist:
+            #Roadmap object doesn't exist
+            return redirect('/roadmaps/')

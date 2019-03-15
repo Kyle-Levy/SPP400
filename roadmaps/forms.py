@@ -1,5 +1,6 @@
 from django import forms
-from roadmaps.models import Roadmap
+from django.forms import ModelForm
+from roadmaps.models import RoadmapProcedureLink
 
 
 class RoadmapForm(forms.Form):
@@ -16,29 +17,9 @@ class RoadmapForm(forms.Form):
         )
     )
 
-
-class RoadmapProcedureLinkForm(forms.Form):
-    procedures = forms.MultipleChoiceField(
-        label='Procedures',
-        required=True,
-        widget=forms.SelectMultiple(attrs={
-            'class': 'form-control',
-            'id': 'procedures'
-        })
-    )
-    phases = forms.IntegerField(
-        label='Phases',
-        required=True,
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'id': 'phase_number'
-        })
-    )
-    roadmaps = forms.ChoiceField(
-        label='Roadmaps',
-        required=True,
-        widget=forms.Select(attrs={
-            'class': 'form-control',
-            'id': 'roadmaps'
-        })
-    )
+#Going to need to do this to assign classes to these elements
+# https://stackoverflow.com/questions/3679431/how-do-i-set-default-widget-attributes-for-a-django-modelform
+class RoadmapProcedureLinkForm(ModelForm):
+    class Meta:
+        model = RoadmapProcedureLink
+        fields = ['procedure', 'phase']
