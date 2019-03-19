@@ -29,7 +29,8 @@ class RoadmapProcedureLink(models.Model):
         quiried_roadmap = RoadmapProcedureLink.objects.filter(roadmap=searchRoadmap.id)
         procedure_phase_list = []
         for procedures in quiried_roadmap:
-            proc_name = procedures.procedure.__str__()
             proc_phase = procedures.phase
-            procedure_phase_list.append((proc_name, proc_phase))
+            proc_query = procedures.procedure.all()
+            for proc_name in proc_query:
+                procedure_phase_list.append((proc_name, proc_phase))
         return procedure_phase_list
