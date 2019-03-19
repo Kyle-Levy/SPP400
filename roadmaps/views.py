@@ -48,8 +48,10 @@ def view_roadmap(request):
         try:
             # Get the roadmap and place its id into the session
             roadmap = Roadmap.objects.get(id=request.GET.get('id'))
+            roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
+            print(roadmap_pairs[0][0])
             request.session['roadmap_id'] = request.GET.get('id')
-            return render(request, 'modify_roadmap.html', {'form': RoadmapProcedureLinkForm(), 'roadmap': roadmap, 'title':'Modifying: ' + roadmap.roadmap_name})
+            return render(request, 'modify_roadmap.html', {'form': RoadmapProcedureLinkForm(),'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap, 'title':'Modifying: ' + roadmap.roadmap_name})
         except Roadmap.DoesNotExist:
             return redirect('/roadmaps/')
 

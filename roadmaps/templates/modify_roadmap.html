@@ -27,6 +27,27 @@
                 <button type="submit" class="btn btn-warning mb-4">Add to Roadmap</button>
             </form>
         </div>
+        <div class="container-fixed">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Procedure Name</th>
+                    <th scope="col">Phase</th>
+                    <th scope="col">Modify Item</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for procedure, phase in roadmap_pairs %}
+                    <tr>
+                        <td>{{ procedure.procedure_name }}</td>
+                        <td>{{ phase }}</td>
+                        <td><input type="checkbox"></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
     </div>
 </div>
 
