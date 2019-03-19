@@ -8,6 +8,12 @@ class Roadmap(models.Model):
     def __str__(self):
         return self.roadmap_name
 
+    @staticmethod
+    def update_roadmap_name(new_roadmap_name, current_roadmap):
+        quiried_roadmap = Roadmap.objects.filter(id=current_roadmap.id)
+        for roadmap in quiried_roadmap:
+            roadmap.roadmap_name = new_roadmap_name
+
 
 class RoadmapProcedureLink(models.Model):
     roadmap = models.ManyToManyField(Roadmap)
