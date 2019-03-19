@@ -34,3 +34,9 @@ class RoadmapProcedureLink(models.Model):
             for proc_name in proc_query:
                 procedure_phase_list.append((proc_name, proc_phase))
         return procedure_phase_list
+
+    @staticmethod
+    def update_phase_for_procedure(current_roadmap, current_procedure, new_phase_number):
+        quiried_procedures = RoadmapProcedureLink.objects.filter(roadmap=current_roadmap.id, procedure=current_procedure.id)
+        for procedure in quiried_procedures:
+            procedure.phase = new_phase_number

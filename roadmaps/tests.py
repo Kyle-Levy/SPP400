@@ -21,3 +21,4 @@ class TestRoadmaps(TestCase):
         test = RoadmapProcedureLink.get_procedures_from_roadmap(testRoadmap)
         want = [(testProc,1)]
         self.assertEqual(test, want)
+
