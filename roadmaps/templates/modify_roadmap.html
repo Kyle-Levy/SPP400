@@ -37,7 +37,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for procedure, phase in roadmap_pairs %}
+                {% for procedure, phase in roadmap_pairs|dictsort:1 %}
                     <tr>
                         <td>{{ procedure.procedure_name }}</td>
                         <td>{{ phase }}</td>
