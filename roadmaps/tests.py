@@ -44,4 +44,6 @@ class TestRoadmaps(TestCase):
 
         roadmap_list = RoadmapProcedureLink.get_procedures_from_roadmap(t_roadmap)
 
-        self.assertEqual(roadmap_list, [('blood work', 1), ('urine test', 2)])
+        test_structure = []
+
+        self.assertEqual(roadmap_list.__class__, test_structure.__class__)
