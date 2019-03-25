@@ -16,7 +16,7 @@
         {% include "menu_bar.html" %}
         <div class="container-fixed">
             <h2>{{ roadmap.roadmap_name }}</h2>
-            <form action="add/" method="POST"> {% csrf_token %}
+            <form action="/roadmaps/view_roadmap/add/" method="POST"> {% csrf_token %}
                 <div class="form-group">
                     {{ form.procedure }}
                 </div>

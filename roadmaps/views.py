@@ -1,26 +1,9 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django import forms
-from django.utils import timezone
 from roadmaps.forms import RoadmapForm, RoadmapProcedureLinkForm
 from roadmaps.models import Roadmap, RoadmapProcedureLink
 
 
-def add_model(request):
-    if request.method == "POST":
-        form = RoadmapForm(request.POST)
-        if form.is_valid():
-            model_instance = form.save(commit=False)
-            model_instance.timestamp = timezone.now()
-            model_instance.save()
-            return redirect('/')
-
-    else:
-        form = RoadmapForm()
-        return render(request, "roadmap_template.html", {'form': form})
-
-
-def index(request):
+def roadmaps_index(request):
     if request.method == 'POST':
         # Handle searching for roadmaps
         return redirect('/roadmaps/')
@@ -38,7 +21,7 @@ def create_roadmap(request):
             return redirect('/roadmaps/')
         else:
             return render(request, "create_roadmap.html",
-                          {'form': RoadmapForm(), 'title': 'Create Roadmap', 'failed_creation': True})
+                          {'form': RoadmapForm(), 'title': 'Create Roadmap', 'failed_creation': True}, status=401)
     if request.method == "GET":
         return render(request, "create_roadmap.html", {'form': RoadmapForm(), 'title': 'Create Roadmap'})
 
@@ -51,7 +34,9 @@ def view_roadmap(request):
             roadmap = Roadmap.objects.get(id=request.GET.get('id'))
             roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
             request.session['roadmap_id'] = request.GET.get('id')
-            return render(request, 'modify_roadmap.html', {'form': RoadmapProcedureLinkForm(),'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap, 'title':'Modifying: ' + roadmap.roadmap_name})
+            return render(request, 'modify_roadmap.html',
+                          {'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap,
+                           'title': 'Modifying: ' + roadmap.roadmap_name})
         except Roadmap.DoesNotExist:
             return redirect('/roadmaps/')
 
@@ -60,10 +45,12 @@ def view_roadmap(request):
             roadmap = Roadmap.objects.get(id=request.GET.get('id'))
             roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
             return render(request, 'view_roadmap.html',
-                          {'roadmap': roadmap,'roadmap_pairs': roadmap_pairs ,'title': 'View: ' + roadmap.roadmap_name, })
+                          {'roadmap': roadmap, 'roadmap_pairs': roadmap_pairs,
+                           'title': 'View: ' + roadmap.roadmap_name})
         except Roadmap.DoesNotExist:
             # Roadmap object doesn't exist
             return redirect('/roadmaps/')
+
 
 def add_to_roadmap(request):
     if request.method == 'POST':
@@ -78,7 +65,7 @@ def add_to_roadmap(request):
                 roadmap = Roadmap.objects.get(id=roadmap_id)
                 roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
                 return render(request, 'modify_roadmap.html',
-                          {'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap,
-                           'title': 'Modifying: ' + roadmap.roadmap_name})
+                              {'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap,
+                               'title': 'Modifying: ' + roadmap.roadmap_name})
             except Roadmap.DoesNotExist:
                 return redirect('/roadmaps')

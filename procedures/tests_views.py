@@ -14,7 +14,7 @@ class TestProcedures(TestCase):
         self.user.save()
 
         # Creating procedure for testing the ability to manipulate a procedure
-        request = self.factory.post('create/', {'procedure_name': 'View Procedure', 'notes': 'These are test notes'})
+        request = self.factory.post('procedures/create/', {'procedure_name': 'View Procedure', 'notes': 'These are test notes'})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -23,7 +23,7 @@ class TestProcedures(TestCase):
                                                     procedure_info='These are test notes')
 
     def test_create_new_procedure(self):
-        request = self.factory.post('create/', {'procedure_name': 'Leeches',
+        request = self.factory.post('procedures/create/', {'procedure_name': 'Leeches',
                                                 'notes': 'have been used for clinical bloodletting for at least 2,500 years'})
         request.user = self.user
         self.middleware.process_request(request)
@@ -37,7 +37,7 @@ class TestProcedures(TestCase):
         self.assertIsNotNone(created_procedure)
 
     def test_create_new_procedure_missing_name(self):
-        request = self.factory.post('create/',
+        request = self.factory.post('procedures/create/',
                                     {'notes': 'have been used for clinical bloodletting for at least 2,500 years'})
         request.user = self.user
         self.middleware.process_request(request)
