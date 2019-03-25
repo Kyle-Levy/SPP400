@@ -51,7 +51,9 @@ def view_roadmap(request):
             roadmap = Roadmap.objects.get(id=request.GET.get('id'))
             roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
             request.session['roadmap_id'] = request.GET.get('id')
-            return render(request, 'modify_roadmap.html', {'form': RoadmapProcedureLinkForm(),'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap, 'title':'Modifying: ' + roadmap.roadmap_name})
+            return render(request, 'modify_roadmap.html',
+                          {'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap,
+                           'title': 'Modifying: ' + roadmap.roadmap_name})
         except Roadmap.DoesNotExist:
             return redirect('/roadmaps/')
 
@@ -60,10 +62,12 @@ def view_roadmap(request):
             roadmap = Roadmap.objects.get(id=request.GET.get('id'))
             roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
             return render(request, 'view_roadmap.html',
-                          {'roadmap': roadmap,'roadmap_pairs': roadmap_pairs ,'title': 'View: ' + roadmap.roadmap_name, })
+                          {'roadmap': roadmap, 'roadmap_pairs': roadmap_pairs,
+                           'title': 'View: ' + roadmap.roadmap_name})
         except Roadmap.DoesNotExist:
             # Roadmap object doesn't exist
             return redirect('/roadmaps/')
+
 
 def add_to_roadmap(request):
     if request.method == 'POST':
@@ -78,7 +82,7 @@ def add_to_roadmap(request):
                 roadmap = Roadmap.objects.get(id=roadmap_id)
                 roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
                 return render(request, 'modify_roadmap.html',
-                          {'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap,
-                           'title': 'Modifying: ' + roadmap.roadmap_name})
+                              {'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap,
+                               'title': 'Modifying: ' + roadmap.roadmap_name})
             except Roadmap.DoesNotExist:
                 return redirect('/roadmaps')
