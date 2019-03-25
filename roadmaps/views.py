@@ -3,7 +3,7 @@ from roadmaps.forms import RoadmapForm, RoadmapProcedureLinkForm
 from roadmaps.models import Roadmap, RoadmapProcedureLink
 
 
-def index(request):
+def roadmaps_index(request):
     if request.method == 'POST':
         # Handle searching for roadmaps
         return redirect('/roadmaps/')
