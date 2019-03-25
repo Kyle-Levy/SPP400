@@ -21,7 +21,7 @@ def create_roadmap(request):
             return redirect('/roadmaps/')
         else:
             return render(request, "create_roadmap.html",
-                          {'form': RoadmapForm(), 'title': 'Create Roadmap', 'failed_creation': True})
+                          {'form': RoadmapForm(), 'title': 'Create Roadmap', 'failed_creation': True}, status=401)
     if request.method == "GET":
         return render(request, "create_roadmap.html", {'form': RoadmapForm(), 'title': 'Create Roadmap'})
 
