@@ -59,7 +59,6 @@ def add_to_roadmap(request):
             cd = form.cleaned_data
             roadmap_id = request.session['roadmap_id']
             for procedure_item in cd['procedure']:
-                print(procedure_item.id)
                 RoadmapProcedureLink.link_procedure_to_roadmap(procedure_item.id, roadmap_id, cd['phase'])
             try:
                 roadmap = Roadmap.objects.get(id=roadmap_id)
@@ -69,3 +68,5 @@ def add_to_roadmap(request):
                                'title': 'Modifying: ' + roadmap.roadmap_name})
             except Roadmap.DoesNotExist:
                 return redirect('/roadmaps')
+        else:
+            return redirect('/homepage/')

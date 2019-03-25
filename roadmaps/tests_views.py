@@ -2,8 +2,9 @@ from django.test import RequestFactory, TestCase
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.contrib.auth.models import User
 from procedures.views import new_procedure
-from roadmaps.views import roadmaps_index, create_roadmap, view_roadmap
+from roadmaps.views import roadmaps_index, create_roadmap, view_roadmap, add_to_roadmap
 from .models import Procedure, Roadmap, RoadmapProcedureLink
+from mock_django.query import QuerySetMock
 
 
 class TestProcedures(TestCase):
@@ -111,7 +112,7 @@ class TestProcedures(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_get_view_roadmap_invalid(self):
-        request = self.factory.get('/roadmaps/view_roadmap/?id=' + str(self.test_roadmap.id+99999))
+        request = self.factory.get('/roadmaps/view_roadmap/?id=' + str(self.test_roadmap.id + 99999))
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -139,3 +140,72 @@ class TestProcedures(TestCase):
         response = view_roadmap(request)
 
         self.assertEqual(response.status_code, 302)
+
+    def test_add_to_roadmap(self):
+        # View roadmap first
+        view_request = self.factory.post('/roadmaps/view_roadmap/?id=' + str(self.test_roadmap.id))
+        view_request.user = self.user
+        self.middleware.process_request(view_request)
+        view_request.session.save()
+
+        response = view_roadmap(view_request)
+
+        self.assertEqual(response.status_code, 200)
+
+        expected_list = [(self.test_object_one, 1), (self.test_object_two, 1), (self.test_object_three, 1)]
+
+        add_request = self.factory.post('/roadmaps/view_roadmap/add/', {
+            'procedure': [self.test_object_one.id, self.test_object_two.id, self.test_object_three.id], 'phase': 1})
+
+        add_request.user = self.user
+        add_request.session = view_request.session
+
+        response = add_to_roadmap(add_request)
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertListEqual(expected_list, RoadmapProcedureLink.get_procedures_from_roadmap(self.test_roadmap))
+
+    def test_add_to_roadmap_invalid_id(self):
+        # View roadmap first
+        view_request = self.factory.post('/roadmaps/view_roadmap/?id=' + str(self.test_roadmap.id))
+        view_request.user = self.user
+        self.middleware.process_request(view_request)
+        view_request.session.save()
+
+        response = view_roadmap(view_request)
+
+        self.assertEqual(response.status_code, 200)
+
+        add_request = self.factory.post('/roadmaps/view_roadmap/add/', {
+            'procedure': [self.test_object_one.id, self.test_object_two.id, self.test_object_three.id], 'phase': 1})
+
+        add_request.user = self.user
+        add_request.session = view_request.session
+
+        add_request.session['roadmap_id'] = 99999
+        response = add_to_roadmap(add_request)
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_add_to_roadmap_invalid_form(self):
+        # View roadmap first
+        view_request = self.factory.post('/roadmaps/view_roadmap/?id=' + str(self.test_roadmap.id))
+        view_request.user = self.user
+        self.middleware.process_request(view_request)
+        view_request.session.save()
+
+        response = view_roadmap(view_request)
+
+        self.assertEqual(response.status_code, 200)
+
+        add_request = self.factory.post('/roadmaps/view_roadmap/add/', {
+            'procedure': [self.test_object_one.id, self.test_object_two.id, self.test_object_three.id]})
+
+        add_request.user = self.user
+        add_request.session = view_request.session
+
+        response = add_to_roadmap(add_request)
+
+        self.assertEqual(response.status_code, 302)
+
