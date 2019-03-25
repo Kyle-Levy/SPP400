@@ -24,33 +24,35 @@
         </div>
         <div class="row">
             <div class="col">
-            {% load roadmap_extras %}
+                {% load roadmap_extras %}
                 {% for procedure, phase in roadmap_pairs|dictsort:1 %}
 
                     {% if phase|modulo:3 == 0 %}
                         <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
-                        <div class="card-header">{{ procedure.procedure_name }}</div>
-                        <div class="card-body">
-                        <h5 class="card-title">Phase: {{ phase }}</h5>
-
+                            <div class="card-header">{{ procedure.procedure_name }}</div>
+                            <div class="card-body">
+                                <h5 class="card-title">Phase: {{ phase }}</h5>
+                            </div>
+                        </div>
                     {% elif phase|modulo:3 == 1 %}
                         <div class="card text-white bg-warning mb-3" style="max-width: 18rem;">
-                        <div class="card-header">{{ procedure.procedure_name }}</div>
-                        <div class="card-body">
-                        <h5 class="card-title">Phase: {{ phase }}</h5>
+                            <div class="card-header">{{ procedure.procedure_name }}</div>
+                            <div class="card-body">
+                                <h5 class="card-title">Phase: {{ phase }}</h5>
+                            </div>
+                        </div>
                     {% elif phase|modulo:3 == 2 %}
                         <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
-                        <div class="card-header">{{ procedure.procedure_name }}</div>
-                        <div class="card-body">
-                        <h5 class="card-title">Phase: {{ phase }}</h5>
+                            <div class="card-header">{{ procedure.procedure_name }}</div>
+                            <div class="card-body">
+                                <h5 class="card-title">Phase: {{ phase }}</h5>
+                            </div>
+                        </div>
                     {% endif %}
-                </div>
-                </div>
                 {% endfor %}
-            </div>
+                {% include "global_js.html" %}</div>
         </div>
     </div>
 </div>
-{% include "global_js.html" %}
 </body>
 </html>
