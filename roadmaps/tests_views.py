@@ -119,3 +119,23 @@ class TestProcedures(TestCase):
         response = view_roadmap(request)
 
         self.assertEqual(response.status_code, 302)
+
+    def test_post_view_roadmap_valid(self):
+        request = self.factory.post('/roadmaps/view_roadmap/?id=' + str(self.test_roadmap.id))
+        request.user = self.user
+        self.middleware.process_request(request)
+        request.session.save()
+
+        response = view_roadmap(request)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_post_view_roadmap_invalid(self):
+        request = self.factory.post('/roadmaps/view_roadmap/?id=' + str(self.test_roadmap.id + 99999))
+        request.user = self.user
+        self.middleware.process_request(request)
+        request.session.save()
+
+        response = view_roadmap(request)
+
+        self.assertEqual(response.status_code, 302)
