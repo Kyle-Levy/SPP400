@@ -58,8 +58,9 @@ def view_roadmap(request):
     if request.method == 'GET':
         try:
             roadmap = Roadmap.objects.get(id=request.GET.get('id'))
+            roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
             return render(request, 'view_roadmap.html',
-                          {'roadmap': roadmap, 'title': 'View: ' + roadmap.roadmap_name, })
+                          {'roadmap': roadmap,'roadmap_pairs': roadmap_pairs ,'title': 'View: ' + roadmap.roadmap_name, })
         except Roadmap.DoesNotExist:
             # Roadmap object doesn't exist
             return redirect('/roadmaps/')
