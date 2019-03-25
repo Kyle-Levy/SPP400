@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django import forms
 from django.utils import timezone
@@ -49,7 +50,6 @@ def view_roadmap(request):
             # Get the roadmap and place its id into the session
             roadmap = Roadmap.objects.get(id=request.GET.get('id'))
             roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
-            print(roadmap_pairs[0][0])
             request.session['roadmap_id'] = request.GET.get('id')
             return render(request, 'modify_roadmap.html', {'form': RoadmapProcedureLinkForm(),'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap, 'title':'Modifying: ' + roadmap.roadmap_name})
         except Roadmap.DoesNotExist:
@@ -58,7 +58,8 @@ def view_roadmap(request):
     if request.method == 'GET':
         try:
             roadmap = Roadmap.objects.get(id=request.GET.get('id'))
-            return render(request, 'view_roadmap.html', {'roadmap': roadmap, 'title': 'View: ' + roadmap.roadmap_name,})
+            return render(request, 'view_roadmap.html',
+                          {'roadmap': roadmap, 'title': 'View: ' + roadmap.roadmap_name, })
         except Roadmap.DoesNotExist:
             # Roadmap object doesn't exist
             return redirect('/roadmaps/')
@@ -72,4 +73,11 @@ def add_to_roadmap(request):
             for procedure_item in cd['procedure']:
                 print(procedure_item.id)
                 RoadmapProcedureLink.link_procedure_to_roadmap(procedure_item.id, roadmap_id, cd['phase'])
-            return redirect('/homepage/')
+            try:
+                roadmap = Roadmap.objects.get(id=roadmap_id)
+                roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
+                return render(request, 'modify_roadmap.html',
+                          {'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap,
+                           'title': 'Modifying: ' + roadmap.roadmap_name})
+            except Roadmap.DoesNotExist:
+                return redirect('/roadmaps')
