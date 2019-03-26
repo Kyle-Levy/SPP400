@@ -17,7 +17,7 @@ class TestRoadmaps(TestCase):
 
         roadmap_id = tRoadmap.id
 
-        tRoadmap.update_roadmap_name(new_name, roadmap_id)
+        tRoadmap.update_roadmap_name(new_name, tRoadmap)
 
         self.assertEqual(tRoadmap.roadmap_name, new_name)
 
