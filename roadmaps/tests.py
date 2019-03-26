@@ -11,16 +11,6 @@ class TestRoadmaps(TestCase):
 
         return tRoadmap
 
-    def test_update_roadmap_name(self, initial_name='TAVR', new_name='TAVR2'):
-        tRoadmap = Roadmap.objects.create(roadmap_name=initial_name)
-        tRoadmap.save()
-
-        roadmap_id = tRoadmap.id
-
-        tRoadmap.update_roadmap_name(new_name, tRoadmap)
-
-        self.assertEqual(tRoadmap.roadmap_name, new_name)
-
     def create_RoadmapProcedureLink(self, roadmap_name='TAVR', procedure_name='blood work', procedure_info='extract blood', phases=1):
         tRoadmap = Roadmap.objects.create(roadmap_name=roadmap_name)
         tRoadmap.save()
