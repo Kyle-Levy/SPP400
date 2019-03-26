@@ -17,7 +17,9 @@ class TestCreatePatient(TestCase):
 
         # Creating patient for testing the ability to manipulate a patient
 
-        request = self.factory.post('patients/create/', {'first_name': 'John', 'last_name': 'Smith', 'birth_date': '1950-01-01'})
+        request = self.factory.post('patients/create/',
+                                    {'first_name': 'John', 'last_name': 'Smith', 'birth_date': '1950-01-01',
+                                     'record_number': '111'})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -27,7 +29,7 @@ class TestCreatePatient(TestCase):
     def test_valid_patient(self):
 
         request = self.factory.post('patients/create/',
-                                    {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01'})
+                                    {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01', 'record_number': '112'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
@@ -44,7 +46,7 @@ class TestCreatePatient(TestCase):
 
     def test_missing_first_name(self):
 
-        request = self.factory.post('patients/create/', {'last_name': 'Smith', 'birth_date': '1950-02-01'})
+        request = self.factory.post('patients/create/', {'last_name': 'Smith', 'birth_date': '1950-02-01', 'record_number': '111'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
@@ -55,7 +57,7 @@ class TestCreatePatient(TestCase):
 
     def test_missing_last_name(self):
 
-        request = self.factory.post('patients/create/', {'first_name': 'Marie', 'birth_date': '1950-02-01'})
+        request = self.factory.post('patients/create/', {'first_name': 'Marie', 'birth_date': '1950-02-01', 'record_number': '111'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
@@ -66,7 +68,19 @@ class TestCreatePatient(TestCase):
 
     def test_missing_bday(self):
 
-        request = self.factory.post('patients/create/', {'first_name': 'Marie', 'last_name': 'Smith'})
+        request = self.factory.post('patients/create/', {'first_name': 'Marie', 'last_name': 'Smith', 'record_number': '111'})
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+
+        response = new_patient(request)
+
+        self.assertEqual(response.status_code, 401)
+
+    def test_missing_mrn(self):
+
+        request = self.factory.post('patients/create/',
+                                    {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
@@ -142,7 +156,8 @@ class TestCreatePatient(TestCase):
         profile(profile_request)
 
         request = self.factory.post('/patients/profile/update',
-                                    {'first_name': 'Bill', 'last_name': 'Jobs', 'record_number': 'a',  'birth_date': '2000-03-03'})
+                                    {'first_name': 'Bill', 'last_name': 'Jobs', 'record_number': 'a',
+                                     'birth_date': '2000-03-03'})
         request.user = self.user
         request.session = profile_request.session
         request.session.save()
@@ -163,7 +178,8 @@ class TestCreatePatient(TestCase):
         profile(profile_request)
 
         request = self.factory.post('/patients/profile/update',
-                                    {'first_name': 'Bill', 'last_name': 'Jobs', 'record_number': 'a',  'birth_date': '2000-03-03'})
+                                    {'first_name': 'Bill', 'last_name': 'Jobs', 'record_number': 'a',
+                                     'birth_date': '2000-03-03'})
         request.user = self.user
         request.session = profile_request.session
         request.session.save()
@@ -192,7 +208,7 @@ class TestCreatePatient(TestCase):
         profile(profile_request)
 
         request = self.factory.post('/patients/profile/update',
-                                    {'first_name': 'Bill', 'record_number': 'a',  'birth_date': '2000-03-03'})
+                                    {'first_name': 'Bill', 'record_number': 'a', 'birth_date': '2000-03-03'})
         request.user = self.user
         request.session = profile_request.session
         request.session.save()
