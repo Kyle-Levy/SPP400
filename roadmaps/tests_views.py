@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from procedures.views import new_procedure
 from roadmaps.views import roadmaps_index, create_roadmap, view_roadmap, add_to_roadmap
 from .models import Procedure, Roadmap, RoadmapProcedureLink
-from mock_django.query import QuerySetMock
 
 
 class TestProcedures(TestCase):
