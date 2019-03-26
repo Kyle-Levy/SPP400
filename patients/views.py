@@ -4,6 +4,7 @@ from patients.forms import NewPatient, SearchPatients
 from patients.models import Patients
 import re
 
+
 @login_required
 def index(request):
     if request.method == 'POST':
@@ -15,10 +16,13 @@ def index(request):
             for patient in Patients.objects.all():
                 if search.lower() in patient.first_name.lower() or search.lower() in patient.last_name.lower() or search.lower() in patient.record_number.lower() or patient.first_name.lower() in search.lower() or patient.last_name.lower() in search.lower() or patient.record_number.lower() in search.lower():
                     patients.append(patient)
-            return render(request, 'landing_page.html', {'patients': patients, 'form': SearchPatients(), 'filter': cd['search_terms'], 'title': 'Patients'})
+            return render(request, 'landing_page.html',
+                          {'patients': patients, 'form': SearchPatients(), 'filter': cd['search_terms'],
+                           'title': 'Patients'})
 
     if request.method == 'GET':
-        return render(request, 'landing_page.html', {'patients': Patients.objects.all(), 'form': SearchPatients(), 'title': 'Patients'})
+        return render(request, 'landing_page.html',
+                      {'patients': Patients.objects.all(), 'form': SearchPatients(), 'title': 'Patients'})
 
 
 @login_required
@@ -30,7 +34,7 @@ def new_patient(request):
         if form.is_valid():
             # Clean form data and check that the username password pair is valid
             cd = form.cleaned_data
-            patient = Patients.create_patient(cd['first_name'], cd['last_name'], cd['birth_date'])
+            patient = Patients.create_patient(cd['first_name'], cd['last_name'], cd['birth_date'], cd['record_number'])
             patient.save()
             return redirect('/homepage/')
         else:
@@ -46,8 +50,9 @@ def profile(request):
             patient = Patients.objects.get(id=request.GET.get('id'))
             request.session['patient_id'] = request.GET.get('id')
             return render(request, 'update_patient.html', {'form': NewPatient(
-                initial={'first_name': patient.first_name, 'last_name': patient.last_name, 'birth_date': patient.bday}),
-                'patient': patient,
+                initial={'first_name': patient.first_name, 'last_name': patient.last_name,
+                         'record_number': patient.record_number,
+                         'birth_date': patient.bday}), 'patient': patient,
                 'title': 'Update: ' + patient.last_name + ', ' + patient.first_name})
         except Patients.DoesNotExist:
             # TODO: add in error message here
@@ -76,6 +81,7 @@ def update(request):
                 # Get desired patient id from url
                 patient.first_name = cd['first_name']
                 patient.last_name = cd['last_name']
+                patient.record_number = cd['record_number']
                 patient.bday = cd['birth_date']
                 patient.save()
                 return redirect("/patients/profile/?id=" + str(patient.id))

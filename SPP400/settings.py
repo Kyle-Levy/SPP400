@@ -24,7 +24,7 @@ SECRET_KEY = '%c4wn#4mz@!p9ogr7dldj6pg@53e&le29=bt!f4fzbe19lm^vk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['new-test-dev.us-west-2.elasticbeanstalk.com','127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['patient-tracker-dev.6uhhianbqz.us-west-2.elasticbeanstalk.com', '127.0.0.1', 'localhost']
 
 
 
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'procedures',
     'behave_django',
     'roadmaps',
+    'assigned_procedures',
 ]
 
 MIDDLEWARE = [
