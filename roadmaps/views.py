@@ -59,7 +59,9 @@ def add_to_roadmap(request):
             cd = form.cleaned_data
             roadmap_id = request.session['roadmap_id']
             for procedure_item in cd['procedure']:
-                RoadmapProcedureLink.link_procedure_to_roadmap(procedure_item.id, roadmap_id, cd['phase'])
+                #If the item doesn't exist, add it
+                if not RoadmapProcedureLink.objects.filter(roadmap=roadmap_id, procedure=procedure_item.id, phase=cd['phase']):
+                    RoadmapProcedureLink.link_procedure_to_roadmap(procedure_item.id, roadmap_id, cd['phase'])
             try:
                 roadmap = Roadmap.objects.get(id=roadmap_id)
                 roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
@@ -70,3 +72,33 @@ def add_to_roadmap(request):
                 return redirect('/roadmaps')
         else:
             return redirect('/homepage/')
+
+
+def remove_selected_pairs(request):
+    if request.method == 'POST':
+        checked_boxes = request.POST.getlist('selection[]')
+        roadmap_id = request.session['roadmap_id']
+
+        for pair in checked_boxes:
+            cleaned_pair = tuple(pair.split(','))
+            RoadmapProcedureLink.remove_pair_from_roadmap(roadmap_id, cleaned_pair[0],
+                                                          cleaned_pair[1])
+        try:
+            roadmap = Roadmap.objects.get(id=roadmap_id)
+            roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
+            return render(request, 'modify_roadmap.html',
+                          {'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap,
+                           'title': 'Modifying: ' + roadmap.roadmap_name})
+        except Roadmap.DoesNotExist:
+            return redirect('/roadmaps')
+
+def delete_roadmap(request):
+    if request.method == 'POST':
+        roadmap_id = request.session['roadmap_id']
+        try:
+            roadmap = Roadmap.objects.get(id=roadmap_id)
+            RoadmapProcedureLink.remove_all_pairs_from_roadmap(roadmap_id)
+            roadmap.delete()
+        except Roadmap.DoesNotExist:
+            return redirect('/homepage')
+        return redirect('/roadmaps')
