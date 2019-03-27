@@ -83,6 +83,8 @@ def update(request):
                 patient.last_name = cd['last_name']
                 patient.record_number = cd['record_number']
                 patient.bday = cd['birth_date']
+                patient.referring_physician = cd['referring_physician']
+                patient.date_of_referral = cd['date_of_referral']
                 patient.save()
                 return redirect("/patients/profile/?id=" + str(patient.id))
             else:
