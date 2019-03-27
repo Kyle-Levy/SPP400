@@ -26,8 +26,8 @@ class Patients(models.Model):
 
 
     @classmethod
-    def create_patient(cls, first_name, last_name, birth_date, record_number):
-        patient = cls(first_name=first_name, last_name=last_name, bday=birth_date, record_number=record_number)
+    def create_patient(cls, first_name, last_name, birth_date, record_number, referring_physician, date_of_referral):
+        patient = cls(first_name=first_name, last_name=last_name, bday=birth_date, record_number=record_number, referring_physician=referring_physician, date_of_referral=date_of_referral)
         return patient
     def toggle_today_flag(self):
         if self.today_flag is False:
