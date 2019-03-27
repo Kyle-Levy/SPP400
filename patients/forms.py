@@ -63,3 +63,25 @@ class NewPatient(forms.Form):
             }
         )
     )
+
+    referring_physician = forms.CharField(
+        label='Referring Physician',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'id': 'referringPhysician',
+                'placeholder': 'Referring Physician'
+            }
+        )
+    )
+
+    referral_date = forms.DateField(
+        label='Referral Date',
+        widget=forms.DateInput(
+            attrs={
+                'class': 'form-control',
+                'id': 'referralDate',
+                'placeholder': 'MM/DD/YYYY',
+            }
+        )
+    )
