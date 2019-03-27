@@ -59,7 +59,9 @@ def add_to_roadmap(request):
             cd = form.cleaned_data
             roadmap_id = request.session['roadmap_id']
             for procedure_item in cd['procedure']:
-                RoadmapProcedureLink.link_procedure_to_roadmap(procedure_item.id, roadmap_id, cd['phase'])
+                #If the item doesn't exist, add it
+                if not RoadmapProcedureLink.objects.filter(roadmap=roadmap_id, procedure=procedure_item.id, phase=cd['phase']):
+                    RoadmapProcedureLink.link_procedure_to_roadmap(procedure_item.id, roadmap_id, cd['phase'])
             try:
                 roadmap = Roadmap.objects.get(id=roadmap_id)
                 roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
