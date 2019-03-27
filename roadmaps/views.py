@@ -91,3 +91,14 @@ def remove_selected_pairs(request):
                            'title': 'Modifying: ' + roadmap.roadmap_name})
         except Roadmap.DoesNotExist:
             return redirect('/roadmaps')
+
+def delete_roadmap(request):
+    if request.method == 'POST':
+        roadmap_id = request.session['roadmap_id']
+        try:
+            roadmap = Roadmap.objects.get(id=roadmap_id)
+            RoadmapProcedureLink.remove_all_pairs_from_roadmap(roadmap_id)
+            roadmap.delete()
+        except Roadmap.DoesNotExist:
+            return redirect('/homepage')
+        return redirect('/roadmaps')

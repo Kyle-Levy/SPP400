@@ -7,4 +7,5 @@ urlpatterns = [
     path('view_roadmap/', views.view_roadmap),
     path('view_roadmap/add/', views.add_to_roadmap),
     path('view_roadmap/remove/', views.remove_selected_pairs),
+    path('view_roadmap/delete/', views.delete_roadmap)
 ]

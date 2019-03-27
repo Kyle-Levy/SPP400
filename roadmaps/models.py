@@ -15,6 +15,8 @@ class Roadmap(models.Model):
             roadmap.roadmap_name = new_roadmap_name
 
 
+
+
 class RoadmapProcedureLink(models.Model):
     roadmap = models.ManyToManyField(Roadmap)
     procedure = models.ManyToManyField(Procedure)
@@ -50,5 +52,11 @@ class RoadmapProcedureLink(models.Model):
     @staticmethod
     def remove_pair_from_roadmap(roadmap_id,procedure_id, phase_number ):
         queried_pairs = RoadmapProcedureLink.objects.filter(roadmap=roadmap_id, procedure=procedure_id, phase=phase_number)
+        for item in queried_pairs:
+            item.delete()
+
+    @staticmethod
+    def remove_all_pairs_from_roadmap(roadmap_id):
+        queried_pairs = RoadmapProcedureLink.objects.filter(roadmap=roadmap_id)
         for item in queried_pairs:
             item.delete()
