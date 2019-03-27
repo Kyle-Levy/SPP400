@@ -70,3 +70,23 @@ def add_to_roadmap(request):
                 return redirect('/roadmaps')
         else:
             return redirect('/homepage/')
+
+
+def remove_selected_pairs(request):
+    if request.method == 'POST':
+        checked_boxes = request.POST.getlist('selection[]')
+        roadmap_id = request.session['roadmap_id']
+        print(checked_boxes)
+
+        for pair in checked_boxes:
+            cleaned_pair = tuple(pair.split(','))
+            RoadmapProcedureLink.remove_pair_from_roadmap(roadmap_id, cleaned_pair[0],
+                                                          cleaned_pair[1])
+        try:
+            roadmap = Roadmap.objects.get(id=roadmap_id)
+            roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
+            return render(request, 'modify_roadmap.html',
+                          {'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap,
+                           'title': 'Modifying: ' + roadmap.roadmap_name})
+        except Roadmap.DoesNotExist:
+            return redirect('/roadmaps')

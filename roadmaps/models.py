@@ -46,3 +46,9 @@ class RoadmapProcedureLink(models.Model):
         quiried_procedures = RoadmapProcedureLink.objects.filter(roadmap=current_roadmap.id, procedure=current_procedure.id)
         for procedure in quiried_procedures:
             procedure.phase = new_phase_number
+
+    @staticmethod
+    def remove_pair_from_roadmap(roadmap_id,procedure_id, phase_number ):
+        queried_pairs = RoadmapProcedureLink.objects.filter(roadmap=roadmap_id, procedure=procedure_id, phase=phase_number)
+        for item in queried_pairs:
+            item.delete()
