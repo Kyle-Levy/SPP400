@@ -27,6 +27,7 @@ urlpatterns = [
     path('procedures/', include('procedures.urls')),
     path('patients/', include('patients.urls')),
     path('errorpage/', include('errorpage.urls')),
+    path('roadmaps/', include('roadmaps.urls')),
 ]
 
 handler404 = 'errorpage.views.error'

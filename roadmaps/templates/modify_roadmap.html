@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% include "global_styles.html" %}
+</head>
+
+<body>
+<!-- Div holding the entire page -->
+<div class="wrapper">
+
+    {% include "sidebar.html" %}
+
+    <div id="content">
+
+        {% include "menu_bar.html" %}
+        <div class="container-fixed">
+            <h2>{{ roadmap.roadmap_name }}</h2>
+            <form action="/roadmaps/view_roadmap/add/" method="POST"> {% csrf_token %}
+                <div class="form-group">
+                    {{ form.procedure }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.phase }}
+                </div>
+                <button type="submit" class="btn btn-warning mb-4">Add to Roadmap</button>
+            </form>
+        </div>
+        <div class="container-fixed">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Procedure Name</th>
+                    <th scope="col">Phase</th>
+                    <th scope="col">Modify Item</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for procedure, phase in roadmap_pairs|dictsort:1 %}
+                    <tr>
+                        <td>{{ procedure.procedure_name }}</td>
+                        <td>{{ phase }}</td>
+                        <td><input type="checkbox"></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+{% include "global_js.html" %}
+</body>
+</html>

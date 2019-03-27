@@ -2,3 +2,7 @@
     height: 631px;
     overflow-y: scroll;
 }
+
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+}

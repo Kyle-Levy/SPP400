@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% include "global_styles.html" %}
+</head>
+
+<body>
+<!-- Div holding the entire page -->
+<div class="wrapper">
+
+    {% include "sidebar.html" %}
+
+    <div id="content">
+
+        {% include "menu_bar.html" %}
+
+        <div class="container-fixed">
+            {{ roadmap.roadmap_name }}
+            <form action="/roadmaps/view_roadmap/?id={{ roadmap.id }}"
+                  method="post"> {% csrf_token %}
+                <button type="submit" class="btn btn-warning mb-4">Modify Roadmap</button>
+            </form>
+        </div>
+        <div class="row">
+            <div class="col">
+                {% load roadmap_extras %}
+                {% for procedure, phase in roadmap_pairs|dictsort:1 %}
+
+                    {% if phase|modulo:3 == 0 %}
+                        <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
+                            <div class="card-header">{{ procedure.procedure_name }}</div>
+                            <div class="card-body">
+                                <h5 class="card-title">Phase: {{ phase }}</h5>
+                            </div>
+                        </div>
+                    {% elif phase|modulo:3 == 1 %}
+                        <div class="card text-white bg-warning mb-3" style="max-width: 18rem;">
+                            <div class="card-header">{{ procedure.procedure_name }}</div>
+                            <div class="card-body">
+                                <h5 class="card-title">Phase: {{ phase }}</h5>
+                            </div>
+                        </div>
+                    {% elif phase|modulo:3 == 2 %}
+                        <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
+                            <div class="card-header">{{ procedure.procedure_name }}</div>
+                            <div class="card-body">
+                                <h5 class="card-title">Phase: {{ phase }}</h5>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                {% include "global_js.html" %}</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
