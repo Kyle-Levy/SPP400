@@ -76,7 +76,6 @@ def remove_selected_pairs(request):
     if request.method == 'POST':
         checked_boxes = request.POST.getlist('selection[]')
         roadmap_id = request.session['roadmap_id']
-        print(checked_boxes)
 
         for pair in checked_boxes:
             cleaned_pair = tuple(pair.split(','))

@@ -2,7 +2,7 @@ from django.test import RequestFactory, TestCase
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.contrib.auth.models import User
 from procedures.views import new_procedure
-from roadmaps.views import roadmaps_index, create_roadmap, view_roadmap, add_to_roadmap
+from roadmaps.views import roadmaps_index, create_roadmap, view_roadmap, add_to_roadmap, remove_selected_pairs
 from .models import Procedure, Roadmap, RoadmapProcedureLink
 
 
@@ -208,3 +208,123 @@ class TestProcedures(TestCase):
 
         self.assertEqual(response.status_code, 302)
 
+    def test_remove_from_roadmap(self):
+        # View roadmap first
+        view_request = self.factory.post('/roadmaps/view_roadmap/?id=' + str(self.test_roadmap.id))
+        view_request.user = self.user
+        self.middleware.process_request(view_request)
+        view_request.session.save()
+
+        response = view_roadmap(view_request)
+
+        self.assertEqual(response.status_code, 200)
+
+        expected_list = [(self.test_object_one, 1), (self.test_object_two, 1), (self.test_object_three, 1)]
+
+        # Add procedure one, two, and three to phase one
+        add_request = self.factory.post('/roadmaps/view_roadmap/add/', {
+            'procedure': [self.test_object_one.id, self.test_object_two.id, self.test_object_three.id], 'phase': 1})
+
+        add_request.user = self.user
+        add_request.session = view_request.session
+
+        response = add_to_roadmap(add_request)
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertListEqual(expected_list, RoadmapProcedureLink.get_procedures_from_roadmap(self.test_roadmap))
+
+        # Remove procedure one and three from the roadmap
+        remove_request = self.factory.post('/roadmaps/view_roadmap/remove/', {
+            'selection[]': ['1,1', '3,1']
+        })
+
+        remove_request.user = self.user
+        remove_request.session = view_request.session
+
+        response = remove_selected_pairs(remove_request)
+
+        self.assertEqual(response.status_code, 200)
+
+        expected_list = [(self.test_object_two, 1)]
+
+        self.assertListEqual(expected_list, RoadmapProcedureLink.get_procedures_from_roadmap(self.test_roadmap))
+
+    def test_remove_nothing_from_roadmap(self):
+        # View roadmap first
+        view_request = self.factory.post('/roadmaps/view_roadmap/?id=' + str(self.test_roadmap.id))
+        view_request.user = self.user
+        self.middleware.process_request(view_request)
+        view_request.session.save()
+
+        response = view_roadmap(view_request)
+
+        self.assertEqual(response.status_code, 200)
+
+        expected_list = [(self.test_object_one, 1), (self.test_object_two, 1), (self.test_object_three, 1)]
+
+        # Add procedure one, two, and three to phase one
+        add_request = self.factory.post('/roadmaps/view_roadmap/add/', {
+            'procedure': [self.test_object_one.id, self.test_object_two.id, self.test_object_three.id], 'phase': 1})
+
+        add_request.user = self.user
+        add_request.session = view_request.session
+
+        response = add_to_roadmap(add_request)
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertListEqual(expected_list, RoadmapProcedureLink.get_procedures_from_roadmap(self.test_roadmap))
+
+        # Remove procedure one and three from the roadmap
+        remove_request = self.factory.post('/roadmaps/view_roadmap/remove/', {
+            'selection[]': []
+        })
+
+        remove_request.user = self.user
+        remove_request.session = view_request.session
+
+        response = remove_selected_pairs(remove_request)
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertListEqual(expected_list, RoadmapProcedureLink.get_procedures_from_roadmap(self.test_roadmap))
+
+    def test_remove_from_roadmap_invalid_roadmap_id(self):
+        # View roadmap first
+        view_request = self.factory.post('/roadmaps/view_roadmap/?id=' + str(self.test_roadmap.id))
+        view_request.user = self.user
+        self.middleware.process_request(view_request)
+        view_request.session.save()
+
+        response = view_roadmap(view_request)
+
+        self.assertEqual(response.status_code, 200)
+
+        expected_list = [(self.test_object_one, 1), (self.test_object_two, 1), (self.test_object_three, 1)]
+
+        # Add procedure one, two, and three to phase one
+        add_request = self.factory.post('/roadmaps/view_roadmap/add/', {
+            'procedure': [self.test_object_one.id, self.test_object_two.id, self.test_object_three.id], 'phase': 1})
+
+        add_request.user = self.user
+        add_request.session = view_request.session
+
+        response = add_to_roadmap(add_request)
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertListEqual(expected_list, RoadmapProcedureLink.get_procedures_from_roadmap(self.test_roadmap))
+
+        # Remove procedure one and three from the roadmap
+        remove_request = self.factory.post('/roadmaps/view_roadmap/remove/', {
+            'selection[]': []
+        })
+
+        remove_request.user = self.user
+        remove_request.session = view_request.session
+        remove_request.session['roadmap_id'] = 99999
+
+        response = remove_selected_pairs(remove_request)
+
+        self.assertEqual(response.status_code, 302)
