@@ -20,6 +20,9 @@ class Patients(models.Model):
     record_number = models.CharField(max_length=150, default="########")
     # Foreign key for a patent's procedure step.
     procedure_step = models.CharField(max_length=1000, default="")
+    # Fields for referring physician and date of referral.
+    referring_physician = models.CharField(max_length=150, default='')
+    date_of_referral = models.DateField(auto_now=False, auto_now_add=False)
 
 
     @classmethod
