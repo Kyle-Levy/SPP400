@@ -14,6 +14,8 @@ class AssignedProcedures(models.Model):
     #if they return for a different procedure (default is 1)
     visitID = models.IntegerField(default=1)
     completed = models.BooleanField(default=False)
+    est_days_to_complete = models.IntegerField(default=0)
+
 
     @classmethod
     def assign_procedure_to_patient(cls, step, patientToLink,procedureToLink, return_visit=False):
