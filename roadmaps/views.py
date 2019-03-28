@@ -8,7 +8,9 @@ def roadmaps_index(request):
         # Handle searching for roadmaps
         return redirect('/roadmaps/')
     if request.method == 'GET':
-        return render(request, 'roadmaps_main.html', {'roadmaps': Roadmap.objects.all(), 'title': 'Roadmaps'})
+        breadcrumbs = [('#', 'Roadmaps')]
+        return render(request, 'roadmaps_main.html',
+                      {'roadmaps': Roadmap.objects.all(), 'title': 'Roadmaps', 'breadcrumbs': breadcrumbs})
 
 
 def create_roadmap(request):
@@ -20,10 +22,14 @@ def create_roadmap(request):
             roadmap.save()
             return redirect('/roadmaps/')
         else:
+            breadcrumbs = [('/roadmaps/', 'Roadmaps'), ('#', 'Create Roadmap')]
             return render(request, "create_roadmap.html",
-                          {'form': RoadmapForm(), 'title': 'Create Roadmap', 'failed_creation': True}, status=401)
+                          {'form': RoadmapForm(), 'title': 'Create Roadmap', 'failed_creation': True,
+                           'breadcrumbs': breadcrumbs}, status=401)
     if request.method == "GET":
-        return render(request, "create_roadmap.html", {'form': RoadmapForm(), 'title': 'Create Roadmap'})
+        breadcrumbs = [('/roadmaps/', 'Roadmaps'), ('#', 'Create Roadmap')]
+        return render(request, "create_roadmap.html",
+                      {'form': RoadmapForm(), 'title': 'Create Roadmap', 'breadcrumbs': breadcrumbs})
 
 
 def view_roadmap(request):
@@ -34,9 +40,12 @@ def view_roadmap(request):
             roadmap = Roadmap.objects.get(id=request.GET.get('id'))
             roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
             request.session['roadmap_id'] = request.GET.get('id')
+            breadcrumbs = [('/roadmaps/', 'Roadmaps'),
+                           ('/roadmaps/view_roadmap/?id=' + request.GET.get('id'), roadmap.roadmap_name),
+                           ('#', 'Modifying: ' + roadmap.roadmap_name)]
             return render(request, 'modify_roadmap.html',
-                          {'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap,
-                           'title': 'Modifying: ' + roadmap.roadmap_name})
+{'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap,
+                           'title': 'Modifying: ' + roadmap.roadmap_name, 'breadcrumbs': breadcrumbs})
         except Roadmap.DoesNotExist:
             return redirect('/roadmaps/')
 
@@ -52,9 +61,10 @@ def view_roadmap(request):
                 else:
                     seperated_by_phase[phase] = [procedure]
 
+            breadcrumbs = [('/roadmaps/', 'Roadmaps'), ('#', roadmap.roadmap_name)]
             return render(request, 'view_roadmap.html',
                           {'roadmap': roadmap, 'title': 'View: ' + roadmap.roadmap_name,
-                           'seperated_by_phase': seperated_by_phase})
+                           'seperated_by_phase': seperated_by_phase, 'breadcrumbs': breadcrumbs})
         except Roadmap.DoesNotExist:
             # Roadmap object doesn't exist
             return redirect('/roadmaps/')
@@ -74,9 +84,12 @@ def add_to_roadmap(request):
             try:
                 roadmap = Roadmap.objects.get(id=roadmap_id)
                 roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
+                breadcrumbs = [('/roadmaps/', 'Roadmaps'),
+                              ('/roadmaps/view_roadmap/?id=' + roadmap_id, roadmap.roadmap_name),
+                              ('#', 'Modifying: ' + roadmap.roadmap_name)]
                 return render(request, 'modify_roadmap.html',
                               {'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap,
-                               'title': 'Modifying: ' + roadmap.roadmap_name})
+                               'title': 'Modifying: ' + roadmap.roadmap_name, 'breadcrumbs': breadcrumbs})
             except Roadmap.DoesNotExist:
                 return redirect('/roadmaps')
         else:
@@ -95,6 +108,9 @@ def remove_selected_pairs(request):
         try:
             roadmap = Roadmap.objects.get(id=roadmap_id)
             roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
+            breadcrumbs = [('/roadmaps/', 'Roadmaps'),
+                          ('/roadmaps/view_roadmap/?id=' + roadmap_id, roadmap.roadmap_name),
+                          ('#', 'Modifying: ' + roadmap.roadmap_name)]
             return render(request, 'modify_roadmap.html',
                           {'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap,
                            'title': 'Modifying: ' + roadmap.roadmap_name})

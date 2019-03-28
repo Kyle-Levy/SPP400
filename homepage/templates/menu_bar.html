@@ -9,7 +9,18 @@
                     </span>
             </button>
         </div>
+    </nav>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
 
+            {% for url_string, name in breadcrumbs %}
+                {% if forloop.last %}
+                    <li class="breadcrumb-item active" aria-current="page">{{ name }}</li>
+                {% else %}
+                    <li class="breadcrumb-item"><a href="{{ url_string }}">{{ name }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ol>
     </nav>
 
 {% endblock %}
