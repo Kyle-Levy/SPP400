@@ -52,10 +52,9 @@ def view_roadmap(request):
                 else:
                     seperated_by_phase[phase] = [procedure]
 
-            print(seperated_by_phase)
             return render(request, 'view_roadmap.html',
-                          {'roadmap': roadmap, 'roadmap_pairs': roadmap_pairs,
-                           'title': 'View: ' + roadmap.roadmap_name})
+                          {'roadmap': roadmap, 'title': 'View: ' + roadmap.roadmap_name,
+                           'seperated_by_phase': seperated_by_phase})
         except Roadmap.DoesNotExist:
             # Roadmap object doesn't exist
             return redirect('/roadmaps/')
@@ -68,8 +67,9 @@ def add_to_roadmap(request):
             cd = form.cleaned_data
             roadmap_id = request.session['roadmap_id']
             for procedure_item in cd['procedure']:
-                #If the item doesn't exist, add it
-                if not RoadmapProcedureLink.objects.filter(roadmap=roadmap_id, procedure=procedure_item.id, phase=cd['phase']):
+                # If the item doesn't exist, add it
+                if not RoadmapProcedureLink.objects.filter(roadmap=roadmap_id, procedure=procedure_item.id,
+                                                           phase=cd['phase']):
                     RoadmapProcedureLink.link_procedure_to_roadmap(procedure_item.id, roadmap_id, cd['phase'])
             try:
                 roadmap = Roadmap.objects.get(id=roadmap_id)
@@ -100,6 +100,7 @@ def remove_selected_pairs(request):
                            'title': 'Modifying: ' + roadmap.roadmap_name})
         except Roadmap.DoesNotExist:
             return redirect('/roadmaps')
+
 
 def delete_roadmap(request):
     if request.method == 'POST':
