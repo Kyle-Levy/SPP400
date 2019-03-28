@@ -25,5 +25,6 @@ class Procedure(models.Model):
             self.est_days_to_complete = numberOf * 7
             self.save()
             return True
+
         else:
             return False
