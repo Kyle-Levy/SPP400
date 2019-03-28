@@ -12,3 +12,4 @@ class Procedure(models.Model):
 
     def __str__(self):
         return self.procedure_name
+
