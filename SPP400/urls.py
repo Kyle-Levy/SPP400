@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include, url
 from django.views import generic
+from django.shortcuts import redirect, render
 
 
 urlpatterns = [
@@ -25,5 +26,9 @@ urlpatterns = [
     url(r'^$', generic.RedirectView.as_view(url='/homepage/', permanent=False)),
     path('procedures/', include('procedures.urls')),
     path('patients/', include('patients.urls')),
+    path('errorpage/', include('errorpage.urls')),
     path('roadmaps/', include('roadmaps.urls')),
 ]
+
+handler404 = 'errorpage.views.error'
+handler500 = 'errorpage.views.error'
