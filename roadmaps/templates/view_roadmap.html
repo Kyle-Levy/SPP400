@@ -27,10 +27,11 @@
             {% for phase_num, procedure_list in seperated_by_phase.items %}
                 <div class="col-12">
                     <div class="card text-white bg-{% cycle 'primary' 'secondary' 'success' 'info' 'warning' %} mb-3">
-                        <div class="card-header">Phase: {{ phase_num }}</div>
+                        <div class="card-header"><h5 class="mt-2">Phase: {{ phase_num }}</h5></div>
                         <div class="card-body row">
                             {% for procedure in procedure_list %}
-                                <div class="card text-dark bg-light mb-3 mx-3 col" style="max-width: 18rem;">
+                                <div class="card text-dark bg-light mb-3 mx-3 col" style="max-width: 16rem;
+                                                                                          min-width: 16rem;">
 
                                     <div class="card-body">
                                         <h5 class="card-title">{{ procedure.procedure_name }}</h5>
