@@ -11,4 +11,6 @@ $(document).ready(function () {
         $('.collapse.in').toggleClass('in');
     });
 
+    //To disable the analytics for the meanwhile
+    $("#analytics > a:nth-child(1)").attr("href", "#");
 });
