@@ -2,7 +2,14 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from procedures.forms import NewProcedure, SearchProcedures
 from procedures.models import Procedure
-from django.http import HttpResponse
+
+'''
+breadcrumbs = [('/patients/', 'Patients'),
+                               ('/patients/profile/?id=' + str(patient.id), patient.last_name + ', ' + patient.first_name),
+                               ('#', 'Update: ' + patient.last_name + ', ' + patient.first_name)]
+                               
+, 'breadcrumbs': breadcrumbs
+'''
 
 
 @login_required
@@ -16,10 +23,16 @@ def index(request):
             for procedure in Procedure.objects.all():
                 if search.lower() in procedure.procedure_name.lower() or procedure.procedure_name.lower() in search.lower():
                     procedures.append(procedure)
-            return render(request, 'procedure_main.html', {'procedures': procedures, 'form': SearchProcedures(), 'filter': cd['search_terms'], 'title': 'Procedures'})
+            breadcrumbs = [('/procedures/', 'Procedures')]
+            return render(request, 'procedure_main.html',
+                          {'procedures': procedures, 'form': SearchProcedures(), 'filter': cd['search_terms'],
+                           'title': 'Procedures', 'breadcrumbs': breadcrumbs})
 
     if request.method == 'GET':
-        return render(request, 'procedure_main.html', {'procedures': Procedure.objects.all(), 'form': SearchProcedures(), 'title': 'Procedures'})
+        breadcrumbs = [('/procedures/', 'Procedures')]
+        return render(request, 'procedure_main.html',
+                      {'procedures': Procedure.objects.all(), 'form': SearchProcedures(), 'title': 'Procedures',
+                       'breadcrumbs': breadcrumbs})
 
 
 @login_required
@@ -32,10 +45,16 @@ def new_procedure(request):
             procedure.save()
             return redirect('/procedures/')
         else:
+            breadcrumbs = [('/procedures/', 'Procedures'),
+                           ('#', 'New Procedure')]
             return render(request, 'new_procedure.html',
-                          {'form': NewProcedure(), 'failed_creation': True, 'title': 'New Procedure'}, status=401)
+                          {'form': NewProcedure(), 'failed_creation': True, 'title': 'New Procedure',
+                           'breadcrumbs': breadcrumbs}, status=401)
     else:
-        return render(request, 'new_procedure.html', {'form': NewProcedure(), 'title': 'New Procedure'})
+        breadcrumbs = [('/procedures/', 'Procedures'),
+                       ('#', 'New Procedure')]
+        return render(request, 'new_procedure.html',
+                      {'form': NewProcedure(), 'title': 'New Procedure', 'breadcrumbs': breadcrumbs})
 
 
 @login_required
@@ -44,10 +63,13 @@ def view_procedure(request):
         try:
             # Get desired procedure id from url and store into session for when page is updated
             procedure = Procedure.objects.get(id=request.GET.get('id'))
-            request.session['procedure_id'] = request.GET.get('id')
+            request.session['procedure_id'] = procedure.id
+            breadcrumbs = [('/procedures/', 'Procedures'),
+                           ('/procedures/view_procedure/?id=' + str(procedure.id),'View: ' + procedure.procedure_name),
+                           ('#', 'Update: ' + procedure.procedure_name)]
             return render(request, 'update_procedure.html', {'form': NewProcedure(
                 initial={'procedure_name': procedure.procedure_name, 'notes': procedure.procedure_info}),
-                'procedure': procedure, 'title': 'Update: ' + procedure.procedure_name})
+                'procedure': procedure, 'title': 'Update: ' + procedure.procedure_name, 'breadcrumbs': breadcrumbs})
         except Procedure.DoesNotExist:
             return redirect('/procedures/')
 
@@ -55,8 +77,11 @@ def view_procedure(request):
         try:
             # Get desired patient id from url
             procedure = Procedure.objects.get(id=request.GET.get('id'))
+            breadcrumbs = [('/procedures/', 'Procedures'),
+                           ('#', 'View: ' + procedure.procedure_name)]
             return render(request, 'view_procedure.html',
-                          {'procedure': procedure, 'title': 'View: ' + procedure.procedure_name})
+                          {'procedure': procedure, 'title': 'View: ' + procedure.procedure_name,
+                           'breadcrumbs': breadcrumbs})
         except Procedure.DoesNotExist:
             # TODO: add in error message here
             return redirect('/procedures/')
@@ -77,9 +102,12 @@ def update_procedure(request):
                 procedure.save()
                 return redirect("/procedures/view_procedure/?id=" + str(procedure.id))
             else:
+                breadcrumbs = [('/procedures/', 'Procedures'),
+                               ('/procedures/view_procedure/?id=' + str(procedure.id),'View: ' + procedure.procedure_name),
+                               ('#', 'Update: ' + procedure.procedure_name)]
                 return render(request, 'view_procedure.html',
                               {'procedure': procedure, 'title': 'View: ' + procedure.procedure_name,
-                               'failed_update': True}, status=401)
+                               'failed_update': True, 'breadcrumbs': breadcrumbs}, status=401)
         except Procedure.DoesNotExist:
             # TODO: add in error message here
             return redirect('/procedures/')
