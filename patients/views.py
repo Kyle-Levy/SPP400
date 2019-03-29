@@ -16,19 +16,29 @@ def index(request):
             for patient in Patients.objects.all():
                 if search.lower() in patient.first_name.lower() or search.lower() in patient.last_name.lower() or search.lower() in patient.record_number.lower() or patient.first_name.lower() in search.lower() or patient.last_name.lower() in search.lower() or patient.record_number.lower() in search.lower():
                     patients.append(patient)
+            breadcrumbs = [('#', 'Patients')]
             return render(request, 'landing_page.html',
                           {'patients': patients, 'form': SearchPatients(), 'filter': cd['search_terms'],
-                           'title': 'Patients'})
+                           'title': 'Patients', 'breadcrumbs': breadcrumbs})
 
     if request.method == 'GET':
+        breadcrumbs = [('#', 'Patients')]
         return render(request, 'landing_page.html',
-                      {'patients': Patients.objects.all(), 'form': SearchPatients(), 'title': 'Patients'})
+                      {'patients': Patients.objects.all(), 'form': SearchPatients(), 'title': 'Patients',
+                       'breadcrumbs': breadcrumbs})
+
+
+'''breadcrumbs = [('/roadmaps/', 'Roadmaps'),
+                          ('/roadmaps/view_roadmap/?id=' + roadmap_id, roadmap.roadmap_name),
+                          ('#', 'Modifying: ' + roadmap.roadmap_name)]'''
 
 
 @login_required
 def new_patient(request):
     if request.method == 'GET':
-        return render(request, 'new_patient.html', {'form': NewPatient(), 'title': 'New Patient'})
+        breadcrumbs = [('/patients/', 'Patients'), ('#', 'New Patient')]
+        return render(request, 'new_patient.html',
+                      {'form': NewPatient(), 'title': 'New Patient', 'breadcrumbs': breadcrumbs})
     if request.method == 'POST':
         form = NewPatient(request.POST)
         if form.is_valid():
@@ -38,8 +48,10 @@ def new_patient(request):
             patient.save()
             return redirect('/homepage/')
         else:
+            breadcrumbs = [('/patients/', 'Patients'), ('#', 'New Patient')]
             return render(request, 'new_patient.html',
-                          {'form': NewPatient(), 'failed_creation': True, 'title': 'New Patient'}, status=401)
+                          {'form': NewPatient(), 'failed_creation': True, 'title': 'New Patient',
+                           'breadcrumbs': breadcrumbs}, status=401)
 
 
 @login_required
@@ -48,12 +60,16 @@ def profile(request):
         try:
             # Get desired patient id from url
             patient = Patients.objects.get(id=request.GET.get('id'))
-            request.session['patient_id'] = request.GET.get('id')
+            request.session['patient_id'] = patient.id
+
+            breadcrumbs = [('/patients/', 'Patients'),
+                           ('/patients/profile/?id=' + str(patient.id), patient.last_name + ', ' + patient.first_name),
+                           ('#', 'Update: ' + patient.last_name + ', ' + patient.first_name)]
             return render(request, 'update_patient.html', {'form': NewPatient(
                 initial={'first_name': patient.first_name, 'last_name': patient.last_name,
                          'record_number': patient.record_number,
                          'birth_date': patient.bday}), 'patient': patient,
-                'title': 'Update: ' + patient.last_name + ', ' + patient.first_name})
+                'title': 'Update: ' + patient.last_name + ', ' + patient.first_name, 'breadcrumbs': breadcrumbs})
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
@@ -62,8 +78,11 @@ def profile(request):
         try:
             # Get desired patient id from url
             patient = Patients.objects.get(id=request.GET.get('id'))
+            breadcrumbs = [('/patients/', 'Patients'),
+                           ('#', patient.last_name + ', ' + patient.first_name)]
             return render(request, 'patient.html',
-                          {"patient": patient, 'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name})
+                          {"patient": patient, 'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name,
+                           'breadcrumbs': breadcrumbs})
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
@@ -86,9 +105,12 @@ def update(request):
                 patient.save()
                 return redirect("/patients/profile/?id=" + str(patient.id))
             else:
+                breadcrumbs = [('/patients/', 'Patients'),
+                               ('/patients/profile/?id=' + str(patient.id), patient.last_name + ', ' + patient.first_name),
+                               ('#', 'Update: ' + patient.last_name + ', ' + patient.first_name)]
                 return render(request, 'patient.html', {"patient": patient,
                                                         'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name,
-                                                        'failed_update': True}, status=401)
+                                                        'failed_update': True, 'breadcrumbs': breadcrumbs}, status=401)
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
