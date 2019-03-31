@@ -16,10 +16,12 @@
 
         {% include "menu_bar.html" %}
 
-
+        <form action="/patients/profile/procedures/" method="post">{% csrf_token %}
         <div class="container-fluid">
             {{ form.roadmap }}
         </div>
+            <button type="submit" class="btn btn-warning">Update Patient</button>
+        </form>
     </div>
 
 </div>

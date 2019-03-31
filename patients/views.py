@@ -139,12 +139,24 @@ def procedures(request):
         try:
             # Get desired patient id from url
             patient = Patients.objects.get(id=request.GET.get('id'))
+            request.session['patient_id'] = patient.id
             breadcrumbs = [('/patients/', 'Patients'),
                            ('/patients/profile/?id=' + str(patient.id), patient.last_name + ', ' + patient.first_name),
                            ('#', patient.first_name + " " + patient.last_name + "'s  Procedures")]
-            return render(request, 'patient_procedures.html', {'form':SelectFromRoadmap(), 'breadcrumbs': breadcrumbs,
+            return render(request, 'patient_procedures.html', {'form': SelectFromRoadmap(), 'breadcrumbs': breadcrumbs,
                                                                'title': patient.first_name + " " + patient.last_name + "'s  Procedures"})
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
-    
+    if request.method == 'POST':
+        try:
+            patient = Patients.objects.get(id=request.session['patient_id'])
+
+            form = SelectFromRoadmap(request.POST)
+            if form.is_valid():
+                cd = form.cleaned_data
+                return redirect('/patients/profile/?id=' + str(patient.id))
+            else:
+                return redirect('/homepage/')
+        except Patients.DoesNotExist:
+            return redirect('/patients/')
