@@ -29,7 +29,7 @@ class TestCreatePatient(TestCase):
     def test_valid_patient(self):
 
         request = self.factory.post('patients/create/',
-                                    {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01', 'record_number': '112'})
+                                    {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01', 'record_number': '112', 'referring_physician': 'Dr. Who', 'date_of_referral': '01/01/2019'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
