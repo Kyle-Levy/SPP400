@@ -32,6 +32,12 @@ class TestAssignedProcedures(TestCase):
         tProcedure2 = Procedure.objects.create(procedure_name="blood")
         tProcedure2.save()
 
+        RoadmapProcedureLink.link_procedure_to_roadmap(tProcedure, tRoadmap, 1)
+
+        RoadmapProcedureLink.link_procedure_to_roadmap(tProcedure2, tRoadmap, 2)
+
+        return tRoadmap, tProcedure, tProcedure2
+
     def test_create_assignedProcedureReturnVisit(self):
         tPatient = Patients.objects.create(first_name="Kyle", last_name="Dorce", bday=datetime(1996, 10, 24))
         tProcedure = Procedure.objects.create(procedure_name="leeches")
