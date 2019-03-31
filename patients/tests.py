@@ -12,7 +12,7 @@ import pytz
 class TestPatientModel(TestCase):
 
     def create_patient(self, first_name="Kyle", last_name="Dorcey", bday=datetime(1996, 10, 24), doc_notes="he sick",
-                       referring_physician='Dr. Seuss', date_of_referral='01/01/2019'):
+                       referring_physician='Dr. Seuss', date_of_referral='2019-01-01'):
         return Patients.objects.create(first_name=first_name, last_name=last_name, bday=bday,
                                        referring_physician=referring_physician, date_of_referral=date_of_referral,
                                        doc_notes=doc_notes, flagged=False, patient_flagged_reason="none",
