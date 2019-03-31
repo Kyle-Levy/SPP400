@@ -5,7 +5,7 @@ from django.test import TestCase
 class TestPatientForm(TestCase):
 
     def test_valid_form(self):
-        form_data = {'first_name': 'John', 'last_name': 'Smith', 'record_number': 'a', 'birth_date': '01/01/1950'}
+        form_data = {'first_name': 'John', 'last_name': 'Smith', 'record_number': 'a', 'birth_date': '01/01/1950', 'referring_physician': 'Dr. Who', 'date_of_referral': '01/01/2019'}
         form = NewPatient(data=form_data)
         self.assertTrue(form.is_valid())
 
