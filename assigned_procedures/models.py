@@ -53,7 +53,7 @@ class AssignedProcedures(models.Model):
             procStep = assignedProcedures.procedureStep
             quiriedProcedures = assignedProcedures.procedure.all()
             for procedures in quiriedProcedures:
-                procedureList.append( (procStep,procedures) )
+                procedureList.append( (procedures, procStep) )
         return procedureList
 
 
