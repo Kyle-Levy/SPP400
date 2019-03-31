@@ -19,7 +19,7 @@ class TestCreatePatient(TestCase):
 
         request = self.factory.post('patients/create/',
                                     {'first_name': 'John', 'last_name': 'Smith', 'birth_date': '1950-01-01',
-                                     'record_number': '111', 'referring_physician': 'Dr. Who', 'date_of_referral': '01/01/2019'})
+                                     'record_number': '111', 'referring_physician': 'Dr. Who', 'date_of_referral': '2019-01-01'})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -29,7 +29,7 @@ class TestCreatePatient(TestCase):
     def test_valid_patient(self):
 
         request = self.factory.post('patients/create/',
-                                    {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01', 'record_number': '112', 'referring_physician': 'Dr. Who', 'date_of_referral': '01/01/2019'})
+                                    {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01', 'record_number': '112', 'referring_physician': 'Dr. Who', 'date_of_referral': '2019-01-01'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
@@ -46,7 +46,7 @@ class TestCreatePatient(TestCase):
 
     def test_missing_first_name(self):
 
-        request = self.factory.post('patients/create/', {'last_name': 'Smith', 'birth_date': '1950-02-01', 'record_number': '111', 'referring_physician': 'Dr. Who', 'date_of_referral': '01/01/2019'})
+        request = self.factory.post('patients/create/', {'last_name': 'Smith', 'birth_date': '1950-02-01', 'record_number': '111', 'referring_physician': 'Dr. Who', 'date_of_referral': '2019-01-01'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
@@ -57,7 +57,7 @@ class TestCreatePatient(TestCase):
 
     def test_missing_last_name(self):
 
-        request = self.factory.post('patients/create/', {'first_name': 'Marie', 'birth_date': '1950-02-01', 'record_number': '111', 'referring_physician': 'Dr. Who', 'date_of_referral': '01/01/2019'})
+        request = self.factory.post('patients/create/', {'first_name': 'Marie', 'birth_date': '1950-02-01', 'record_number': '111', 'referring_physician': 'Dr. Who', 'date_of_referral': '2019-01-01'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
@@ -68,7 +68,7 @@ class TestCreatePatient(TestCase):
 
     def test_missing_bday(self):
 
-        request = self.factory.post('patients/create/', {'first_name': 'Marie', 'last_name': 'Smith', 'record_number': '111', 'referring_physician': 'Dr. Who', 'date_of_referral': '01/01/2019'})
+        request = self.factory.post('patients/create/', {'first_name': 'Marie', 'last_name': 'Smith', 'record_number': '111', 'referring_physician': 'Dr. Who', 'date_of_referral': '2019-01-01'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
@@ -80,7 +80,7 @@ class TestCreatePatient(TestCase):
     def test_missing_mrn(self):
 
         request = self.factory.post('patients/create/',
-                                    {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01', 'referring_physician': 'Dr. Who', 'date_of_referral': '01/01/2019'})
+                                    {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01', 'referring_physician': 'Dr. Who', 'date_of_referral': '2019-01-01'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
@@ -93,7 +93,7 @@ class TestCreatePatient(TestCase):
 
         request = self.factory.post('patients/create/',
                                     {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01',
-                                     'record_number': '112', 'date_of_referral': '01/01/2019'})
+                                     'record_number': '112', 'date_of_referral': '2019-01-01'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
