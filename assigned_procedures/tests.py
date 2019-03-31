@@ -11,8 +11,8 @@ from datetime import datetime
 # Create your tests here.
 class TestAssignedProcedures(TestCase):
 
-    def create_assignedProcedure(self, first_name="Kyle", last_name="Dorce", bday=datetime(1996, 10, 24)):
-        tPatient = Patients.objects.create(first_name=first_name, last_name=last_name, bday=bday)
+    def create_assignedProcedure(self, first_name="Kyle", last_name="Dorce", bday=datetime(1996, 10, 24), referring_physician='Dr. Who', date_of_referral=datetime(2019, 1, 1)):
+        tPatient = Patients.objects.create(first_name=first_name, last_name=last_name, bday=bday, referring_physician=referring_physician, date_of_referral=date_of_referral)
         tPatient.save()
         tProcedure = Procedure.objects.create(procedure_name="leeches")
         tAssignment = AssignedProcedures.assign_procedure_to_patient(1, tPatient, tProcedure)
