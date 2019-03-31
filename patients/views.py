@@ -85,8 +85,6 @@ def profile(request):
                            ('#', patient.last_name + ', ' + patient.first_name)]
             roadmap_pairs = AssignedProcedures.get_all_procedures(patient)
 
-            print("Roadmap pairs in patients\n--------------------------------")
-            print(roadmap_pairs)
             all_assigned_procedures = RoadmapProcedureLink.seperate_by_phase(roadmap_pairs)
 
             print(all_assigned_procedures)
