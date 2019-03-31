@@ -4,6 +4,8 @@ from procedures.models import Procedure
 
 class Roadmap(models.Model):
     roadmap_name = models.CharField(max_length=100)
+    est_days_to_complete = models.IntegerField(default=0)
+
 
     def __str__(self):
         return self.roadmap_name
