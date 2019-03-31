@@ -19,7 +19,7 @@ class TestCreatePatient(TestCase):
 
         request = self.factory.post('patients/create/',
                                     {'first_name': 'John', 'last_name': 'Smith', 'birth_date': '1950-01-01',
-                                     'record_number': '111'})
+                                     'record_number': '111', 'referring_physician': 'Dr. Who', 'date_of_referral': '01/01/2019'})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
