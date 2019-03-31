@@ -89,6 +89,19 @@ class TestCreatePatient(TestCase):
 
         self.assertEqual(response.status_code, 401)
 
+    def test_missing_referring_physician(self):
+
+        request = self.factory.post('patients/create/',
+                                    {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01',
+                                     'record_number': '112', 'date_of_referral': '01/01/2019'})
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+
+        response = new_patient(request)
+
+        self.assertEqual(response.status_code, 401)
+
     def test_get_patients(self):
         request = self.factory.get('/patients/')
 
