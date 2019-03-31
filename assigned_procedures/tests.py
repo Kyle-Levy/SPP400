@@ -43,12 +43,12 @@ class TestAssignedProcedures(TestCase):
         #one linked procedure case
         testAssign, testPatient, testProcedure = self.test_create_assignedProcedure()
         quiriedProcedure = AssignedProcedures.get_all_procedures(testPatient)
-        self.assertEqual(quiriedProcedure[0],(1,testProcedure))
+        self.assertEqual(quiriedProcedure[0],(testProcedure,1))
         #two linked procedures case
         tProcedure = Procedure.objects.create(procedure_name="bloodwork")
         AssignedProcedures.assign_procedure_to_patient(2,testPatient,tProcedure)
         quiriedProcedure = AssignedProcedures.get_all_procedures(testPatient)
-        self.assertEqual(quiriedProcedure,[(1,testProcedure),(2,tProcedure)])
+        self.assertEqual(quiriedProcedure,[(testProcedure,1),(tProcedure,2)])
 
     def test_toggle_completed(self):
         testAssign, testPatient, testProcedure = self.test_create_assignedProcedure()
@@ -70,5 +70,10 @@ class TestAssignedProcedures(TestCase):
 
         AssignedProcedures.add_roadmap_to_patient(tRoadmap, tPatient)
         toCheck = AssignedProcedures.get_all_procedures(tPatient)
-        solution = [(1,tProcedure),(2,tProcedure2)]
+        solution = [(tProcedure,1),(tProcedure2,2)]
         self.assertEqual(toCheck,solution)
+
+    def test_remove_assigned_procedure(self):
+        testAssign, testPatient, testProcedure = self.test_create_assignedProcedure()
+
+        self.assertEqual("moo", "woof")
