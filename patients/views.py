@@ -52,7 +52,7 @@ def profile(request):
             return render(request, 'update_patient.html', {'form': NewPatient(
                 initial={'first_name': patient.first_name, 'last_name': patient.last_name,
                          'record_number': patient.record_number,
-                         'birth_date': patient.bday}), 'patient': patient,
+                         'birth_date': patient.bday, 'referring_physician': patient.referring_physician, 'date_of_referral': patient.date_of_referral}), 'patient': patient,
                 'title': 'Update: ' + patient.last_name + ', ' + patient.first_name})
         except Patients.DoesNotExist:
             # TODO: add in error message here
