@@ -34,7 +34,7 @@ def new_patient(request):
         if form.is_valid():
             # Clean form data and check that the username password pair is valid
             cd = form.cleaned_data
-            patient = Patients.create_patient(cd['first_name'], cd['last_name'], cd['birth_date'], cd['record_number'])
+            patient = Patients.create_patient(cd['first_name'], cd['last_name'], cd['birth_date'], cd['record_number'], cd['referring_physician'], cd['referral_date'])
             patient.save()
             return redirect('/homepage/')
         else:
