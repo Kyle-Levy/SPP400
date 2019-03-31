@@ -183,7 +183,7 @@ class TestCreatePatient(TestCase):
 
         request = self.factory.post('/patients/profile/update',
                                     {'first_name': 'Bill', 'last_name': 'Jobs', 'record_number': 'a',
-                                     'birth_date': '2000-03-03'})
+                                     'birth_date': '2000-03-03', 'referring_physician': 'Dr. Seuss', 'date_of_referral': '02/02/2019'})
         request.user = self.user
         request.session = profile_request.session
         request.session.save()
@@ -205,7 +205,7 @@ class TestCreatePatient(TestCase):
 
         request = self.factory.post('/patients/profile/update',
                                     {'first_name': 'Bill', 'last_name': 'Jobs', 'record_number': 'a',
-                                     'birth_date': '2000-03-03'})
+                                     'birth_date': '2000-03-03', 'referring_physician': 'Dr. Seuss', 'date_of_referral': '02/02/2019'})
         request.user = self.user
         request.session = profile_request.session
         request.session.save()
