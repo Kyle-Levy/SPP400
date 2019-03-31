@@ -2,6 +2,7 @@ from patients import models
 from patients.models import Patients
 from procedures import models
 from procedures.models import Procedure
+from roadmaps.models import Roadmap,RoadmapProcedureLink
 from django.db import models
 from datetime import datetime
 from datetime import timedelta
@@ -125,4 +126,15 @@ class AssignedProcedures(models.Model):
         for assignedProc in quiriedAssignedProcedures:
             assignedProc.procedureStep = newStepNumber
             assignedProc.save()
+
+    @staticmethod
+    def add_roadmap_to_patient(roadmap, patient, returnVisit=False):
+        proceduresToAssign = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
+        for tempProc in proceduresToAssign:
+            AssignedProcedures.assign_procedure_to_patient(tempProc[1],patient,tempProc[0],returnVisit)
+
+
+
+
+
 
