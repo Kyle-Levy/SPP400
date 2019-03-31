@@ -131,7 +131,10 @@ class AssignedProcedures(models.Model):
     def add_roadmap_to_patient(roadmap, patient, returnVisit=False):
         proceduresToAssign = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
         for tempProc in proceduresToAssign:
-            AssignedProcedures.assign_procedure_to_patient(tempProc[1],patient,tempProc[0],returnVisit)
+            phaseNumber = tempProc[1] #aka step
+            procedureObj = tempProc[0]
+            proc_est = procedureObj.est_days_to_complete
+            AssignedProcedures.assign_procedure_to_patient(phaseNumber,patient,procedureObj,proc_est, returnVisit)
 
 
 
