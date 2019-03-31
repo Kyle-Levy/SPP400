@@ -75,12 +75,12 @@ class NewPatient(forms.Form):
         )
     )
 
-    referral_date = forms.DateField(
-        label='Referral Date',
+    date_of_referral = forms.DateField(
+        label='Date of Referral',
         widget=forms.DateInput(
             attrs={
                 'class': 'form-control',
-                'id': 'referralDate',
+                'id': 'dateOfReferral',
                 'placeholder': 'MM/DD/YYYY',
             }
         )
