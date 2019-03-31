@@ -69,7 +69,8 @@
                                 <button type="submit" class="btn btn-warning">Update Patient</button>
                             </form>
 
-                            <a href="/patients/profile/procedures/?id={{ patient.id }}" class="btn btn-warning my-4">Patient's Procedures</a>
+                            <a href="/patients/profile/procedures/?id={{ patient.id }}" class="btn btn-warning my-4">Patient's
+                                Procedures</a>
 
                         </div>
                     </div>
@@ -85,8 +86,15 @@
 
                                 <div class="card-header">Next Procedures</div>
                                 <div class="card-body">
-                                    <h5 class="card-title">Procedure Name</h5>
-                                    <p class="card-text">Procedure Date</p>
+                                    {% for phase_num, procedure_list in assigned_procedures.items%}
+
+                                        <h5 class="card-title">Phase: {{ phase_num }}</h5>
+                                        {% for procedure in procedure_list %}
+
+                                            <p class="card-text">{{ procedure }}</p>
+                                        {% endfor %}
+                                    {% endfor %}
+
                                     <h5 class="card-title">Procedure Name</h5>
                                     <p class="card-text">Procedure Date</p>
                                 </div>

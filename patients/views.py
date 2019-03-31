@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect
 from patients.forms import NewPatient, SearchPatients
 from roadmaps.forms import SelectFromRoadmap
 from patients.models import Patients
-from roadmaps.models import Roadmap
+from assigned_procedures.models import AssignedProcedures
+from roadmaps.models import RoadmapProcedureLink
 import re
 
 
@@ -82,9 +83,17 @@ def profile(request):
             patient = Patients.objects.get(id=request.GET.get('id'))
             breadcrumbs = [('/patients/', 'Patients'),
                            ('#', patient.last_name + ', ' + patient.first_name)]
+            roadmap_pairs = AssignedProcedures.get_all_procedures(patient)
+
+            print("Roadmap pairs in patients\n--------------------------------")
+            print(roadmap_pairs)
+            all_assigned_procedures = RoadmapProcedureLink.seperate_by_phase(roadmap_pairs)
+
+            print(all_assigned_procedures)
+
             return render(request, 'patient.html',
                           {"patient": patient, 'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name,
-                           'breadcrumbs': breadcrumbs})
+                           'breadcrumbs': breadcrumbs, 'assigned_procedures':all_assigned_procedures})
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
@@ -155,6 +164,8 @@ def procedures(request):
             form = SelectFromRoadmap(request.POST)
             if form.is_valid():
                 cd = form.cleaned_data
+                roadmap = cd['roadmap']
+                AssignedProcedures.add_roadmap_to_patient(roadmap, patient)
                 return redirect('/patients/profile/?id=' + str(patient.id))
             else:
                 return redirect('/homepage/')
