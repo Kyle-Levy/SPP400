@@ -63,14 +63,14 @@ class AssignedProcedures(models.Model):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, procedure=searchProcedure, visitID=searchVisitID).select_related()
         for assignedProc in quiriedAssignedProcedures:
             if assignedProc.est_flag is True:
-                if assignedProc.est_date_complete > datetime.now() and assignedProc.completed is False:
-                    return "in progress (behind)"
-                elif assignedProc.est_date_complete > datetime.now() and assignedProc.completed is True:
-                    return "completed (behind)"
-                elif assignedProc.est_date_complete < datetime.now() and assignedProc.completed is False:
+                if assignedProc.est_date_complete > timezone.now() and assignedProc.completed is False:
                     return "in progress (on time)"
-                elif assignedProc.est_date_complete < datetime.now() and assignedProc.completed is True:
+                elif assignedProc.est_date_complete > timezone.now() and assignedProc.completed is True:
                     return "completed (on time)"
+                elif assignedProc.est_date_complete < timezone.now() and assignedProc.completed is False:
+                    return "in progress (behind)"
+                elif assignedProc.est_date_complete < timezone.now() and assignedProc.completed is True:
+                    return "completed (behind)"
             else:
                 return "not scheduled"
 
