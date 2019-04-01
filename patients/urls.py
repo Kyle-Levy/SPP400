@@ -7,5 +7,6 @@ urlpatterns = [
     path('profile/', views.profile),
     path('profile/update/', views.update),
     path('profile/delete/', views.delete),
-    path('profile/procedures/', views.procedures)
+    path('profile/procedures/', views.procedures),
+    path('profile/procedures/remove/', views.remove_pairs_from_patient),
 ]

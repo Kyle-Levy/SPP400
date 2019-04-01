@@ -87,11 +87,10 @@ def profile(request):
 
             all_assigned_procedures = RoadmapProcedureLink.seperate_by_phase(roadmap_pairs)
 
-            print(all_assigned_procedures)
 
             return render(request, 'patient.html',
                           {"patient": patient, 'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name,
-                           'breadcrumbs': breadcrumbs, 'assigned_procedures':all_assigned_procedures})
+                           'breadcrumbs': breadcrumbs, 'assigned_procedures': all_assigned_procedures})
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
@@ -147,11 +146,13 @@ def procedures(request):
             # Get desired patient id from url
             patient = Patients.objects.get(id=request.GET.get('id'))
             request.session['patient_id'] = patient.id
+            roadmap_pairs = AssignedProcedures.get_all_procedures(patient)
             breadcrumbs = [('/patients/', 'Patients'),
                            ('/patients/profile/?id=' + str(patient.id), patient.last_name + ', ' + patient.first_name),
                            ('#', patient.first_name + " " + patient.last_name + "'s  Procedures")]
             return render(request, 'patient_procedures.html', {'form': SelectFromRoadmap(), 'breadcrumbs': breadcrumbs,
-                                                               'title': patient.first_name + " " + patient.last_name + "'s  Procedures"})
+                                                               'title': patient.first_name + " " + patient.last_name + "'s  Procedures",
+                                                               'roadmap_pairs': roadmap_pairs})
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
@@ -167,5 +168,21 @@ def procedures(request):
                 return redirect('/patients/profile/?id=' + str(patient.id))
             else:
                 return redirect('/homepage/')
+        except Patients.DoesNotExist:
+            return redirect('/patients/')
+
+
+@login_required
+def remove_pairs_from_patient(request):
+    if request.method == 'POST':
+        checked_boxes = request.POST.getlist('selection[]')
+        try:
+            patient = Patients.objects.get(id=request.session['patient_id'])
+            for pair in checked_boxes:
+                print(pair)
+                cleaned_pair = tuple(pair.split(','))
+                AssignedProcedures.remove_assigned_procedure(patient, cleaned_pair[0],
+                                                             cleaned_pair[1])
+            return redirect('/patients/profile/?id=' + str(patient.id))
         except Patients.DoesNotExist:
             return redirect('/patients/')

@@ -2,22 +2,23 @@ from patients import models
 from patients.models import Patients
 from procedures import models
 from procedures.models import Procedure
-from roadmaps.models import Roadmap,RoadmapProcedureLink
+from roadmaps.models import Roadmap, RoadmapProcedureLink
 from django.db import models
+
 
 # Create your models here.
 class AssignedProcedures(models.Model):
     patient = models.ManyToManyField(Patients)
     procedure = models.ManyToManyField(Procedure)
-    #procedure steps that share the same visitID and number are concurrent
+    # procedure steps that share the same visitID and number are concurrent
     procedureStep = models.IntegerField()
-    #visitID is a way to distinguish what step a patient is on
-    #if they return for a different procedure (default is 1)
+    # visitID is a way to distinguish what step a patient is on
+    # if they return for a different procedure (default is 1)
     visitID = models.IntegerField(default=1)
     completed = models.BooleanField(default=False)
 
     @classmethod
-    def assign_procedure_to_patient(cls, step, patientToLink,procedureToLink, return_visit=False):
+    def assign_procedure_to_patient(cls, step, patientToLink, procedureToLink, return_visit=False):
         if return_visit is True:
             new_visit_id = AssignedProcedures.last_visit_id(patientToLink)
             new_assignment = cls(procedureStep=step, visitID=new_visit_id)
@@ -32,19 +33,18 @@ class AssignedProcedures(models.Model):
 
         return new_assignment
 
-    #this method is used when a patient is returning for a new procedure
+    # this method is used when a patient is returning for a new procedure
     @staticmethod
-    def last_visit_id( plz):
-        assignments =AssignedProcedures.objects.filter(patient=plz.id)
+    def last_visit_id(plz):
+        assignments = AssignedProcedures.objects.filter(patient=plz.id)
         maxVisitID = 0
         for retrieved in assignments:
             if retrieved.visitID > maxVisitID:
                 maxVisitID = retrieved.visitID
 
-
         return maxVisitID
 
-    #returns list of tuples structured: (step number, procedure object)
+    # returns list of tuples structured: (step number, procedure object)
     @staticmethod
     def get_all_procedures(searchPatient, searchVisitID=1):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, visitID=searchVisitID)
@@ -53,13 +53,13 @@ class AssignedProcedures(models.Model):
             procStep = assignedProcedures.procedureStep
             quiriedProcedures = assignedProcedures.procedure.all()
             for procedures in quiriedProcedures:
-                procedureList.append( (procedures, procStep) )
+                procedureList.append((procedures, procStep))
         return procedureList
-
 
     @staticmethod
     def toggle_completed(searchPatient, searchProcedure, searchVisitID=1):
-        quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, procedure=searchProcedure, visitID=searchVisitID)
+        quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id,
+                                                                      procedure=searchProcedure, visitID=searchVisitID)
         for assignedProc in quiriedAssignedProcedures:
             if assignedProc.completed is False:
                 assignedProc.completed = True
@@ -72,7 +72,8 @@ class AssignedProcedures(models.Model):
 
     @staticmethod
     def update_procedure_step(newStepNumber, searchPatient, searchProcedure, searchVisitID=1):
-        quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, procedure=searchProcedure, visitID=searchVisitID)
+        quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id,
+                                                                      procedure=searchProcedure, visitID=searchVisitID)
         for assignedProc in quiriedAssignedProcedures:
             assignedProc.procedureStep = newStepNumber
             assignedProc.save()
@@ -81,12 +82,10 @@ class AssignedProcedures(models.Model):
     def add_roadmap_to_patient(roadmap, patient, returnVisit=False):
         proceduresToAssign = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
         for tempProc in proceduresToAssign:
-            AssignedProcedures.assign_procedure_to_patient(tempProc[1],patient,tempProc[0],returnVisit)
+            AssignedProcedures.assign_procedure_to_patient(tempProc[1], patient, tempProc[0], returnVisit)
 
     @staticmethod
-    def remove_assigned_procedure(patientToChange, procedureToDelete, visitID=1):
-        quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=patientToChange.id, procedure=procedureToDelete, visitID=visitID).delete()
-
-
-
-
+    def remove_assigned_procedure(patientToChange, procedureToDelete, phase, visitID=1):
+        quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=patientToChange.id,
+                                                                      procedure=procedureToDelete, procedureStep=phase,
+                                                                      visitID=visitID).delete()

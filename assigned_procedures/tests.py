@@ -77,7 +77,7 @@ class TestAssignedProcedures(TestCase):
         testAssign, testPatient, testProcedure = self.test_create_assignedProcedure()
         tProcedure = Procedure.objects.create(procedure_name="TAVR")
         AssignedProcedures.assign_procedure_to_patient(2, testPatient, tProcedure)
-        AssignedProcedures.remove_assigned_procedure(testPatient, testProcedure)
+        AssignedProcedures.remove_assigned_procedure(testPatient, testProcedure, 1)
         toCheck = AssignedProcedures.get_all_procedures(testPatient)
         correct = [(tProcedure,2)]
         self.assertEqual(toCheck, correct)

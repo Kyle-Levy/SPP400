@@ -20,8 +20,53 @@
         <div class="container-fluid">
             {{ form.roadmap }}
         </div>
-            <button type="submit" class="btn btn-warning">Update Patient</button>
+            <button type="submit" class="btn btn-warning my-4">Update Patient</button>
         </form>
+        <div class="container-fixed">
+            <form action="/patients/profile/procedures/remove/" method="post">{% csrf_token %}
+                <table class="table table-hover border">
+                    <thead>
+                    <tr>
+                        <th scope="col">Procedure Name</th>
+                        <th scope="col">Phase</th>
+                        <th scope="col">Modify Item</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for procedure, phase in roadmap_pairs|dictsort:1 %}
+                        <tr>
+                            <td>{{ procedure.procedure_name }}</td>
+                            <td>{{ phase }}</td>
+                            <td><input type="checkbox" name="selection[]" value="{{ procedure.id }},{{ phase }}"></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <button type="button" class="btn btn-warning my-4" data-toggle="modal" data-target="#removePairs">
+                    Remove Selected Pairs
+                </button>
+            <!-- Modal stuff goes here -->
+            <div class="modal fade" id="removePairs" tabindex="-1" role="dialog" aria-labelledby="removePairsLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="removePairsLabel">Remove Selected Pairs</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <h5>Are you sure?</h5>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-danger mb-4">Removed Selected Pairs</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
 </div>
