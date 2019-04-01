@@ -103,6 +103,7 @@ class TestRoadmapToPatients(TestCase):
         response = procedures(request)
         self.assertEqual(response.status_code, 302)
 
+    # Test adds a roadmap onto a patient and verifies it added successfully
     def test_post_patient_procedure_valid(self):
         #Need to get the previous page to store id in session
         get_request = self.factory.get('/patients/profile/procedures/?id=' + str(self.test_patient.id))
@@ -112,7 +113,7 @@ class TestRoadmapToPatients(TestCase):
         response = procedures(get_request)
         self.assertEqual(response.status_code, 200)
 
-        post_request = self.factory.post('/patients/profile/procedures/', {'roadmap':[str(self.test_roadmap.id)]})
+        post_request = self.factory.post('/patients/profile/procedures/add_roadmap//', {'roadmap':[str(self.test_roadmap.id)]})
         self.middleware.process_request(post_request)
         post_request.session = get_request.session
         post_request.user = self.user
@@ -134,7 +135,7 @@ class TestRoadmapToPatients(TestCase):
         response = procedures(get_request)
         self.assertEqual(response.status_code, 200)
 
-        post_request = self.factory.post('/patients/profile/procedures/', {'roadmap':[str(99999)]})
+        post_request = self.factory.post('/patients/profile/procedures/add_roadmap/', {'roadmap':[str(99999)]})
         self.middleware.process_request(post_request)
         post_request.session = get_request.session
         post_request.user = self.user
