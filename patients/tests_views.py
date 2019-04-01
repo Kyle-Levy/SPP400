@@ -2,7 +2,7 @@ from django.test import RequestFactory, TestCase
 from django.contrib.auth.models import User
 from django.contrib.sessions.middleware import SessionMiddleware
 
-from .views import index, new_patient, profile, update, delete
+from .views import index, new_patient, profile, update, delete, procedures
 from .models import Patients
 
 
@@ -307,6 +307,7 @@ class TestCreatePatient(TestCase):
         request.user = self.user
         response = index(request)
         self.assertEqual(response.status_code, 200)
+
 
 
 '''
