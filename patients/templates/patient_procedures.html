@@ -16,10 +16,23 @@
 
         {% include "menu_bar.html" %}
 
+        <form action="/patients/profile/procedures/add_procedure/" method="POST"> {% csrf_token %}
+            <div class="form-group">
+                <label for="id_procedure">Procedures: </label>
+                {{procedure_phase_form.procedure }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_phase">Phase: </label>
+                {{ procedure_phase_form.phase }}
+            </div>
+            <button type="submit" class="btn btn-warning mb-4">Add to Roadmap</button>
+        </form>
+
         <form action="/patients/profile/procedures/add_roadmap/" method="post">{% csrf_token %}
-        <div class="container-fluid">
-            {{ form.roadmap }}
-        </div>
+            <div class="container-fluid">
+                {{ roadmap_form.roadmap }}
+            </div>
             <button type="submit" class="btn btn-warning my-4">Update Patient</button>
         </form>
         <div class="container-fixed">
@@ -45,8 +58,8 @@
                 <button type="button" class="btn btn-warning my-4" data-toggle="modal" data-target="#removePairs">
                     Remove Selected Pairs
                 </button>
-            <!-- Modal stuff goes here -->
-            <div class="modal fade" id="removePairs" tabindex="-1" role="dialog" aria-labelledby="removePairsLabel"
+                <!-- Modal stuff goes here -->
+                <div class="modal fade" id="removePairs" tabindex="-1" role="dialog" aria-labelledby="removePairsLabel"
                      aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
