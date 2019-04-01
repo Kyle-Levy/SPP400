@@ -83,7 +83,9 @@ class AssignedProcedures(models.Model):
         for tempProc in proceduresToAssign:
             AssignedProcedures.assign_procedure_to_patient(tempProc[1],patient,tempProc[0],returnVisit)
 
-
+    @staticmethod
+    def remove_assigned_procedure(patientToChange, procedureToDelete, visitID=1):
+        quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=patientToChange.id, procedure=procedureToDelete, visitID=visitID).delete()
 
 
 
