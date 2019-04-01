@@ -4,7 +4,7 @@ from django.contrib.sessions.middleware import SessionMiddleware
 
 from assigned_procedures.models import AssignedProcedures
 from patients.models import Patients
-from patients.views import new_patient, procedures, remove_pairs_from_patient
+from patients.views import new_patient, procedures, remove_pairs_from_patient, add_roadmap
 from procedures.models import Procedure
 from procedures.views import new_procedure
 from roadmaps.models import Roadmap
@@ -113,15 +113,16 @@ class TestRoadmapToPatients(TestCase):
         response = procedures(get_request)
         self.assertEqual(response.status_code, 200)
 
-        post_request = self.factory.post('/patients/profile/procedures/add_roadmap//', {'roadmap':[str(self.test_roadmap.id)]})
+        post_request = self.factory.post('/patients/profile/procedures/add_roadmap/', {'roadmap': [str(self.test_roadmap.id)]})
         self.middleware.process_request(post_request)
         post_request.session = get_request.session
         post_request.user = self.user
-        response = procedures(post_request)
+        response = add_roadmap(post_request)
         self.assertEqual(response.status_code, 302)
 
-        expected_list = [(self.test_object_one, 1), (self.test_object_two, 1), (self.test_object_three, 1)]
 
+        expected_list = [(self.test_object_one, 1), (self.test_object_two, 1), (self.test_object_three, 1)]
+        
         self.assertListEqual(expected_list, AssignedProcedures.get_all_procedures(self.test_patient))
 
         return post_request
@@ -139,7 +140,7 @@ class TestRoadmapToPatients(TestCase):
         self.middleware.process_request(post_request)
         post_request.session = get_request.session
         post_request.user = self.user
-        response = procedures(post_request)
+        response = add_roadmap(post_request)
         self.assertEqual(response.status_code, 302)
 
         expected_list = []
@@ -155,13 +156,13 @@ class TestRoadmapToPatients(TestCase):
         response = procedures(get_request)
         self.assertEqual(response.status_code, 200)
 
-        post_request = self.factory.post('/patients/profile/procedures/', {'roadmap':[self.test_roadmap.id]})
+        post_request = self.factory.post('/patients/profile/procedures/add_roadmap/', {'roadmap':[self.test_roadmap.id]})
         self.middleware.process_request(post_request)
         post_request.session = get_request.session
 
         post_request.session['patient_id'] = 99999
         post_request.user = self.user
-        response = procedures(post_request)
+        response = add_roadmap(post_request)
         self.assertEqual(response.status_code, 302)
 
         expected_list = []
