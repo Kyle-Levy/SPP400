@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from patients.forms import NewPatient, SearchPatients
-from roadmaps.forms import SelectFromRoadmap
+from roadmaps.forms import SelectFromRoadmap, RoadmapProcedureLinkForm
 from patients.models import Patients
 from assigned_procedures.models import AssignedProcedures
 from roadmaps.models import RoadmapProcedureLink
@@ -180,7 +180,20 @@ def add_roadmap(request):
 
 @login_required
 def add_procedure(request):
-    return redirect('/homepage/')
+    if request.method == 'POST':
+        try:
+            patient = Patients.objects.get(id=request.session['patient_id'])
+
+            form = RoadmapProcedureLinkForm(request.POST)
+            if form.is_valid():
+                cd = form.cleaned_data
+                for procedure_item in cd['procedure']:
+                    AssignedProcedures.assign_procedure_to_patient(cd['phase'], patient, procedure_item)
+                return redirect('/patients/profile/?id=' + str(patient.id))
+            else:
+                return redirect('/homepage/')
+        except Patients.DoesNotExist:
+            return redirect('/patients/')
 
 
 @login_required

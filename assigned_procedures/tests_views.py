@@ -4,7 +4,7 @@ from django.contrib.sessions.middleware import SessionMiddleware
 
 from assigned_procedures.models import AssignedProcedures
 from patients.models import Patients
-from patients.views import new_patient, procedures, remove_pairs_from_patient, add_roadmap
+from patients.views import new_patient, procedures, remove_pairs_from_patient, add_roadmap, add_procedure
 from procedures.models import Procedure
 from procedures.views import new_procedure
 from roadmaps.models import Roadmap
@@ -186,10 +186,10 @@ class TestRoadmapToPatients(TestCase):
             'procedure': [self.test_object_one.id, self.test_object_two.id, self.test_object_three.id], 'phase': 1})
         add_request.session = get_request.session
         add_request.user = self.user
-        response = add_roadmap(add_request)
+        response = add_procedure(add_request)
         self.assertEqual(response.status_code, 302)
 
-        expected_list = [self.test_object_one.id, self.test_object_two.id, self.test_object_three.id]
+        expected_list = [(self.test_object_one, 1), (self.test_object_two, 1),(self.test_object_three, 1)]
 
         self.assertListEqual(expected_list, AssignedProcedures.get_all_procedures(self.test_patient))
 
@@ -210,7 +210,7 @@ class TestRoadmapToPatients(TestCase):
             'procedure': [99999], 'phase': 1})
         add_request.session = get_request.session
         add_request.user = self.user
-        response = add_roadmap(add_request)
+        response = add_procedure(add_request)
         self.assertEqual(response.status_code, 302)
 
         expected_list = []
@@ -235,7 +235,7 @@ class TestRoadmapToPatients(TestCase):
         add_request.session = get_request.session
         add_request.user = self.user
         add_request.session['patient_id'] = 99999
-        response = add_roadmap(add_request)
+        response = add_procedure(add_request)
         self.assertEqual(response.status_code, 302)
 
         expected_list = []
