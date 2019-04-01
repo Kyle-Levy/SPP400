@@ -308,21 +308,6 @@ class TestCreatePatient(TestCase):
         response = index(request)
         self.assertEqual(response.status_code, 200)
 
-    def test_get_patient_procedure_page_valid(self):
-        request = self.factory.get('/patients/profile/procedures/?id=' + str(self.test_patient.id))
-        self.middleware.process_request(request)
-        request.session.save()
-        request.user = self.user
-        response = procedures(request)
-        self.assertEqual(response.status_code, 200)
-
-    def test_get_patient_procedure_page_invalid(self):
-        request = self.factory.get('/patients/profile/procedures/?id=' + str(99999))
-        self.middleware.process_request(request)
-        request.session.save()
-        request.user = self.user
-        response = procedures(request)
-        self.assertEqual(response.status_code, 302)
 
 
 '''

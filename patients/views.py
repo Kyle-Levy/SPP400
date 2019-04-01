@@ -86,6 +86,7 @@ def profile(request):
                            ('#', patient.last_name + ', ' + patient.first_name)]
             roadmap_pairs = AssignedProcedures.get_all_procedures(patient)
 
+
             all_assigned_procedures = RoadmapProcedureLink.seperate_by_phase(roadmap_pairs)
 
 
@@ -182,7 +183,6 @@ def remove_pairs_from_patient(request):
         try:
             patient = Patients.objects.get(id=request.session['patient_id'])
             for pair in checked_boxes:
-                print(pair)
                 cleaned_pair = tuple(pair.split(','))
                 AssignedProcedures.remove_assigned_procedure(patient, cleaned_pair[0],
                                                              cleaned_pair[1])
