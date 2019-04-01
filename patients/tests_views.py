@@ -2,7 +2,7 @@ from django.test import RequestFactory, TestCase
 from django.contrib.auth.models import User
 from django.contrib.sessions.middleware import SessionMiddleware
 
-from .views import index, new_patient, profile, update, delete
+from .views import index, new_patient, profile, update, delete, procedures
 from .models import Patients
 
 
@@ -307,6 +307,22 @@ class TestCreatePatient(TestCase):
         request.user = self.user
         response = index(request)
         self.assertEqual(response.status_code, 200)
+
+    def test_get_patient_procedure_page_valid(self):
+        request = self.factory.get('/patients/profile/procedures/?id=' + str(self.test_patient.id))
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+        response = procedures(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_patient_procedure_page_invalid(self):
+        request = self.factory.get('/patients/profile/procedures/?id=' + str(99999))
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+        response = procedures(request)
+        self.assertEqual(response.status_code, 302)
 
 
 '''
