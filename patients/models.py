@@ -20,11 +20,14 @@ class Patients(models.Model):
     record_number = models.CharField(max_length=150, default="########")
     # Foreign key for a patent's procedure step.
     procedure_step = models.CharField(max_length=1000, default="")
+    # Fields for referring physician and date of referral.
+    referring_physician = models.CharField(max_length=150, default='')
+    date_of_referral = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
 
 
     @classmethod
-    def create_patient(cls, first_name, last_name, birth_date, record_number):
-        patient = cls(first_name=first_name, last_name=last_name, bday=birth_date, record_number=record_number)
+    def create_patient(cls, first_name, last_name, birth_date, record_number, referring_physician, date_of_referral):
+        patient = cls(first_name=first_name, last_name=last_name, bday=birth_date, record_number=record_number, referring_physician=referring_physician, date_of_referral=date_of_referral)
         return patient
     def toggle_today_flag(self):
         if self.today_flag is False:

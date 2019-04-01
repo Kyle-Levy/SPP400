@@ -16,9 +16,8 @@ from django.utils.timezone import now
 # labeled as "test" so they do not interfere with code coverage metrics
 class TestAssignedProcedures(TestCase):
 
-    #not actually a test
-    def test_create_assignedProcedure(self, first_name="Kyle", last_name="Dorce", bday=datetime(1996, 10, 24)):
-        tPatient = Patients.objects.create(first_name=first_name, last_name=last_name, bday=bday)
+    def test_create_assignedProcedure(self, first_name="Kyle", last_name="Dorce", bday=datetime(1996, 10, 24), referring_physician='Dr. Who', date_of_referral=datetime(2019, 1, 1)):
+        tPatient = Patients.objects.create(first_name=first_name, last_name=last_name, bday=bday, referring_physician=referring_physician, date_of_referral=date_of_referral)
         tPatient.save()
         tProcedure = Procedure.objects.create(procedure_name="leeches")
         tAssignment = AssignedProcedures.assign_procedure_to_patient(1, tPatient, tProcedure)

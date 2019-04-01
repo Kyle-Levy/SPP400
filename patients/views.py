@@ -44,7 +44,7 @@ def new_patient(request):
         if form.is_valid():
             # Clean form data and check that the username password pair is valid
             cd = form.cleaned_data
-            patient = Patients.create_patient(cd['first_name'], cd['last_name'], cd['birth_date'], cd['record_number'])
+            patient = Patients.create_patient(cd['first_name'], cd['last_name'], cd['birth_date'], cd['record_number'], cd['referring_physician'], cd['date_of_referral'])
             patient.save()
             return redirect('/homepage/')
         else:
@@ -68,8 +68,9 @@ def profile(request):
             return render(request, 'update_patient.html', {'form': NewPatient(
                 initial={'first_name': patient.first_name, 'last_name': patient.last_name,
                          'record_number': patient.record_number,
-                         'birth_date': patient.bday}), 'patient': patient,
+                         'birth_date': patient.bday, 'referring_physician': patient.referring_physician, 'date_of_referral': patient.date_of_referral}), 'patient': patient,
                 'title': 'Update: ' + patient.last_name + ', ' + patient.first_name, 'breadcrumbs': breadcrumbs})
+          
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
@@ -102,6 +103,8 @@ def update(request):
                 patient.last_name = cd['last_name']
                 patient.record_number = cd['record_number']
                 patient.bday = cd['birth_date']
+                patient.referring_physician = cd['referring_physician']
+                patient.date_of_referral = cd['date_of_referral']
                 patient.save()
                 return redirect("/patients/profile/?id=" + str(patient.id))
             else:
