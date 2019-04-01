@@ -16,25 +16,32 @@
 
         {% include "menu_bar.html" %}
 
-        <form action="/patients/profile/procedures/add_procedure/" method="POST"> {% csrf_token %}
-            <div class="form-group">
-                <label for="id_procedure">Procedures: </label>
-                {{procedure_phase_form.procedure }}
-            </div>
+        <div class="row">
+            <div class="col">
+                <form action="/patients/profile/procedures/add_procedure/" method="POST"> {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_procedure">Procedures: </label>
+                        {{ procedure_phase_form.procedure }}
+                    </div>
 
-            <div class="form-group">
-                <label for="id_phase">Phase: </label>
-                {{ procedure_phase_form.phase }}
+                    <div class="form-group">
+                        <label for="id_phase">Phase: </label>
+                        {{ procedure_phase_form.phase }}
+                    </div>
+                    <button type="submit" class="btn btn-warning mb-4">Add Procedure(s) to Patient</button>
+                </form>
             </div>
-            <button type="submit" class="btn btn-warning mb-4">Add to Roadmap</button>
-        </form>
+            <div class="col">
 
-        <form action="/patients/profile/procedures/add_roadmap/" method="post">{% csrf_token %}
-            <div class="container-fluid">
-                {{ roadmap_form.roadmap }}
+                <form action="/patients/profile/procedures/add_roadmap/" method="post">{% csrf_token %}
+                    <div class="container-fluid">
+                        <label for="id_roadmap">Roadmaps: </label>
+                        {{ roadmap_form.roadmap }}
+                    </div>
+                    <button type="submit" class="btn btn-warning my-4">Add Roadmap to Patient</button>
+                </form>
             </div>
-            <button type="submit" class="btn btn-warning my-4">Update Patient</button>
-        </form>
+        </div>
         <div class="container-fixed">
             <form action="/patients/profile/procedures/remove/" method="post">{% csrf_token %}
                 <table class="table table-hover border">
@@ -50,7 +57,8 @@
                         <tr>
                             <td>{{ procedure.procedure_name }}</td>
                             <td>{{ phase }}</td>
-                            <td><input type="checkbox" name="selection[]" value="{{ procedure.id }},{{ phase }}"></td>
+                            <td><input type="checkbox" name="selection[]" value="{{ procedure.id }},{{ phase }}">
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -59,7 +67,8 @@
                     Remove Selected Pairs
                 </button>
                 <!-- Modal stuff goes here -->
-                <div class="modal fade" id="removePairs" tabindex="-1" role="dialog" aria-labelledby="removePairsLabel"
+                <div class="modal fade" id="removePairs" tabindex="-1" role="dialog"
+                     aria-labelledby="removePairsLabel"
                      aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
