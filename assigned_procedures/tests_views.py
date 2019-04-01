@@ -183,3 +183,20 @@ class TestRoadmapToPatients(TestCase):
 
         self.assertListEqual(expected_list, AssignedProcedures.get_all_procedures(self.test_patient))
 
+    def test_post_remove_procedures_invalid_patient(self):
+        add_request = self.test_post_patient_procedure_valid()
+        remove_request = self.factory.post('/patients/profile/procedures/remove/', {
+            'selection[]': ['1,1', '3,1']
+        })
+        self.middleware.process_request(remove_request)
+        remove_request.user = self.user
+        remove_request.session = add_request.session
+        remove_request.session['patient_id'] = 99999
+        response = remove_pairs_from_patient(remove_request)
+
+        self.assertEqual(response.status_code, 302)
+
+        expected_list = [(self.test_object_one, 1), (self.test_object_two, 1), (self.test_object_three, 1)]
+
+        self.assertListEqual(expected_list, AssignedProcedures.get_all_procedures(self.test_patient))
+
