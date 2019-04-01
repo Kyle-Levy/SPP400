@@ -16,7 +16,7 @@
 
         {% include "menu_bar.html" %}
 
-        <form action="/patients/profile/procedures/" method="post">{% csrf_token %}
+        <form action="/patients/profile/procedures/add_roadmap/" method="post">{% csrf_token %}
         <div class="container-fluid">
             {{ form.roadmap }}
         </div>

@@ -160,6 +160,9 @@ def procedures(request):
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
+
+@login_required
+def add_roadmap(request):
     if request.method == 'POST':
         try:
             patient = Patients.objects.get(id=request.session['patient_id'])
@@ -174,6 +177,10 @@ def procedures(request):
                 return redirect('/homepage/')
         except Patients.DoesNotExist:
             return redirect('/patients/')
+
+@login_required
+def add_procedure(request):
+    return redirect('/homepage/')
 
 
 @login_required
