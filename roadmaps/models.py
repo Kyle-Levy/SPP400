@@ -62,3 +62,15 @@ class RoadmapProcedureLink(models.Model):
         queried_pairs = RoadmapProcedureLink.objects.filter(roadmap=roadmap_id)
         for item in queried_pairs:
             item.delete()
+
+    @staticmethod
+    def seperate_by_phase(roadmap_pairs):
+        seperated_by_phase = {}
+
+        for procedure, phase in roadmap_pairs:
+            if phase in seperated_by_phase:
+                seperated_by_phase[phase].append(procedure)
+            else:
+                seperated_by_phase[phase] = [procedure]
+
+        return seperated_by_phase

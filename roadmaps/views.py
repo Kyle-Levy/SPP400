@@ -53,13 +53,7 @@ def view_roadmap(request):
         try:
             roadmap = Roadmap.objects.get(id=request.GET.get('id'))
             roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
-            seperated_by_phase = {}
-
-            for procedure, phase in roadmap_pairs:
-                if phase in seperated_by_phase:
-                    seperated_by_phase[phase].append(procedure)
-                else:
-                    seperated_by_phase[phase] = [procedure]
+            seperated_by_phase = RoadmapProcedureLink.seperate_by_phase(roadmap_pairs)
 
             breadcrumbs = [('/roadmaps/', 'Roadmaps'), ('#', roadmap.roadmap_name)]
             return render(request, 'view_roadmap.html',

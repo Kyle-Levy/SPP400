@@ -75,6 +75,9 @@
                                 <button type="submit" class="btn btn-warning">Update Patient</button>
                             </form>
 
+                            <a href="/patients/profile/procedures/?id={{ patient.id }}" class="btn btn-warning my-4">Patient's
+                                Procedures</a>
+
                         </div>
                     </div>
                 </div>
@@ -89,10 +92,26 @@
 
                                 <div class="card-header">Next Procedures</div>
                                 <div class="card-body">
-                                    <h5 class="card-title">Procedure Name</h5>
-                                    <p class="card-text">Procedure Date</p>
-                                    <h5 class="card-title">Procedure Name</h5>
-                                    <p class="card-text">Procedure Date</p>
+                                    {% for phase_num, procedure_list in assigned_procedures.items %}
+                                        <div class="col-12">
+                                            <div class="card text-white bg-{% cycle 'primary' 'secondary' 'success' 'info' 'warning' %} mb-3">
+                                                <div class="card-header"><h5 class="mt-2">Phase: {{ phase_num }}</h5>
+                                                </div>
+                                                <div class="card-body row">
+                                                    {% for procedure in procedure_list %}
+                                                        <div class="card text-dark bg-light mb-3 mx-3 col" style="max-width: 16rem;
+                                                                                          min-width: 16rem;">
+
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">{{ procedure.procedure_name }}</h5>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+
                                 </div>
                             </div>
 
@@ -118,51 +137,6 @@
 
                         </div>
                     </div>
-                    <!--
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="panel panel-default text-left">
-                                <div class="panel-body">
-                                    <h1 align="center">Patient Records</h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <h4>Next Procedures:</h4>
-                        </div>
-                        <div class="col-sm-9">
-                            <div class="well">
-                                <p>I think this should be a list of procedures, most likely 1 or 2 in the next level of
-                                    the workflow.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <h4>Procedures Remaining:</h4>
-                        </div>
-                        <div class="col-sm-9">
-                            <div class="well">
-                                <p>I think this should be a list of procedures, all required to reach the end goal of
-                                    the workflow.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <h4>Analytics:</h4>
-                        </div>
-                        <div class="col-sm-9">
-                            <div class="well">
-                                <p>Im guessing something like average time to schedule, time since starting process,
-                                    estimated time to complete procedure workflow can go here</p>
-                            </div>
-                        </div>
-                    </div>
--->
                 </div>
             </div>
         </div>
