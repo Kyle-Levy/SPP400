@@ -21,7 +21,31 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm" id="alerts-col">
-                    Alerts go here
+                {% if alert_patients %}
+                    {% for current_patient in alert_patients %}
+                        <a href="/patients/profile/?id={{ current_patient.id }}"
+                           id="{{ current_patient.first_name.lower }}{{ current_patient.last_name.lower }}"
+                           class="list-group-item list-group-item-action {% cycle 'list-group-item-danger' 'list-group-item-warning' 'list-group-item-success' 'list-group-item-dark' %} flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ current_patient.last_name }}, {{ current_patient.first_name }}</h5>
+                                <small>{{ current_patient.date_of_referral }}</small>
+                            </div>
+                            <h6>MRN: {{ current_patient.record_number }}</h6>
+                            <h6 class="mb-1">Procedure Roadmap Title</h6>
+                            <div class="d-flex w-100 justify-content-between">
+                                <p class="mb-1">Next Procedure(s): {% cycle 'Bloodwork' 'Ekg' 'TAVR' '' %}</p>
+                                <small>{% cycle '01/18/2019' '02/01/2019' '02/22/2019' '03/01/2019' %}</small>
+                            </div>
+                            {% if current_patient.patient_flagged_reason %}
+                                <p class="mb-1"> Alert Reason: {{ current_patient.patient_flagged_reason }}</p>
+                            {% endif %}
+                            <small>{% cycle 'Referred' 'In-Progress' 'Ready' 'Done' %}</small>
+                        </a>
+                    {% endfor %}
+
+                {% else %}
+                    No patients are off schedule
+                {% endif %}
                 </div>
                 <div class="col-sm" id="today-col">
                     Today's patients go here
@@ -47,17 +71,19 @@
                             Sort By
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownSortButton">
-                            <button type="button" class="btn btn-info dropdown-item" id="sortByFirst">First Name</button>
+                            <button type="button" class="btn btn-info dropdown-item" id="sortByFirst">First Name
+                            </button>
                             <button type="button" class="btn btn-info dropdown-item" id="sortByLast">Last Name</button>
                         </div>
                     </div>
                     <div class="list-group">
                         {% for current_patient in patients %}
-                            <a href="/patients/profile/?id={{ current_patient.id }}" id="{{ current_patient.first_name.lower }}{{ current_patient.last_name.lower }}"
+                            <a href="/patients/profile/?id={{ current_patient.id }}"
+                               id="{{ current_patient.first_name.lower }}{{ current_patient.last_name.lower }}"
                                class="list-group-item list-group-item-action {% cycle 'list-group-item-danger' 'list-group-item-warning' 'list-group-item-success' 'list-group-item-dark' %} flex-column align-items-start">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h5 class="mb-1">{{ current_patient.last_name }}, {{ current_patient.first_name }}</h5>
-                                    <small>{% cycle '01/01/2019' '01/18/2019' '02/01/2019' '02/22/2019' %}</small>
+                                    <small>{{ current_patient.date_of_referral }}</small>
                                 </div>
                                 <h6>MRN: {{ current_patient.record_number }}</h6>
                                 <h6 class="mb-1">Procedure Roadmap Title</h6>

@@ -158,7 +158,7 @@ class AssignedProcedures(models.Model):
             quiriedPatients = assignedProc.patient.all()
             for patient in quiriedPatients:
                 behindCheck, behindProc = patient.flag_update()
-                if behindCheck is True:
+                if behindCheck or patient.flagged is True:
                     behindPatients.append(patient)
         return list(set(behindPatients))
 
