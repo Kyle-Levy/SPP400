@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from patients.forms import NewPatient, SearchPatients
+from patients.forms import NewPatient, SearchPatients, FlagForm
 from roadmaps.forms import SelectFromRoadmap, RoadmapProcedureLinkForm
 from patients.models import Patients
 from assigned_procedures.models import AssignedProcedures
@@ -92,7 +92,8 @@ def profile(request):
 
             return render(request, 'patient.html',
                           {"patient": patient, 'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name,
-                           'breadcrumbs': breadcrumbs, 'assigned_procedures': all_assigned_procedures})
+                           'breadcrumbs': breadcrumbs, 'assigned_procedures': all_assigned_procedures,
+                           'flag_form': FlagForm()})
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
@@ -211,5 +212,25 @@ def remove_pairs_from_patient(request):
                 AssignedProcedures.remove_assigned_procedure(patient, cleaned_pair[0],
                                                              cleaned_pair[1])
             return redirect('/patients/profile/?id=' + str(patient.id))
+        except Patients.DoesNotExist:
+            return redirect('/patients/')
+
+
+def flag_patient(request):
+    if request.method == 'POST':
+        try:
+            form = FlagForm(request.POST)
+
+            if form.is_valid():
+                patient = Patients.objects.get(id=request.GET.get('id'))
+                request.session['patient_id'] = patient.id
+
+                cd = form.cleaned_data
+                patient.patient_flagged_reason = cd['notes']
+                patient.toggle_flag()
+                patient.save()
+
+                return redirect('/patients/profile/?id=' + str(patient.id))
+
         except Patients.DoesNotExist:
             return redirect('/patients/')
