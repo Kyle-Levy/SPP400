@@ -68,7 +68,7 @@ def view_procedure(request):
                            ('/procedures/view_procedure/?id=' + str(procedure.id),'View: ' + procedure.procedure_name),
                            ('#', 'Update: ' + procedure.procedure_name)]
             return render(request, 'update_procedure.html', {'form': NewProcedure(
-                initial={'procedure_name': procedure.procedure_name, 'notes': procedure.procedure_info}),
+                initial={'procedure_name': procedure.procedure_name, 'notes': procedure.procedure_info, 'time_frame': 'days', 'time': procedure.est_days_to_complete}),
                 'procedure': procedure, 'title': 'Update: ' + procedure.procedure_name, 'breadcrumbs': breadcrumbs})
         except Procedure.DoesNotExist:
             return redirect('/procedures/')
