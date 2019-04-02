@@ -1,4 +1,4 @@
-from patients.forms import NewPatient
+from patients.forms import *
 from django.test import TestCase
 
 
@@ -37,4 +37,17 @@ class TestPatientForm(TestCase):
     def test_empty_fields(self):
         form_data = {}
         form = NewPatient(data=form_data)
+        self.assertFalse(form.is_valid())
+
+
+class TestFlagForm(TestCase):
+
+    def test_valid_form(self):
+        form_data = {'notes': "Didn't respond to emails."}
+        form = FlagForm(data=form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_empty_field(self):
+        form_data = {}
+        form = FlagForm(data=form_data)
         self.assertFalse(form.is_valid())
