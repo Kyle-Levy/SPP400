@@ -2,7 +2,7 @@ from django.test import RequestFactory, TestCase
 from django.contrib.auth.models import User
 from django.contrib.sessions.middleware import SessionMiddleware
 
-from .views import index, new_patient, profile, update, delete, procedures
+from .views import *
 from .models import Patients
 
 
@@ -307,6 +307,57 @@ class TestCreatePatient(TestCase):
         request.user = self.user
         response = index(request)
         self.assertEqual(response.status_code, 200)
+
+    def test_valid_flag_patient(self):
+        request = self.factory.post('/patients/profile/flag/?id=' + str(self.test_patient.id), {'notes': "Didn't respond to emails."})
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+        response = flag_patient(request)
+        modified_patient = Patients.objects.get(first_name='John', last_name='Smith', bday='1950-01-01')
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(modified_patient.flagged)
+        self.assertEqual(modified_patient.patient_flagged_reason, "Didn't respond to emails.")
+
+    def test_invalid_notes(self):
+        request = self.factory.post('/patients/profile/flag/?id=' + str(self.test_patient.id), {'notes': ""})
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+        response = flag_patient(request)
+        modified_patient = Patients.objects.get(first_name='John', last_name='Smith', bday='1950-01-01')
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(modified_patient.flagged)
+        self.assertEqual(modified_patient.patient_flagged_reason, "")
+
+    def test_invalid_id_flag_patient(self):
+        request = self.factory.post('/patients/profile/flag/?id=' + str(99999), {'notes': "Didn't respond to emails."})
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+        response = flag_patient(request)
+        self.assertEqual(response.status_code, 302)
+
+    def test_valid_unflagged_patient(self):
+        self.test_valid_flag_patient()
+        request = self.factory.post('/patients/profile/unflag/?id=' + str(self.test_patient.id))
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+        response = unflag_patient(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(self.test_patient.flagged)
+        self.assertEqual(self.test_patient.patient_flagged_reason, '')
+
+    def test_invalid_id_unflagged_patient(self):
+        self.test_valid_flag_patient()
+        request = self.factory.post('/patients/profile/unflag/?id=' + str(99999))
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+        response = unflag_patient(request)
+        self.assertEqual(response.status_code, 302)
+
 
 
 
