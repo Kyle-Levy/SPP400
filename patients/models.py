@@ -23,6 +23,9 @@ class Patients(models.Model):
     # Fields for referring physician and date of referral.
     referring_physician = models.CharField(max_length=150, default='')
     date_of_referral = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
+    #flag used to show when a patient is behind for a procedure
+    behind_flag = models.BooleanField(default=False)
+
 
 
     @classmethod
@@ -67,5 +70,28 @@ class Patients(models.Model):
     def save(self, *args, **kwargs):
         self.search_field = str(self.first_name) + str(self.last_name) + str(self.record_number)
         super(Patients, self).save(*args, **kwargs)
+
+
+    #Updates the "behind_flag" to "true" if there are any
+    #assigned procedures that are in progress and behind schedule.
+    #it then returns a tuple structured (True, Problematic Procedure)
+    #and if none are behind returns False
+
+    def flag_update(self):
+        import assigned_procedures
+        from assigned_procedures.models import AssignedProcedures
+
+        assignedProcs = AssignedProcedures.get_all_procedures(self)
+        for procedureToCheck in assignedProcs:
+            result = AssignedProcedures.check_goal_status(self,procedureToCheck[0],1)
+            if result == "in progress (behind)":
+                self.behind_flag = True
+                self.save()
+                return True, procedureToCheck
+
+        self.behind_flag = False
+        self.save()
+        return False, None
+
 
 

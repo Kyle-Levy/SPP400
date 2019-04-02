@@ -112,3 +112,22 @@ class TestAssignedProcedures(TestCase):
         correct = [(tProcedure,2)]
         self.assertEqual(toCheck, correct)
 
+    def test_update_all_patient_goal_flags(self):
+        result = AssignedProcedures.update_all_patient_goal_flags()
+        self.assertEqual(result, [])
+        tPatient = Patients.objects.create(first_name="Kyle", last_name="Dorcey", bday=datetime(1996, 10, 24))
+        tPatient.save()
+        tPatient2 = Patients.objects.create(first_name="Mr", last_name="Magoo", bday=datetime(1996, 10, 24))
+        tPatient2.save()
+
+        testProcedure = Procedure.objects.create(procedure_name="Leaches")
+        testProcedure.save()
+        testProcedure2 = Procedure.objects.create(procedure_name="moo")
+        testProcedure2.save()
+
+        AssignedProcedures.assign_procedure_to_patient(1,tPatient,testProcedure)
+        AssignedProcedures.assign_procedure_to_patient(2,tPatient,testProcedure2,-10)
+        AssignedProcedures.assign_procedure_to_patient(1, tPatient2, testProcedure)
+        AssignedProcedures.assign_procedure_to_patient(2, tPatient2, testProcedure2, -10)
+        result = AssignedProcedures.update_all_patient_goal_flags()
+        self.assertEqual(result,[tPatient, tPatient2])

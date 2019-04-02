@@ -28,7 +28,6 @@ class AssignedProcedures(models.Model):
 
 
     @classmethod
-
     def assign_procedure_to_patient(cls, step, patientToLink,procedureToLink, proc_est=0, return_visit=False):
         if proc_est is not 0:
             est_flag = True
@@ -53,7 +52,6 @@ class AssignedProcedures(models.Model):
 
 
 
-
     #returns a strings:
     #completed (on time)
     #completed (behind)
@@ -62,11 +60,14 @@ class AssignedProcedures(models.Model):
     #not scheduled
     #"in progress"/"completed" refers to whether the procedure has been completed or not
     #"behind"/"on time" refers to if the procedure is behind schedule or not.
+    #KNOWN BUG: THIS DOES NOT WORK IF THE SAME PROCEDURE IS ASSIGNED AT DIFFERENT TIMES WITH DIFFERENT GOALS
     @staticmethod
     def check_goal_status(searchPatient, searchProcedure, searchVisitID=1):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, procedure=searchProcedure, visitID=searchVisitID).select_related()
         for assignedProc in quiriedAssignedProcedures:
+
             if assignedProc.est_flag is True:
+
                 if assignedProc.est_date_complete > timezone.now() and assignedProc.completed is False:
                     return "in progress (on time)"
                 elif assignedProc.est_date_complete > timezone.now() and assignedProc.completed is True:
@@ -96,7 +97,7 @@ class AssignedProcedures(models.Model):
 
         return maxVisitID
 
-    # returns list of tuples structured: (step number, procedure object)
+    # returns list of tuples structured: (procedure object, procedure step)
     @staticmethod
     def get_all_procedures(searchPatient, searchVisitID=1):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, visitID=searchVisitID)
@@ -148,3 +149,16 @@ class AssignedProcedures(models.Model):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=patientToChange.id,
                                                                       procedure=procedureToDelete, procedureStep=phase,
                                                                       visitID=visitID).delete()
+
+    @staticmethod
+    def update_all_patient_goal_flags():
+        behindPatients = []
+        quiriedAssignedProcedures = AssignedProcedures.objects.filter(completed=False)
+        for assignedProc in quiriedAssignedProcedures:
+            quiriedPatients = assignedProc.patient.all()
+            for patient in quiriedPatients:
+                behindCheck, behindProc = patient.flag_update()
+                if behindCheck is True:
+                    behindPatients.append(patient)
+        return list(set(behindPatients))
+
