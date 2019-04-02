@@ -5,6 +5,8 @@ from datetime import date
 from datetime import datetime
 from datetime import timedelta
 from django.utils import timezone
+
+
 import pytz
 
 
@@ -43,3 +45,27 @@ class TestPatientModel(TestCase):
         test_patient.flagged = True
         test_patient.toggle_flag()
         self.assertEqual(test_patient.flagged, False)
+
+    def test_flag_update(self):
+        from assigned_procedures.models import AssignedProcedures
+        from procedures.models import Procedure
+
+        tProcedure = Procedure.objects.create(procedure_name="leeches")
+        tProcedure.save()
+        tProcedure2 = Procedure.objects.create(procedure_name="Bloodwork")
+        tProcedure2.save()
+        tProcedure3 = Procedure.objects.create(procedure_name="TAVR")
+        tProcedure3.save()
+        tPatient = self.create_patient()
+        tPatient.save()
+
+        AssignedProcedures.assign_procedure_to_patient(1,tPatient,tProcedure)
+        AssignedProcedures.assign_procedure_to_patient(2,tPatient,tProcedure2)
+        AssignedProcedures.assign_procedure_to_patient(3,tPatient,tProcedure3)
+
+        self.assertEqual(tPatient.flag_update(), (False,None))
+        tProcedure = Procedure.objects.create(procedure_name="mmmhm popy")
+        tProcedure.save()
+        AssignedProcedures.assign_procedure_to_patient(4, tPatient, tProcedure, -10)
+        self.assertEqual(tPatient.flag_update(), (True,(tProcedure,4)))
+
