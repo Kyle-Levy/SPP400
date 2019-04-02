@@ -28,7 +28,6 @@ class AssignedProcedures(models.Model):
 
 
     @classmethod
-
     def assign_procedure_to_patient(cls, step, patientToLink,procedureToLink, proc_est=0, return_visit=False):
         if proc_est is not 0:
             est_flag = True
@@ -53,7 +52,6 @@ class AssignedProcedures(models.Model):
 
 
 
-
     #returns a strings:
     #completed (on time)
     #completed (behind)
@@ -66,6 +64,7 @@ class AssignedProcedures(models.Model):
     def check_goal_status(searchPatient, searchProcedure, searchVisitID=1):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, procedure=searchProcedure, visitID=searchVisitID).select_related()
         for assignedProc in quiriedAssignedProcedures:
+
             if assignedProc.est_flag is True:
                 if assignedProc.est_date_complete > timezone.now() and assignedProc.completed is False:
                     return "in progress (on time)"
@@ -96,7 +95,7 @@ class AssignedProcedures(models.Model):
 
         return maxVisitID
 
-    # returns list of tuples structured: (step number, procedure object)
+    # returns list of tuples structured: (procedure object, procedure step)
     @staticmethod
     def get_all_procedures(searchPatient, searchVisitID=1):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, visitID=searchVisitID)
