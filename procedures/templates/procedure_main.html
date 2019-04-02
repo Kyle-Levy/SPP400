@@ -49,6 +49,7 @@
                             <thead>
                             <tr>
                                 <th>Procedure Name</th>
+                                <th>Projected Timeline</th>
                                 <th>More Info</th>
                             </tr>
                             </thead>
@@ -56,6 +57,7 @@
                             {% for procedure in procedures %}
                                 <tr>
                                     <td>{{ procedure.procedure_name }}</td>
+                                    <td>{{ procedure.est_days_to_complete }} days</td>
                                     <td>
                                         <a class="text-primary" href="/procedures/view_procedure/?id={{ procedure.id }}">View
                                             Procedure</a>
