@@ -6,6 +6,7 @@
 </head>
 
 <body>
+{% load octicons %}
 
 <!-- Div holding the entire page -->
 <div class="wrapper">
@@ -29,6 +30,36 @@
                         <div class="card-header">
                             <div style="font-size: 200%;">
                                 {{ patient.first_name }} {{ patient.last_name }}
+                                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#flagModal">
+                                    <span>
+                                        {% octicon "report" %}
+                                        Flag Patient
+                                    </span>
+                                </button>
+                                <div class="modal fade" id="flagModal" tabindex="-1" role="dialog"
+                                     aria-labelledby="flagModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="flagModalLabel">Flag Notes</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <form action="/patients/profile/flag/?id={{ patient.id }}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="modal-body">
+                                                    <label for="notes">Reason for Flagging:</label>
+                                                    {{ flag_form.notes }}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div>
                                 MRN: {{ patient.record_number }}
