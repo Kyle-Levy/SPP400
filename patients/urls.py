@@ -8,5 +8,7 @@ urlpatterns = [
     path('profile/update/', views.update),
     path('profile/delete/', views.delete),
     path('profile/procedures/', views.procedures),
+    path('profile/procedures/add_roadmap/', views.add_roadmap),
+    path('profile/procedures/add_procedure/', views.add_procedure),
     path('profile/procedures/remove/', views.remove_pairs_from_patient),
 ]

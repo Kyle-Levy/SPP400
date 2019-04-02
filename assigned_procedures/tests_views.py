@@ -4,7 +4,7 @@ from django.contrib.sessions.middleware import SessionMiddleware
 
 from assigned_procedures.models import AssignedProcedures
 from patients.models import Patients
-from patients.views import new_patient, procedures, remove_pairs_from_patient
+from patients.views import new_patient, procedures, remove_pairs_from_patient, add_roadmap, add_procedure
 from procedures.models import Procedure
 from procedures.views import new_procedure
 from roadmaps.models import Roadmap
@@ -86,7 +86,6 @@ class TestRoadmapToPatients(TestCase):
 
         add_to_roadmap(add_request)
 
-
     def test_get_patient_procedure_page_valid(self):
         request = self.factory.get('/patients/profile/procedures/?id=' + str(self.test_patient.id))
         self.middleware.process_request(request)
@@ -103,8 +102,9 @@ class TestRoadmapToPatients(TestCase):
         response = procedures(request)
         self.assertEqual(response.status_code, 302)
 
+    # Test adds a roadmap onto a patient and verifies it added successfully
     def test_post_patient_procedure_valid(self):
-        #Need to get the previous page to store id in session
+        # Need to get the previous page to store id in session
         get_request = self.factory.get('/patients/profile/procedures/?id=' + str(self.test_patient.id))
         self.middleware.process_request(get_request)
         get_request.session.save()
@@ -112,11 +112,12 @@ class TestRoadmapToPatients(TestCase):
         response = procedures(get_request)
         self.assertEqual(response.status_code, 200)
 
-        post_request = self.factory.post('/patients/profile/procedures/', {'roadmap':[str(self.test_roadmap.id)]})
+        post_request = self.factory.post('/patients/profile/procedures/add_roadmap/',
+                                         {'roadmap': [str(self.test_roadmap.id)]})
         self.middleware.process_request(post_request)
         post_request.session = get_request.session
         post_request.user = self.user
-        response = procedures(post_request)
+        response = add_roadmap(post_request)
         self.assertEqual(response.status_code, 302)
 
         expected_list = [(self.test_object_one, 1), (self.test_object_two, 1), (self.test_object_three, 1)]
@@ -126,7 +127,7 @@ class TestRoadmapToPatients(TestCase):
         return post_request
 
     def test_post_patient_procedure_invalid_roadmap(self):
-        #Need to get the previous page to store id in session
+        # Need to get the previous page to store id in session
         get_request = self.factory.get('/patients/profile/procedures/?id=' + str(self.test_patient.id))
         self.middleware.process_request(get_request)
         get_request.session.save()
@@ -134,11 +135,11 @@ class TestRoadmapToPatients(TestCase):
         response = procedures(get_request)
         self.assertEqual(response.status_code, 200)
 
-        post_request = self.factory.post('/patients/profile/procedures/', {'roadmap':[str(99999)]})
+        post_request = self.factory.post('/patients/profile/procedures/add_roadmap/', {'roadmap': [str(99999)]})
         self.middleware.process_request(post_request)
         post_request.session = get_request.session
         post_request.user = self.user
-        response = procedures(post_request)
+        response = add_roadmap(post_request)
         self.assertEqual(response.status_code, 302)
 
         expected_list = []
@@ -146,7 +147,7 @@ class TestRoadmapToPatients(TestCase):
         self.assertListEqual(expected_list, AssignedProcedures.get_all_procedures(self.test_patient))
 
     def test_post_patient_procedure_invalid_patient_id(self):
-        #Need to get the previous page to store id in session
+        # Need to get the previous page to store id in session
         get_request = self.factory.get('/patients/profile/procedures/?id=' + str(self.test_patient.id))
         self.middleware.process_request(get_request)
         get_request.session.save()
@@ -154,18 +155,94 @@ class TestRoadmapToPatients(TestCase):
         response = procedures(get_request)
         self.assertEqual(response.status_code, 200)
 
-        post_request = self.factory.post('/patients/profile/procedures/', {'roadmap':[self.test_roadmap.id]})
+        post_request = self.factory.post('/patients/profile/procedures/add_roadmap/',
+                                         {'roadmap': [self.test_roadmap.id]})
         self.middleware.process_request(post_request)
         post_request.session = get_request.session
 
         post_request.session['patient_id'] = 99999
         post_request.user = self.user
-        response = procedures(post_request)
+        response = add_roadmap(post_request)
         self.assertEqual(response.status_code, 302)
 
         expected_list = []
 
         self.assertListEqual(expected_list, AssignedProcedures.get_all_procedures(self.test_patient))
+
+    def test_post_add_procedure_valid(self):
+        # Need to get the previous page to store id in session
+        get_request = self.factory.get('/patients/profile/procedures/?id=' + str(self.test_patient.id))
+        self.middleware.process_request(get_request)
+        get_request.session.save()
+        get_request.user = self.user
+        response = procedures(get_request)
+        self.assertEqual(response.status_code, 200)
+
+        expected_list = []
+
+        self.assertListEqual(expected_list, AssignedProcedures.get_all_procedures(self.test_patient))
+
+        add_request = self.factory.post('profile/procedures/add_procedure/', {
+            'procedure': [self.test_object_one.id, self.test_object_two.id, self.test_object_three.id], 'phase': 1})
+        add_request.session = get_request.session
+        add_request.user = self.user
+        response = add_procedure(add_request)
+        self.assertEqual(response.status_code, 302)
+
+        expected_list = [(self.test_object_one, 1), (self.test_object_two, 1),(self.test_object_three, 1)]
+
+        self.assertListEqual(expected_list, AssignedProcedures.get_all_procedures(self.test_patient))
+
+    def test_post_add_procedure_invalid_procedure_id(self):
+        # Need to get the previous page to store id in session
+        get_request = self.factory.get('/patients/profile/procedures/?id=' + str(self.test_patient.id))
+        self.middleware.process_request(get_request)
+        get_request.session.save()
+        get_request.user = self.user
+        response = procedures(get_request)
+        self.assertEqual(response.status_code, 200)
+
+        expected_list = []
+
+        self.assertListEqual(expected_list, AssignedProcedures.get_all_procedures(self.test_patient))
+
+        add_request = self.factory.post('profile/procedures/add_procedure/', {
+            'procedure': [99999], 'phase': 1})
+        add_request.session = get_request.session
+        add_request.user = self.user
+        response = add_procedure(add_request)
+        self.assertEqual(response.status_code, 302)
+
+        expected_list = []
+
+        self.assertListEqual(expected_list, AssignedProcedures.get_all_procedures(self.test_patient))
+
+    def test_post_add_procedure_invalid_patient_id(self):
+        # Need to get the previous page to store id in session
+        get_request = self.factory.get('/patients/profile/procedures/?id=' + str(self.test_patient.id))
+        self.middleware.process_request(get_request)
+        get_request.session.save()
+        get_request.user = self.user
+        response = procedures(get_request)
+        self.assertEqual(response.status_code, 200)
+
+        expected_list = []
+
+        self.assertListEqual(expected_list, AssignedProcedures.get_all_procedures(self.test_patient))
+
+        add_request = self.factory.post('profile/procedures/add_procedure/', {
+            'procedure': [self.test_object_one.id, self.test_object_two.id, self.test_object_three.id], 'phase': 1})
+        add_request.session = get_request.session
+        add_request.user = self.user
+        add_request.session['patient_id'] = 99999
+        response = add_procedure(add_request)
+        self.assertEqual(response.status_code, 302)
+
+        expected_list = []
+
+        self.assertListEqual(expected_list, AssignedProcedures.get_all_procedures(self.test_patient))
+
+
 
     def test_post_remove_procedures(self):
         add_request = self.test_post_patient_procedure_valid()
@@ -199,4 +276,3 @@ class TestRoadmapToPatients(TestCase):
         expected_list = [(self.test_object_one, 1), (self.test_object_two, 1), (self.test_object_three, 1)]
 
         self.assertListEqual(expected_list, AssignedProcedures.get_all_procedures(self.test_patient))
-

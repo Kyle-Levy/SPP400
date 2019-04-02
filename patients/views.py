@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from patients.forms import NewPatient, SearchPatients
-from roadmaps.forms import SelectFromRoadmap
+from roadmaps.forms import SelectFromRoadmap, RoadmapProcedureLinkForm
 from patients.models import Patients
 from assigned_procedures.models import AssignedProcedures
 from roadmaps.models import RoadmapProcedureLink
@@ -47,7 +47,8 @@ def new_patient(request):
         if form.is_valid():
             # Clean form data and check that the username password pair is valid
             cd = form.cleaned_data
-            patient = Patients.create_patient(cd['first_name'], cd['last_name'], cd['birth_date'], cd['record_number'], cd['referring_physician'], cd['date_of_referral'])
+            patient = Patients.create_patient(cd['first_name'], cd['last_name'], cd['birth_date'], cd['record_number'],
+                                              cd['referring_physician'], cd['date_of_referral'])
             patient.save()
             return redirect('/homepage/')
         else:
@@ -71,9 +72,10 @@ def profile(request):
             return render(request, 'update_patient.html', {'form': NewPatient(
                 initial={'first_name': patient.first_name, 'last_name': patient.last_name,
                          'record_number': patient.record_number,
-                         'birth_date': patient.bday, 'referring_physician': patient.referring_physician, 'date_of_referral': patient.date_of_referral}), 'patient': patient,
+                         'birth_date': patient.bday, 'referring_physician': patient.referring_physician,
+                         'date_of_referral': patient.date_of_referral}), 'patient': patient,
                 'title': 'Update: ' + patient.last_name + ', ' + patient.first_name, 'breadcrumbs': breadcrumbs})
-          
+
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
@@ -86,9 +88,7 @@ def profile(request):
                            ('#', patient.last_name + ', ' + patient.first_name)]
             roadmap_pairs = AssignedProcedures.get_all_procedures(patient)
 
-
             all_assigned_procedures = RoadmapProcedureLink.seperate_by_phase(roadmap_pairs)
-
 
             return render(request, 'patient.html',
                           {"patient": patient, 'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name,
@@ -154,12 +154,18 @@ def procedures(request):
             breadcrumbs = [('/patients/', 'Patients'),
                            ('/patients/profile/?id=' + str(patient.id), patient.last_name + ', ' + patient.first_name),
                            ('#', patient.first_name + " " + patient.last_name + "'s  Procedures")]
-            return render(request, 'patient_procedures.html', {'form': SelectFromRoadmap(), 'breadcrumbs': breadcrumbs,
-                                                               'title': patient.first_name + " " + patient.last_name + "'s  Procedures",
-                                                               'roadmap_pairs': roadmap_pairs})
+            return render(request, 'patient_procedures.html',
+                          {'roadmap_form': SelectFromRoadmap(), 'procedure_phase_form': RoadmapProcedureLinkForm,
+                           'breadcrumbs': breadcrumbs,
+                           'title': patient.first_name + " " + patient.last_name + "'s  Procedures",
+                           'roadmap_pairs': roadmap_pairs})
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
+
+
+@login_required
+def add_roadmap(request):
     if request.method == 'POST':
         try:
             patient = Patients.objects.get(id=request.session['patient_id'])
@@ -169,6 +175,24 @@ def procedures(request):
                 cd = form.cleaned_data
                 roadmap = cd['roadmap']
                 AssignedProcedures.add_roadmap_to_patient(roadmap, patient)
+                return redirect('/patients/profile/?id=' + str(patient.id))
+            else:
+                return redirect('/homepage/')
+        except Patients.DoesNotExist:
+            return redirect('/patients/')
+
+
+@login_required
+def add_procedure(request):
+    if request.method == 'POST':
+        try:
+            patient = Patients.objects.get(id=request.session['patient_id'])
+
+            form = RoadmapProcedureLinkForm(request.POST)
+            if form.is_valid():
+                cd = form.cleaned_data
+                for procedure_item in cd['procedure']:
+                    AssignedProcedures.assign_procedure_to_patient(cd['phase'], patient, procedure_item)
                 return redirect('/patients/profile/?id=' + str(patient.id))
             else:
                 return redirect('/homepage/')
