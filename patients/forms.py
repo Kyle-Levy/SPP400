@@ -90,7 +90,7 @@ class NewPatient(forms.Form):
 class FlagForm(forms.Form):
     notes = forms.CharField(
         label='Notes',
-        required=False,
+        required=True,
         widget=forms.Textarea(
             attrs={
                 'class': 'form-control',
