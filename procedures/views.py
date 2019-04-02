@@ -99,6 +99,7 @@ def update_procedure(request):
                 # Get desired patient id from url
                 procedure.procedure_name = cd['procedure_name']
                 procedure.procedure_info = cd['notes']
+                procedure.add_time_estimate(cd['time'], str(request.POST.get('time_frame')))
                 procedure.save()
                 return redirect("/procedures/view_procedure/?id=" + str(procedure.id))
             else:
