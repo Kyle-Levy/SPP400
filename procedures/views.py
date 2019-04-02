@@ -42,19 +42,20 @@ def new_procedure(request):
         if form.is_valid():
             cd = form.cleaned_data
             procedure = Procedure(procedure_name=cd['procedure_name'], procedure_info=cd['notes'])
+            procedure.add_time_estimate(cd['time'], str(request.POST.get('time_frame')))
             procedure.save()
             return redirect('/procedures/')
         else:
             breadcrumbs = [('/procedures/', 'Procedures'),
                            ('#', 'New Procedure')]
             return render(request, 'new_procedure.html',
-                          {'form': NewProcedure(), 'failed_creation': True, 'title': 'New Procedure',
+                          {'form': NewProcedure(initial={'time_frame': 'days'}), 'failed_creation': True, 'title': 'New Procedure',
                            'breadcrumbs': breadcrumbs}, status=401)
     else:
         breadcrumbs = [('/procedures/', 'Procedures'),
                        ('#', 'New Procedure')]
         return render(request, 'new_procedure.html',
-                      {'form': NewProcedure(), 'title': 'New Procedure', 'breadcrumbs': breadcrumbs})
+                      {'form': NewProcedure(initial={'time_frame': 'days'}), 'title': 'New Procedure', 'breadcrumbs': breadcrumbs})
 
 
 @login_required
