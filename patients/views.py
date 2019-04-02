@@ -226,11 +226,33 @@ def flag_patient(request):
                 request.session['patient_id'] = patient.id
 
                 cd = form.cleaned_data
-                patient.patient_flagged_reason = cd['notes']
-                patient.toggle_flag()
-                patient.save()
+
+                if not patient.flagged:
+                    patient.toggle_flag()
+                    patient.patient_flagged_reason = cd['notes']
+                    patient.save()
 
                 return redirect('/patients/profile/?id=' + str(patient.id))
+
+            else:
+                return redirect('/patients/')
+
+        except Patients.DoesNotExist:
+            return redirect('/patients/')
+
+
+def unflag_patient(request):
+    if request.method == 'POST':
+        try:
+            patient = Patients.objects.get(id=request.GET.get('id'))
+            request.session['patient_id'] = patient.id
+
+            patient.patient_flagged_reason = ""
+            if patient.flagged:
+                patient.toggle_flag()
+            patient.save()
+
+            return redirect('/patients/profile/?id=' + str(patient.id))
 
         except Patients.DoesNotExist:
             return redirect('/patients/')
