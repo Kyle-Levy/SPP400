@@ -79,7 +79,7 @@ $(document).ready(function () {
     //Apply the function as a listener to the checkboxes themselves
     $(".main-col > label > input").change(show_checked);
 
-    let sort_list_group = function () {
+    let sort_list_group = function (event) {
 
         //Comparator function between a's text and b's text
         let sort_by_last_name = function (a, b) {
@@ -91,8 +91,10 @@ $(document).ready(function () {
         };
 
 
+        let columnToBeSorted = $(this.parentNode.parentNode.parentNode).attr('id');
         //Lists of patients names
-        let list = $("a > div > h5").get();
+        let list = $("#" + columnToBeSorted + " > div > a > div > h5").get();
+
 
         if (event.data.sort_method === "last") {
             list = list.sort(sort_by_last_name);
@@ -115,9 +117,9 @@ $(document).ready(function () {
 
     };
     //Sort the patients by first name
-    $("#sortByFirst").click({sort_method: "first"}, sort_list_group);
+    $(".main-col > div > div > .sortByFirst").click({sort_method: "first"}, sort_list_group);
     //Sort the patients by last name
-    $("#sortByLast").click({sort_method: "last"}, sort_list_group);
+    $(".main-col > div > div > .sortByLast").click({sort_method: "last"}, sort_list_group);
 
 
 });
