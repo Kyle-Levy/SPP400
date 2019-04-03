@@ -15,36 +15,36 @@
 
         {% include "menu_bar.html" %}
         <div class="container-fixed">
-                    <h2>{{ roadmap.roadmap_name }}</h2>
-                    <form action="/roadmaps/view_roadmap/update/" method="POST"> {% csrf_token %}
-                        <div class="row">
-                        <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="time">Projected Timeline</label>
-                            {{ update_form.time }}
-                        </div>
-                        </div>            <div class="col-sm-6">
+            <h2>{{ roadmap.roadmap_name }}</h2>
+            <form action="/roadmaps/view_roadmap/update/" method="POST"> {% csrf_token %}
+                <div class="row">
+                    <div class="col-sm-6">
                         <div class="form-group">
                             <label for="procedure_name">Procedure Name</label>
                             {{ update_form.roadmap_name }}
                         </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
+                    </div>
+                    <div class="col-sm-6">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-warning mb-4">Update Details</button>
+                            <label for="time">Projected Timeline</label>
+                            {{ update_form.time }}
                         </div>
-                        </div>
-                            <div class="col-sm-6">
+                    </div>
+                    <div class="col-sm-6">
                         <div class="form-group">
                             {{ update_form.time_frame.0 }}
                             {{ update_form.time_frame.1 }}
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-warning ml-3 mb-4">Update Details</button>
+                            </div>
                         </div>
-
-                        </div>
-                        </div>
-                    </form>
+                    </div>
+                </div>
+            </form>
             <form action="/roadmaps/view_roadmap/add/" method="POST"> {% csrf_token %}
                 <div class="form-group">
                     <label for="id_procedure">Procedures: </label>
@@ -103,15 +103,17 @@
             </form>
 
             <form action="/roadmaps/view_roadmap/delete/" method="post">{% csrf_token %}
-            <button type="button" class="btn btn-danger my-4" data-toggle="modal" data-target="#deleteRoadmap">
+                <button type="button" class="btn btn-danger my-4" data-toggle="modal" data-target="#deleteRoadmap">
                     Delete Roadmap
                 </button>
-                <div class="modal fade" id="deleteRoadmap" tabindex="-1" role="dialog" aria-labelledby="deleteRoadmapLabel"
+                <div class="modal fade" id="deleteRoadmap" tabindex="-1" role="dialog"
+                     aria-labelledby="deleteRoadmapLabel"
                      aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h4 class="modal-title" id="deleteRoadmapLabel">Delete Roadmap: {{ roadmap.roadmap_name }}</h4>
+                                <h4 class="modal-title" id="deleteRoadmapLabel">Delete
+                                    Roadmap: {{ roadmap.roadmap_name }}</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
