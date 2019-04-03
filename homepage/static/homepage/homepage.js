@@ -13,19 +13,17 @@ $(document).ready(function () {
     let show_checked = function () {
 
         //This should eventually be all columns
-        let manipulated_columns = ['patients-col'];
+        let manipulated_columns = ['alerts-col', 'patients-col'];
 
         //On document ready, this would be an instance of, hence it should sort all columns, else, it should sort only the grandparent of the checkbox clicked's column(i.e patients-col, alerts-col)
         if (!(this instanceof Window)) {
             manipulated_columns = [$(this.parentNode.parentNode).attr('id')];
         }
 
-        console.log(manipulated_columns);
 
         for (var j = 0; j < manipulated_columns.length; j++) {
             let checkList = $("#" + manipulated_columns[j] + " > label > input").get();
 
-            console.log(checkList);
 
             //Default values for checks
             let referred = "none";
@@ -56,16 +54,17 @@ $(document).ready(function () {
 
             //For all of the elements, set the display attr
             for (let i = 0; i < patient_statuses.length; i++) {
-                if (patient_statuses[i].innerHTML === "Referred") {
+                console.log(patient_statuses[i].innerHTML);
+                if (patient_statuses[i].innerText === "Referred") {
                     patient_statuses[i].parentNode.style.display = referred;
                 }
-                if (patient_statuses[i].innerHTML === "In-Progress") {
+                if (patient_statuses[i].innerText === "In-Progress") {
                     patient_statuses[i].parentNode.style.display = inprogress;
                 }
-                if (patient_statuses[i].innerHTML === "Ready") {
+                if (patient_statuses[i].innerText === "Ready") {
                     patient_statuses[i].parentNode.style.display = ready;
                 }
-                if (patient_statuses[i].innerHTML === "Done") {
+                if (patient_statuses[i].innerText === "Done") {
                     patient_statuses[i].parentNode.style.display = done;
                 }
             }
@@ -76,8 +75,9 @@ $(document).ready(function () {
     //Call the function on document ready because checkbox check status is cached when page is refreshed
     show_checked();
 
+
     //Apply the function as a listener to the checkboxes themselves
-    $("#patients-col > label > input").change(show_checked);
+    $(".main-col > label > input").change(show_checked);
 
     let sort_list_group = function () {
 

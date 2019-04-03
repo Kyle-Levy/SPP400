@@ -20,37 +20,47 @@
 
         <div class="container">
             <div class="row">
-                <div class="col-sm" id="alerts-col">
-                {% if alert_patients %}
-                    {% for current_patient in alert_patients %}
-                        <a href="/patients/profile/?id={{ current_patient.id }}"
-                           id="{{ current_patient.first_name.lower }}{{ current_patient.last_name.lower }}"
-                           class="list-group-item list-group-item-action {% cycle 'list-group-item-danger' 'list-group-item-warning' 'list-group-item-success' 'list-group-item-dark' %} flex-column align-items-start">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">{{ current_patient.last_name }}, {{ current_patient.first_name }}</h5>
-                                <small>{{ current_patient.date_of_referral }}</small>
-                            </div>
-                            <h6>MRN: {{ current_patient.record_number }}</h6>
-                            <h6 class="mb-1">Procedure Roadmap Title</h6>
-                            <div class="d-flex w-100 justify-content-between">
-                                <p class="mb-1">Next Procedure(s): {% cycle 'Bloodwork' 'Ekg' 'TAVR' '' %}</p>
-                                <small>{% cycle '01/18/2019' '02/01/2019' '02/22/2019' '03/01/2019' %}</small>
-                            </div>
-                            {% if current_patient.patient_flagged_reason %}
-                                <p class="mb-1"> Alert Reason: {{ current_patient.patient_flagged_reason }}</p>
-                            {% endif %}
-                            <small>{% cycle 'Referred' 'In-Progress' 'Ready' 'Done' %}</small>
-                        </a>
-                    {% endfor %}
-
-                {% else %}
-                    No patients are off schedule
-                {% endif %}
+                <div class="col-sm main-col" id="alerts-col">
+                    <h2>Alerts</h2>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" value="referred" checked>Referred
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" value="in-progress" checked>In-Progress
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" value="ready" checked>Ready
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" value="done" checked>Done
+                    </label>
+                    <div class="list-group">
+                        {% for current_patient in alert_patients %}
+                            <a href="/patients/profile/?id={{ current_patient.id }}"
+                               id="{{ current_patient.first_name.lower }}{{ current_patient.last_name.lower }}"
+                               class="list-group-item list-group-item-action {% cycle 'list-group-item-danger' 'list-group-item-warning' 'list-group-item-success' 'list-group-item-dark' %} flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ current_patient.last_name }}, {{ current_patient.first_name }}</h5>
+                                    <small>{{ current_patient.date_of_referral }}</small>
+                                </div>
+                                <h6>MRN: {{ current_patient.record_number }}</h6>
+                                <h6 class="mb-1">Procedure Roadmap Title</h6>
+                                <div class="d-flex w-100 justify-content-between">
+                                    <p class="mb-1">Next Procedure(s): {% cycle 'Bloodwork' 'Ekg' 'TAVR' '' %}</p>
+                                    <small>{% cycle '01/18/2019' '02/01/2019' '02/22/2019' '03/01/2019' %}</small>
+                                </div>
+                                {% if current_patient.patient_flagged_reason %}
+                                    <p class="mb-1"> Alert Reason: {{ current_patient.patient_flagged_reason }}</p>
+                                {% endif %}
+                                <small>{% cycle 'Referred' 'In-Progress' 'Ready' 'Done' %}</small>
+                            </a>
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="col-sm" id="today-col">
+                <div class="col-sm main-col" id="today-col">
                     Today's patients go here
                 </div>
-                <div class="col-sm" id="patients-col">
+                <div class="col-sm main-col" id="patients-col">
 
                     <h2>All Patients</h2>
                     <label class="checkbox-inline">
