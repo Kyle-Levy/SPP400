@@ -17,6 +17,23 @@ class RoadmapForm(forms.Form):
         )
     )
 
+    time = forms.CharField(
+        label='Projected Timeline',
+        max_length=10,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'id': 'procedureName',
+                'placeholder': 'Enter Projected Completion Time'
+            }
+        )
+    )
+
+    CHOICES = [('days', 'Days'),
+               ('weeks', 'Weeks')]
+
+    time_frame = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect)
+
 
 # Followed this to assign classes to these elements
 # https://stackoverflow.com/questions/3679431/how-do-i-set-default-widget-attributes-for-a-django-modelform

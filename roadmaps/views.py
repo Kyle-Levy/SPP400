@@ -19,6 +19,7 @@ def create_roadmap(request):
         if form.is_valid():
             cd = form.cleaned_data
             roadmap = Roadmap(roadmap_name=cd['roadmap_name'])
+            roadmap.add_time_estimate(cd['time'], str(request.POST.get('time_frame')))
             roadmap.save()
             return redirect('/roadmaps/')
         else:
@@ -29,7 +30,7 @@ def create_roadmap(request):
     if request.method == "GET":
         breadcrumbs = [('/roadmaps/', 'Roadmaps'), ('#', 'Create Roadmap')]
         return render(request, "create_roadmap.html",
-                      {'form': RoadmapForm(), 'title': 'Create Roadmap', 'breadcrumbs': breadcrumbs})
+                      {'form': RoadmapForm(initial={'time_frame': 'days'}), 'title': 'Create Roadmap', 'breadcrumbs': breadcrumbs})
 
 
 def view_roadmap(request):
