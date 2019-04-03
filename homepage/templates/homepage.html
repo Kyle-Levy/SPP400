@@ -22,6 +22,7 @@
             <div class="row">
                 <div class="col-sm main-col" id="alerts-col">
                     <h2>Alerts</h2>
+
                     <label class="checkbox-inline">
                         <input type="checkbox" value="referred" checked>Referred
                     </label>
@@ -34,6 +35,19 @@
                     <label class="checkbox-inline">
                         <input type="checkbox" value="done" checked>Done
                     </label>
+
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle mb-3" type="button" id="dropdownSortButtonAlert"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Sort By
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownSortButtonAlert">
+                            <button type="button" class="btn btn-info dropdown-item sortByFirst">First Name
+                            </button>
+                            <button type="button" class="btn btn-info dropdown-item sortByLast">Last Name</button>
+                        </div>
+                    </div>
+
                     <div class="list-group">
                         {% for current_patient in alert_patients %}
                             <a href="/patients/profile/?id={{ current_patient.id }}"
@@ -56,10 +70,13 @@
                             </a>
                         {% endfor %}
                     </div>
+
                 </div>
+
                 <div class="col-sm main-col" id="today-col">
                     Today's patients go here
                 </div>
+
                 <div class="col-sm main-col" id="patients-col">
 
                     <h2>All Patients</h2>
@@ -75,17 +92,20 @@
                     <label class="checkbox-inline">
                         <input type="checkbox" value="done" id="doneCheck" checked>Done
                     </label>
+
                     <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle mb-3" type="button" id="dropdownSortButton"
+                        <button class="btn btn-primary dropdown-toggle mb-3" type="button"
+                                id="dropdownSortButtonPatient"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Sort By
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownSortButton">
-                            <button type="button" class="btn btn-info dropdown-item sortByFirst" >First Name
+                        <div class="dropdown-menu" aria-labelledby="dropdownSortButtonPatient">
+                            <button type="button" class="btn btn-info dropdown-item sortByFirst">First Name
                             </button>
-                            <button type="button" class="btn btn-info dropdown-item sortByLast" >Last Name</button>
+                            <button type="button" class="btn btn-info dropdown-item sortByLast">Last Name</button>
                         </div>
                     </div>
+
                     <div class="list-group">
                         {% for current_patient in patients %}
                             <a href="/patients/profile/?id={{ current_patient.id }}"

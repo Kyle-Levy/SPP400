@@ -54,7 +54,6 @@ $(document).ready(function () {
 
             //For all of the elements, set the display attr
             for (let i = 0; i < patient_statuses.length; i++) {
-                console.log(patient_statuses[i].innerHTML);
                 if (patient_statuses[i].innerText === "Referred") {
                     patient_statuses[i].parentNode.style.display = referred;
                 }
