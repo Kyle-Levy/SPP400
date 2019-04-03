@@ -14,7 +14,7 @@ class TestProcedures(TestCase):
         self.user.save()
 
         # Creating procedure for testing the ability to manipulate a procedure
-        request = self.factory.post('procedures/create/', {'procedure_name': 'View Procedure', 'notes': 'These are test notes'})
+        request = self.factory.post('procedures/create/', {'procedure_name': 'View Procedure', 'notes': 'These are test notes', 'time_frame': 'days', 'time': '22'})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -24,7 +24,8 @@ class TestProcedures(TestCase):
 
     def test_create_new_procedure(self):
         request = self.factory.post('procedures/create/', {'procedure_name': 'Leeches',
-                                                'notes': 'have been used for clinical bloodletting for at least 2,500 years'})
+                                        'notes': 'have been used for clinical bloodletting for at least 2,500 years',
+                                        'time_frame': 'days', 'time': '22'})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -38,7 +39,8 @@ class TestProcedures(TestCase):
 
     def test_create_new_procedure_missing_name(self):
         request = self.factory.post('procedures/create/',
-                                    {'notes': 'have been used for clinical bloodletting for at least 2,500 years'})
+                                    {'notes': 'have been used for clinical bloodletting for at least 2,500 years'
+                                        , 'time_frame': 'days', 'time': '22'})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -117,7 +119,8 @@ class TestProcedures(TestCase):
         view_procedure(view_request)
 
         request = self.factory.post('/procedures/view_procedure/update',
-                                    {'procedure_name': 'Updated Procedure', 'notes': 'Updated Procedure Info'})
+                                    {'procedure_name': 'Updated Procedure', 'notes': 'Updated Procedure Info'
+                                        , 'time_frame': 'days', 'time': '22'})
         request.user = self.user
         request.session = view_request.session
         request.session.save()
@@ -139,7 +142,8 @@ class TestProcedures(TestCase):
         view_procedure(view_request)
 
         request = self.factory.post('/procedures/view_procedure/update',
-                                    {'procedure_name': 'Updated Procedure', 'notes': 'Updated Procedure Info'})
+                                    {'procedure_name': 'Updated Procedure', 'notes': 'Updated Procedure Info',
+                                     'time_frame': 'days', 'time': '22'})
         request.user = self.user
         request.session = view_request.session
         request.session.save()

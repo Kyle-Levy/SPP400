@@ -27,6 +27,7 @@
                             <thead>
                             <tr>
                                 <th>Roadmap Name</th>
+                                <th>Projected Timeline</th>
                                 <th>More Info</th>
                             </tr>
                             </thead>
@@ -34,6 +35,7 @@
                             {% for roadmap in roadmaps %}
                                 <tr>
                                     <td>{{ roadmap.roadmap_name }}</td>
+                                    <td>{{roadmap.est_days_to_complete}} days</td>
                                     <td>
                                         <a class="text-primary" href="/roadmaps/view_roadmap/?id={{ roadmap.id }}">View
                                             Roadmap</a>

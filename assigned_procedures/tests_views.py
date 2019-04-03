@@ -32,7 +32,7 @@ class TestRoadmapToPatients(TestCase):
         self.test_patient = Patients.objects.get(first_name='John', last_name='Smith', bday='1950-01-01')
 
         # Creating procedures for testing the ability to add them to a roadmap
-        request = self.factory.post('create/', {'procedure_name': 'Object One', 'notes': 'These are test notes'})
+        request = self.factory.post('create/', {'procedure_name': 'Object One', 'notes': 'These are test notes', 'time_frame': 'days', 'time': '22'})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -42,7 +42,7 @@ class TestRoadmapToPatients(TestCase):
                                                      procedure_info='These are test notes')
 
         # Creating procedures for testing the ability to add them to a roadmap
-        request = self.factory.post('create/', {'procedure_name': 'Object Two', 'notes': 'These are test notes'})
+        request = self.factory.post('create/', {'procedure_name': 'Object Two', 'notes': 'These are test notes', 'time_frame': 'days', 'time': '22'})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -52,7 +52,7 @@ class TestRoadmapToPatients(TestCase):
                                                      procedure_info='These are test notes')
 
         # Creating procedures for testing the ability to add them to a roadmap
-        request = self.factory.post('create/', {'procedure_name': 'Object Three', 'notes': 'These are test notes'})
+        request = self.factory.post('create/', {'procedure_name': 'Object Three', 'notes': 'These are test notes', 'time_frame': 'days', 'time': '22'})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -61,7 +61,7 @@ class TestRoadmapToPatients(TestCase):
         self.test_object_three = Procedure.objects.get(procedure_name='Object Three',
                                                        procedure_info='These are test notes')
 
-        request = self.factory.post('/roadmaps/create/', {'roadmap_name': 'Test Roadmap'})
+        request = self.factory.post('/roadmaps/create/', {'roadmap_name': 'Test Roadmap', 'time_frame': 'days', 'time': '22'})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -241,8 +241,6 @@ class TestRoadmapToPatients(TestCase):
         expected_list = []
 
         self.assertListEqual(expected_list, AssignedProcedures.get_all_procedures(self.test_patient))
-
-
 
     def test_post_remove_procedures(self):
         add_request = self.test_post_patient_procedure_valid()
