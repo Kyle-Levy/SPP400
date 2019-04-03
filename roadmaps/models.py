@@ -10,6 +10,21 @@ class Roadmap(models.Model):
     def __str__(self):
         return self.roadmap_name
 
+    # timeFrame = days, weeks, months
+    # number = number of days/weeks/months
+    def add_time_estimate(self, numberOf, timeFrame):
+        if timeFrame == "days":
+            self.est_days_to_complete = numberOf
+            self.save()
+            return True
+        elif timeFrame == "weeks":
+            self.est_days_to_complete = int(numberOf) * 7
+            self.save()
+            return True
+
+        else:
+            return False
+
     @staticmethod
     def update_roadmap_name(new_roadmap_name, current_roadmap):
         quiried_roadmap = Roadmap.objects.filter(id=current_roadmap.id)

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from roadmaps.forms import RoadmapForm, RoadmapProcedureLinkForm
+from roadmaps.forms import RoadmapForm, RoadmapProcedureLinkForm, UpdateRoadmapInfo
 from roadmaps.models import Roadmap, RoadmapProcedureLink
 
 
@@ -44,8 +44,11 @@ def view_roadmap(request):
                            ('/roadmaps/view_roadmap/?id=' + request.GET.get('id'), roadmap.roadmap_name),
                            ('#', 'Modifying: ' + roadmap.roadmap_name)]
             return render(request, 'modify_roadmap.html',
-{'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap,
-                           'title': 'Modifying: ' + roadmap.roadmap_name, 'breadcrumbs': breadcrumbs})
+                            {'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap,
+                            'title': 'Modifying: ' + roadmap.roadmap_name, 'breadcrumbs': breadcrumbs,
+                            'update_form': UpdateRoadmapInfo(initial= {'time': roadmap.est_days_to_complete,
+                                                                       'time_frame': 'days',
+                                                                       'roadmap_name': roadmap.roadmap_name})})
         except Roadmap.DoesNotExist:
             return redirect('/roadmaps/')
 
@@ -121,4 +124,30 @@ def delete_roadmap(request):
             roadmap.delete()
         except Roadmap.DoesNotExist:
             return redirect('/homepage')
+        return redirect('/roadmaps')
+
+
+def update_roadmap(request):
+    if request.method == 'POST':
+        roadmap_id = request.session['roadmap_id']
+        form = UpdateRoadmapInfo(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            try:
+                roadmap = Roadmap.objects.get(id=roadmap_id)
+                roadmap.roadmap_name = cd['roadmap_name']
+                roadmap.add_time_estimate(cd['time'], str(request.POST.get('time_frame')))
+                roadmap.save()
+                roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
+                breadcrumbs = [('/roadmaps/', 'Roadmaps'),
+                               ('/roadmaps/view_roadmap/?id=' + str(roadmap.id), roadmap.roadmap_name),
+                               ('#', 'Modifying: ' + roadmap.roadmap_name)]
+                return render(request, 'modify_roadmap.html',
+                              {'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs, 'roadmap': roadmap,
+                               'title': 'Modifying: ' + roadmap.roadmap_name, 'breadcrumbs': breadcrumbs,
+                               'update_form': UpdateRoadmapInfo(initial={'time': roadmap.est_days_to_complete,
+                                                                         'time_frame': 'days',
+                                                                         'roadmap_name': roadmap.roadmap_name})})
+            except Roadmap.DoesNotExist:
+                return redirect('/homepage')
         return redirect('/roadmaps')
