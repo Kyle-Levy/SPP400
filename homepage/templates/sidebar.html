@@ -1,9 +1,12 @@
 <!-- Tutorial for creating sidebar can be found at: https://bootstrapious.com/p/bootstrap-sidebar -->
 {% block content %}
     {% load octicons %}
+    {% load static %}
     <nav id="sidebar">
         <div class="sidebar-header">
-            <h3>Patient Tracker</h3>
+            <a class="navbar-brand" href="#">
+                <img src="{% static "homepage/DomeWordLeft BLACK.png" %}" width="215px" alt="">
+            </a>
         </div>
 
         <!-- This holds the bulk of the side bar -->
