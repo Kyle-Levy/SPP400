@@ -1,7 +1,4 @@
-apturl==0.5.2
 asn1crypto==0.24.0
-awscli==1.14.44
-awsebcli==3.14.13
 bcrypt==3.1.6
 behave==1.2.6
 behave-django==1.1.0
