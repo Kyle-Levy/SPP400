@@ -1,5 +1,22 @@
 $(document).ready(function () {
 
+    time = new Date().getHours();
+    username = $('#greeting').text()
+
+    greeting = "";
+
+    if(time >=3 && time < 12){
+        greeting = "Good morning, ";
+    } else if(time >=12 && time < 18){
+        greeting = "Good afternoon, ";
+    } else{
+        greeting = "Good evening, "
+    }
+
+    $('#greeting').text(greeting + username);
+
+
+
     $("#sidebar").mCustomScrollbar({
          theme: "minimal"
     });
