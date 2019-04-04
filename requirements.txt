@@ -13,7 +13,6 @@ chardet==3.0.4
 colorama==0.3.9
 coverage==4.5.2
 cryptography==2.1.4
-distro-info==0.18
 Django==2.1.7
 django-filter==2.1.0
 django-material==1.5.0
