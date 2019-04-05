@@ -46,7 +46,7 @@ class TestProcedures(TestCase):
         request.session.save()
 
         response = new_procedure(request)
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 302)
 
         # If an entry exists, it will overwrite None, thus failing the test
         try:
@@ -92,37 +92,30 @@ class TestProcedures(TestCase):
         response = view_procedure(request)
         self.assertEqual(response.status_code, 302)
 
-    def test_post_view_procedure_valid_id(self):
-        request = self.factory.post('/procedures/view_procedure/?id=' + str(self.test_procedure.id))
+    def test_get_update_procedure_valid_id(self):
+        request = self.factory.get('/procedures/view_procedure/update/?id=' + str(self.test_procedure.id))
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
 
-        response = view_procedure(request)
+        response = update_procedure(request)
         self.assertEqual(response.status_code, 200)
 
-    def test_post_view_procedure_invalid_id(self):
-        request = self.factory.post('/procedures/view_procedure/?id=' + str(99999))
+    def test_get_update_procedure_invalid_id(self):
+        request = self.factory.get('/procedures/view_procedure/update/?id=' + str(99999))
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
 
-        response = view_procedure(request)
+        response = update_procedure(request)
         self.assertEqual(response.status_code, 302)
 
     def test_post_update_procedure_valid_id(self):
-        view_request = self.factory.post('/procedures/view_procedure/?id=' + str(self.test_procedure.id))
-        view_request.user = self.user
-        self.middleware.process_request(view_request)
-        view_request.session.save()
-
-        view_procedure(view_request)
-
-        request = self.factory.post('/procedures/view_procedure/update',
+        request = self.factory.post('/procedures/view_procedure/update/?id=' +str(self.test_procedure.id),
                                     {'procedure_name': 'Updated Procedure', 'notes': 'Updated Procedure Info'
                                         , 'time_frame': 'days', 'time': '22'})
         request.user = self.user
-        request.session = view_request.session
+        self.middleware.process_request(request)
         request.session.save()
 
         response = update_procedure(request)
@@ -134,22 +127,11 @@ class TestProcedures(TestCase):
         self.assertIsNotNone(updated_procedure)
 
     def test_post_update_procedure_invalid_id(self):
-        view_request = self.factory.post('/procedures/view_procedure/?id=' + str(self.test_procedure.id))
-        view_request.user = self.user
-        self.middleware.process_request(view_request)
-        view_request.session.save()
-
-        view_procedure(view_request)
-
-        request = self.factory.post('/procedures/view_procedure/update',
-                                    {'procedure_name': 'Updated Procedure', 'notes': 'Updated Procedure Info',
-                                     'time_frame': 'days', 'time': '22'})
+        request = self.factory.post('/procedures/view_procedure/update/?id=' + str(99999),
+                                    {'procedure_name': 'Updated Procedure', 'notes': 'Updated Procedure Info'
+                                        , 'time_frame': 'days', 'time': '22'})
         request.user = self.user
-        request.session = view_request.session
-        request.session.save()
-
-        # Fudge the id
-        request.session['procedure_id'] = 9999999
+        self.middleware.process_request(request)
         request.session.save()
 
         response = update_procedure(request)
@@ -165,21 +147,16 @@ class TestProcedures(TestCase):
             self.assertIsNone(updated_procedure)
 
     def test_post_update_procedure_invalid_form(self):
-        view_request = self.factory.post('/procedures/view_procedure/?id=' + str(self.test_procedure.id))
-        view_request.user = self.user
-        self.middleware.process_request(view_request)
-        view_request.session.save()
-
-        view_procedure(view_request)
-
-        request = self.factory.post('/procedures/view_procedure/update', {'notes': 'Updated Procedure Info'})
+        request = self.factory.post('/procedures/view_procedure/update/?id=' + str(self.test_procedure.id),
+                                    {'notes': 'Updated Procedure Info'
+                                        , 'time_frame': 'days', 'time': '22'})
         request.user = self.user
-        request.session = view_request.session
+        self.middleware.process_request(request)
         request.session.save()
 
         response = update_procedure(request)
 
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 302)
 
         # If an entry exists, it will overwrite None, thus failing the test
         try:
@@ -189,16 +166,9 @@ class TestProcedures(TestCase):
             self.assertIsNone(updated_procedure)
 
     def test_post_delete_procedure_valid_id(self):
-        view_request = self.factory.post('/procedures/view_procedure/?id=' + str(self.test_procedure.id))
-        view_request.user = self.user
-        self.middleware.process_request(view_request)
-        view_request.session.save()
-
-        view_procedure(view_request)
-
-        request = self.factory.post('/procedures/view_procedure/delete')
+        request = self.factory.post('/procedures/view_procedure/delete/?id=' + str(self.test_procedure.id))
         request.user = self.user
-        request.session = view_request.session
+        self.middleware.process_request(request)
         request.session.save()
 
         response = delete_this_procedure(request)
@@ -214,20 +184,9 @@ class TestProcedures(TestCase):
             self.assertIsNone(deleted_procedure)
 
     def test_post_delete_procedure_invalid_id(self):
-        view_request = self.factory.post('/procedures/view_procedure/?id=' + str(self.test_procedure.id))
-        view_request.user = self.user
-        self.middleware.process_request(view_request)
-        view_request.session.save()
-
-        view_procedure(view_request)
-
-        request = self.factory.post('/procedures/view_procedure/delete')
+        request = self.factory.post('/procedures/view_procedure/delete/?id=' + str(99999))
         request.user = self.user
-        request.session = view_request.session
-        request.session.save()
-
-        # Fudge the id
-        request.session['procedure_id'] = 9999999
+        self.middleware.process_request(request)
         request.session.save()
 
         response = delete_this_procedure(request)
@@ -240,7 +199,7 @@ class TestProcedures(TestCase):
         self.assertIsNotNone(deleted_procedure)
 
     def test_search_procedures(self):
-        request = self.factory.post('/procedures/', {'search_terms': 'john'})
+        request = self.factory.post('/procedures/', {'search_terms': 'view'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
