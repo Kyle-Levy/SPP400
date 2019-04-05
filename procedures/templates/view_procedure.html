@@ -46,10 +46,8 @@
                                 </div>
 
                             </div>
-                            <form action="/procedures/view_procedure/?id={{ procedure.id }}"
-                                  method="post"> {% csrf_token %}
-                                <button type="submit" class="btn btn-warning">Change Procedure Info</button>
-                            </form>
+
+                                <a href="/procedures/view_procedure/update/?id={{ procedure.id }}" class="btn btn-warning">Change Procedure Info</a>
                         </div>
 
                     </div>
