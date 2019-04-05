@@ -19,7 +19,6 @@ class RoadmapForm(forms.Form):
 
     time = forms.IntegerField(
         label='Projected Timeline',
-        max_length=10,
         widget=forms.NumberInput(
             attrs={
                 'class': 'form-control',
