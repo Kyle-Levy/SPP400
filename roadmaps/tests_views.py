@@ -1,9 +1,9 @@
+from django.contrib.messages.storage.fallback import FallbackStorage
 from django.test import RequestFactory, TestCase
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.contrib.auth.models import User
 from procedures.views import new_procedure
-from roadmaps.views import roadmaps_index, create_roadmap, view_roadmap, add_to_roadmap, remove_selected_pairs, \
-    delete_roadmap
+from roadmaps.views import *
 from .models import Procedure, Roadmap, RoadmapProcedureLink
 
 
@@ -98,6 +98,10 @@ class TestProcedures(TestCase):
         self.middleware.process_request(request)
         request.session.save()
 
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
         response = create_roadmap(request)
         self.assertEqual(response.status_code, 401)
 
@@ -117,97 +121,93 @@ class TestProcedures(TestCase):
         self.middleware.process_request(request)
         request.session.save()
 
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
         response = view_roadmap(request)
 
         self.assertEqual(response.status_code, 302)
 
-    def test_post_view_roadmap_valid(self):
-        request = self.factory.post('/roadmaps/view_roadmap/?id=' + str(self.test_roadmap.id))
+    def test_get_modify_roadmap_valid(self):
+        request = self.factory.get('/roadmaps/view_roadmap/modify_roadmap/?id=' + str(self.test_roadmap.id))
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
 
-        response = view_roadmap(request)
+        response = modify_roadmap(request)
 
         self.assertEqual(response.status_code, 200)
 
-    def test_post_view_roadmap_invalid(self):
-        request = self.factory.post('/roadmaps/view_roadmap/?id=' + str(self.test_roadmap.id + 99999))
+    def test_get_modify_roadmap_invalid(self):
+        request = self.factory.get('/roadmaps/view_roadmap/modify_roadmap/?id=' + str(self.test_roadmap.id + 99999))
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
 
-        response = view_roadmap(request)
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = modify_roadmap(request)
 
         self.assertEqual(response.status_code, 302)
 
     def test_add_to_roadmap(self):
-        # View roadmap first
-        view_request = self.factory.post('/roadmaps/view_roadmap/?id=' + str(self.test_roadmap.id))
-        view_request.user = self.user
-        self.middleware.process_request(view_request)
-        view_request.session.save()
-
-        response = view_roadmap(view_request)
-
-        self.assertEqual(response.status_code, 200)
-
         expected_list = [(self.test_object_one, 1), (self.test_object_two, 1), (self.test_object_three, 1)]
 
-        add_request = self.factory.post('/roadmaps/view_roadmap/add/', {
+        add_request = self.factory.post('/roadmaps/view_roadmap/add/?id=' + str(self.test_roadmap.id), {
             'procedure': [self.test_object_one.id, self.test_object_two.id, self.test_object_three.id], 'phase': 1})
 
         add_request.user = self.user
-        add_request.session = view_request.session
+        self.middleware.process_request(add_request)
+        add_request.session.save()
 
         response = add_to_roadmap(add_request)
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
         self.assertListEqual(expected_list, RoadmapProcedureLink.get_procedures_from_roadmap(self.test_roadmap))
 
     def test_add_to_roadmap_invalid_id(self):
-        # View roadmap first
-        view_request = self.factory.post('/roadmaps/view_roadmap/?id=' + str(self.test_roadmap.id))
-        view_request.user = self.user
-        self.middleware.process_request(view_request)
-        view_request.session.save()
+        expected_list = []
 
-        response = view_roadmap(view_request)
-
-        self.assertEqual(response.status_code, 200)
-
-        add_request = self.factory.post('/roadmaps/view_roadmap/add/', {
+        add_request = self.factory.post('/roadmaps/view_roadmap/add/?id=' + str(99999), {
             'procedure': [self.test_object_one.id, self.test_object_two.id, self.test_object_three.id], 'phase': 1})
 
         add_request.user = self.user
-        add_request.session = view_request.session
+        self.middleware.process_request(add_request)
+        add_request.session.save()
 
-        add_request.session['roadmap_id'] = 99999
+        setattr(add_request, 'session', 'session')
+        messages = FallbackStorage(add_request)
+        setattr(add_request, '_messages', messages)
+
         response = add_to_roadmap(add_request)
 
         self.assertEqual(response.status_code, 302)
 
+        self.assertListEqual(expected_list, RoadmapProcedureLink.get_procedures_from_roadmap(self.test_roadmap))
+
     def test_add_to_roadmap_invalid_form(self):
-        # View roadmap first
-        view_request = self.factory.post('/roadmaps/view_roadmap/?id=' + str(self.test_roadmap.id))
-        view_request.user = self.user
-        self.middleware.process_request(view_request)
-        view_request.session.save()
+        expected_list = []
 
-        response = view_roadmap(view_request)
-
-        self.assertEqual(response.status_code, 200)
-
-        add_request = self.factory.post('/roadmaps/view_roadmap/add/', {
+        add_request = self.factory.post('/roadmaps/view_roadmap/add/?id=' + str(self.test_roadmap.id), {
             'procedure': [self.test_object_one.id, self.test_object_two.id, self.test_object_three.id]})
 
         add_request.user = self.user
-        add_request.session = view_request.session
+        self.middleware.process_request(add_request)
+        add_request.session.save()
+
+        setattr(add_request, 'session', 'session')
+        messages = FallbackStorage(add_request)
+        setattr(add_request, '_messages', messages)
 
         response = add_to_roadmap(add_request)
 
         self.assertEqual(response.status_code, 302)
+
+        self.assertListEqual(expected_list, RoadmapProcedureLink.get_procedures_from_roadmap(self.test_roadmap))
 
     def test_remove_from_roadmap(self):
         # View roadmap first

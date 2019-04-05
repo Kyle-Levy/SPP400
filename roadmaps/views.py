@@ -91,18 +91,23 @@ def modify_roadmap(request):
 def add_to_roadmap(request):
     if request.method == 'POST':
         roadmap_id = request.GET.get('id')
-        form = RoadmapProcedureLinkForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            for procedure_item in cd['procedure']:
-                # If the item doesn't exist, add it
-                if not RoadmapProcedureLink.objects.filter(roadmap=roadmap_id, procedure=procedure_item.id,
-                                                           phase=cd['phase']):
-                    RoadmapProcedureLink.link_procedure_to_roadmap(procedure_item.id, roadmap_id, cd['phase'])
-            return redirect('/roadmaps/view_roadmap/modify/?id=' + str(roadmap_id))
-        else:
-            messages.error(request, 'Invalid Form!')
-            return redirect('/roadmaps/view_roadmap/modify/?id=' + str(roadmap_id))
+        try:
+            form = RoadmapProcedureLinkForm(request.POST)
+            Roadmap.objects.get(id=request.GET.get('id'))
+            if form.is_valid():
+                cd = form.cleaned_data
+                for procedure_item in cd['procedure']:
+                    # If the item doesn't exist, add it
+                    if not RoadmapProcedureLink.objects.filter(roadmap=roadmap_id, procedure=procedure_item.id,
+                                                               phase=cd['phase']):
+                        RoadmapProcedureLink.link_procedure_to_roadmap(procedure_item.id, roadmap_id, cd['phase'])
+                return redirect('/roadmaps/view_roadmap/modify/?id=' + str(roadmap_id))
+            else:
+                messages.error(request, 'Invalid Form!')
+                return redirect('/roadmaps/view_roadmap/modify/?id=' + str(roadmap_id))
+        except Roadmap.DoesNotExist:
+            messages.warning(request, "The roadmap you tried to reach doesn't exist!")
+            return redirect('/roadmaps/')
 
 
 @login_required
