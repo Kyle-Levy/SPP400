@@ -1,10 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-
+from django.contrib.auth import authenticate
 from homepage.forms import VerifyActionForm
 from roadmaps.forms import RoadmapForm, RoadmapProcedureLinkForm, RoadmapForm
 from roadmaps.models import Roadmap, RoadmapProcedureLink
 
-
+@login_required
 def roadmaps_index(request):
     if request.method == 'POST':
         # Handle searching for roadmaps
@@ -14,7 +15,7 @@ def roadmaps_index(request):
         return render(request, 'roadmaps_main.html',
                       {'roadmaps': Roadmap.objects.all(), 'title': 'Roadmaps', 'breadcrumbs': breadcrumbs})
 
-
+@login_required
 def create_roadmap(request):
     if request.method == "POST":
         form = RoadmapForm(request.POST)
@@ -35,7 +36,7 @@ def create_roadmap(request):
                       {'form': RoadmapForm(initial={'time_frame': 'days'}), 'title': 'Create Roadmap',
                        'breadcrumbs': breadcrumbs})
 
-
+@login_required
 def view_roadmap(request):
     # User wants to update the roadmap currently being viewed
     if request.method == 'POST':
@@ -71,7 +72,7 @@ def view_roadmap(request):
             # Roadmap object doesn't exist
             return redirect('/roadmaps/')
 
-
+@login_required
 def add_to_roadmap(request):
     if request.method == 'POST':
         form = RoadmapProcedureLinkForm(request.POST)
@@ -101,7 +102,7 @@ def add_to_roadmap(request):
         else:
             return redirect('/homepage/')
 
-
+@login_required
 def remove_selected_pairs(request):
     if request.method == 'POST':
         checked_boxes = request.POST.getlist('selection[]')
@@ -127,9 +128,10 @@ def remove_selected_pairs(request):
         except Roadmap.DoesNotExist:
             return redirect('/roadmaps')
 
-
+@login_required
 def delete_roadmap(request):
     if request.method == 'POST':
+
         roadmap_id = request.session['roadmap_id']
         try:
             roadmap = Roadmap.objects.get(id=roadmap_id)
@@ -139,7 +141,7 @@ def delete_roadmap(request):
             return redirect('/homepage')
         return redirect('/roadmaps')
 
-
+@login_required
 def update_roadmap(request):
     if request.method == 'POST':
         roadmap_id = request.session['roadmap_id']
