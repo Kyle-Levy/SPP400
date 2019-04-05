@@ -25,7 +25,7 @@ SECRET_KEY = '%c4wn#4mz@!p9ogr7dldj6pg@53e&le29=bt!f4fzbe19lm^vk'
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['patient-tracker-dev.6uhhianbqz.us-west-2.elasticbeanstalk.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['patienttracker-dev.us-west-2.elasticbeanstalk.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -97,8 +97,8 @@ if 'RDS_HOSTNAME' in os.environ:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'dbp.sqlite3'),
         }
     }
 
