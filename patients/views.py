@@ -1,5 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+
+from homepage.forms import VerifyActionForm
 from patients.forms import NewPatient, SearchPatients, FlagForm
 from roadmaps.forms import SelectFromRoadmap, RoadmapProcedureLinkForm
 from patients.models import Patients
@@ -74,7 +76,8 @@ def profile(request):
                          'record_number': patient.record_number,
                          'birth_date': patient.bday, 'referring_physician': patient.referring_physician,
                          'date_of_referral': patient.date_of_referral}), 'patient': patient,
-                'title': 'Update: ' + patient.last_name + ', ' + patient.first_name, 'breadcrumbs': breadcrumbs})
+                'title': 'Update: ' + patient.last_name + ', ' + patient.first_name, 'breadcrumbs': breadcrumbs,
+                'verification-form': VerifyActionForm()})
 
         except Patients.DoesNotExist:
             # TODO: add in error message here

@@ -1,5 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+
+from homepage.forms import VerifyActionForm
 from procedures.forms import NewProcedure, SearchProcedures
 from procedures.models import Procedure
 
@@ -49,13 +51,15 @@ def new_procedure(request):
             breadcrumbs = [('/procedures/', 'Procedures'),
                            ('#', 'New Procedure')]
             return render(request, 'new_procedure.html',
-                          {'form': NewProcedure(initial={'time_frame': 'days'}), 'failed_creation': True, 'title': 'New Procedure',
+                          {'form': NewProcedure(initial={'time_frame': 'days'}), 'failed_creation': True,
+                           'title': 'New Procedure',
                            'breadcrumbs': breadcrumbs}, status=401)
     else:
         breadcrumbs = [('/procedures/', 'Procedures'),
                        ('#', 'New Procedure')]
         return render(request, 'new_procedure.html',
-                      {'form': NewProcedure(initial={'time_frame': 'days'}), 'title': 'New Procedure', 'breadcrumbs': breadcrumbs})
+                      {'form': NewProcedure(initial={'time_frame': 'days'}), 'title': 'New Procedure',
+                       'breadcrumbs': breadcrumbs})
 
 
 @login_required
@@ -66,11 +70,13 @@ def view_procedure(request):
             procedure = Procedure.objects.get(id=request.GET.get('id'))
             request.session['procedure_id'] = procedure.id
             breadcrumbs = [('/procedures/', 'Procedures'),
-                           ('/procedures/view_procedure/?id=' + str(procedure.id),'View: ' + procedure.procedure_name),
+                           ('/procedures/view_procedure/?id=' + str(procedure.id), 'View: ' + procedure.procedure_name),
                            ('#', 'Update: ' + procedure.procedure_name)]
             return render(request, 'update_procedure.html', {'form': NewProcedure(
-                initial={'procedure_name': procedure.procedure_name, 'notes': procedure.procedure_info, 'time_frame': 'days', 'time': procedure.est_days_to_complete}),
-                'procedure': procedure, 'title': 'Update: ' + procedure.procedure_name, 'breadcrumbs': breadcrumbs})
+                initial={'procedure_name': procedure.procedure_name, 'notes': procedure.procedure_info,
+                         'time_frame': 'days', 'time': procedure.est_days_to_complete}),
+                'procedure': procedure, 'title': 'Update: ' + procedure.procedure_name, 'breadcrumbs': breadcrumbs,
+                'verification-form': VerifyActionForm()})
         except Procedure.DoesNotExist:
             return redirect('/procedures/')
 
@@ -105,7 +111,8 @@ def update_procedure(request):
                 return redirect("/procedures/view_procedure/?id=" + str(procedure.id))
             else:
                 breadcrumbs = [('/procedures/', 'Procedures'),
-                               ('/procedures/view_procedure/?id=' + str(procedure.id),'View: ' + procedure.procedure_name),
+                               ('/procedures/view_procedure/?id=' + str(procedure.id),
+                                'View: ' + procedure.procedure_name),
                                ('#', 'Update: ' + procedure.procedure_name)]
                 return render(request, 'view_procedure.html',
                               {'procedure': procedure, 'title': 'View: ' + procedure.procedure_name,
