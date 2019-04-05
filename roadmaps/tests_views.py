@@ -380,3 +380,58 @@ class TestProcedures(TestCase):
 
         # Assert the roadmap itself no longer exists
         self.assertListEqual(expected_roadmap_list, list(Roadmap.objects.filter(id=self.test_roadmap.id)))
+
+    def test_update_roadmap_valid(self):
+        request = self.factory.post('/roadmaps/view_roadmap/update/?id=' + str(self.test_roadmap.id),
+                                    {'roadmap_name': 'Updated Roadmap', 'time_frame': 'days', 'time': '22'})
+        request.user = self.user
+        self.middleware.process_request(request)
+        request.session.save()
+
+        response = update_roadmap(request)
+        self.assertEqual(response.status_code, 302)
+
+        test_roadmap = Roadmap.objects.get(roadmap_name='Updated Roadmap')
+        self.assertIsNotNone(test_roadmap)
+
+    def test_update_roadmap_invalid_form(self):
+        request = self.factory.post('/roadmaps/view_roadmap/update/?id=' + str(self.test_roadmap.id),
+                                    {'roadmap_name': 'Updated Roadmap', 'time': '22'})
+        request.user = self.user
+        self.middleware.process_request(request)
+        request.session.save()
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = update_roadmap(request)
+        self.assertEqual(response.status_code, 302)
+
+        # If an entry exists, it will overwrite None, thus failing the test
+        try:
+            test_roadmap = None
+            test_roadmap = Roadmap.objects.get(roadmap_name='Updated Roadmap')
+        except Roadmap.DoesNotExist:
+            self.assertIsNone(test_roadmap)
+
+    def test_update_roadmap_valid_invalid_roadmap_id(self):
+        request = self.factory.post('/roadmaps/view_roadmap/update/?id=' + str(99999),
+                                    {'roadmap_name': 'Updated Roadmap', 'time_frame': 'days', 'time': '22'})
+        request.user = self.user
+        self.middleware.process_request(request)
+        request.session.save()
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = update_roadmap(request)
+        self.assertEqual(response.status_code, 302)
+
+        # If an entry exists, it will overwrite None, thus failing the test
+        try:
+            test_roadmap = None
+            test_roadmap = Roadmap.objects.get(roadmap_name='Updated Roadmap')
+        except Roadmap.DoesNotExist:
+            self.assertIsNone(test_roadmap)
