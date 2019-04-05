@@ -1,13 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-
-from homepage.forms import VerifyActionForm
 from patients.forms import NewPatient, SearchPatients, FlagForm
 from roadmaps.forms import SelectFromRoadmap, RoadmapProcedureLinkForm
 from patients.models import Patients
 from assigned_procedures.models import AssignedProcedures
 from roadmaps.models import RoadmapProcedureLink
-import re
+from django.contrib import messages
 
 
 @login_required
@@ -33,11 +31,6 @@ def index(request):
                        'breadcrumbs': breadcrumbs})
 
 
-'''breadcrumbs = [('/roadmaps/', 'Roadmaps'),
-                          ('/roadmaps/view_roadmap/?id=' + roadmap_id, roadmap.roadmap_name),
-                          ('#', 'Modifying: ' + roadmap.roadmap_name)]'''
-
-
 @login_required
 def new_patient(request):
     if request.method == 'GET':
@@ -60,29 +53,9 @@ def new_patient(request):
                            'breadcrumbs': breadcrumbs}, status=401)
 
 
+# TODO This post currently takes you to the update patient page. Instead, this should be a seperate method that use request.GET
 @login_required
 def profile(request):
-    if request.method == 'POST':
-        try:
-            # Get desired patient id from url
-            patient = Patients.objects.get(id=request.GET.get('id'))
-            request.session['patient_id'] = patient.id
-
-            breadcrumbs = [('/patients/', 'Patients'),
-                           ('/patients/profile/?id=' + str(patient.id), patient.last_name + ', ' + patient.first_name),
-                           ('#', 'Update: ' + patient.last_name + ', ' + patient.first_name)]
-            return render(request, 'update_patient.html', {'form': NewPatient(
-                initial={'first_name': patient.first_name, 'last_name': patient.last_name,
-                         'record_number': patient.record_number,
-                         'birth_date': patient.bday, 'referring_physician': patient.referring_physician,
-                         'date_of_referral': patient.date_of_referral}), 'patient': patient,
-                'title': 'Update: ' + patient.last_name + ', ' + patient.first_name, 'breadcrumbs': breadcrumbs,
-                'verification-form': VerifyActionForm()})
-
-        except Patients.DoesNotExist:
-            # TODO: add in error message here
-            return redirect('/patients/')
-
     if request.method == 'GET':
         try:
             # Get desired patient id from url
@@ -104,10 +77,33 @@ def profile(request):
 
 @login_required
 def update(request):
+    if request.method == 'GET':
+        try:
+            # Get desired patient id from url
+            patient = Patients.objects.get(id=request.GET.get('id'))
+
+            breadcrumbs = [('/patients/', 'Patients'),
+                           ('/patients/profile/?id=' + str(patient.id), patient.last_name + ', ' + patient.first_name),
+                           ('#', 'Update: ' + patient.last_name + ', ' + patient.first_name)]
+
+            initial_form_dict = {'first_name': patient.first_name, 'last_name': patient.last_name,
+                                 'record_number': patient.record_number,
+                                 'birth_date': patient.bday, 'referring_physician': patient.referring_physician,
+                                 'date_of_referral': patient.date_of_referral}
+
+            page_title = 'Update: ' + patient.last_name + ', ' + patient.first_name
+
+            return render(request, 'update_patient.html',
+                          {'form': NewPatient(initial=initial_form_dict), 'patient': patient, 'title': page_title,
+                           'breadcrumbs': breadcrumbs})
+
+        except Patients.DoesNotExist:
+            # TODO: add in error message here "The patient page you tried to access does not exist"
+            return redirect('/patients/')
     if request.method == 'POST':
         form = NewPatient(request.POST)
         try:
-            patient = Patients.objects.get(id=request.session['patient_id'])
+            patient = Patients.objects.get(id=request.GET.get('id'))
             if form.is_valid():
                 # Clean form data and check that the username password pair is valid
                 cd = form.cleaned_data
@@ -121,13 +117,8 @@ def update(request):
                 patient.save()
                 return redirect("/patients/profile/?id=" + str(patient.id))
             else:
-                breadcrumbs = [('/patients/', 'Patients'),
-                               ('/patients/profile/?id=' + str(patient.id),
-                                patient.last_name + ', ' + patient.first_name),
-                               ('#', 'Update: ' + patient.last_name + ', ' + patient.first_name)]
-                return render(request, 'patient.html', {"patient": patient,
-                                                        'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name,
-                                                        'failed_update': True, 'breadcrumbs': breadcrumbs}, status=401)
+                messages.error(request, 'Please try entering your patient information again.')
+                return redirect('/patients/profile/update/?id=' + str(patient.id))
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
@@ -139,7 +130,7 @@ def delete(request):
     if request.method == 'POST':
         try:
             # Get desired patient id from url
-            patient = Patients.objects.get(id=request.session['patient_id'])
+            patient = Patients.objects.get(id=request.GET.get('id'))
             patient.delete()
             return redirect("/patients/")
         except Patients.DoesNotExist:
@@ -153,72 +144,89 @@ def procedures(request):
         try:
             # Get desired patient id from url
             patient = Patients.objects.get(id=request.GET.get('id'))
-            request.session['patient_id'] = patient.id
+
             roadmap_pairs = AssignedProcedures.get_all_procedures(patient)
+
             breadcrumbs = [('/patients/', 'Patients'),
                            ('/patients/profile/?id=' + str(patient.id), patient.last_name + ', ' + patient.first_name),
                            ('#', patient.first_name + " " + patient.last_name + "'s  Procedures")]
+
+            page_title = patient.first_name + " " + patient.last_name + "'s  Procedures"
+
             return render(request, 'patient_procedures.html',
-                          {'roadmap_form': SelectFromRoadmap(), 'procedure_phase_form': RoadmapProcedureLinkForm,
+                          {'roadmap_form': SelectFromRoadmap(),
+                           'procedure_phase_form': RoadmapProcedureLinkForm(),
+                           'patient': patient,
                            'breadcrumbs': breadcrumbs,
-                           'title': patient.first_name + " " + patient.last_name + "'s  Procedures",
+                           'title': page_title,
                            'roadmap_pairs': roadmap_pairs})
         except Patients.DoesNotExist:
             # TODO: add in error message here
             return redirect('/patients/')
 
 
+# TODO change request.session to getting the id from the url
 @login_required
 def add_roadmap(request):
     if request.method == 'POST':
         try:
-            patient = Patients.objects.get(id=request.session['patient_id'])
+            patient = Patients.objects.get(id=request.GET.get('id'))
 
             form = SelectFromRoadmap(request.POST)
             if form.is_valid():
                 cd = form.cleaned_data
                 roadmap = cd['roadmap']
                 AssignedProcedures.add_roadmap_to_patient(roadmap, patient)
-                return redirect('/patients/profile/?id=' + str(patient.id))
+                return redirect('/patients/profile/procedures/?id=' + str(patient.id))
             else:
+                #TODO INVALID FORM
                 return redirect('/homepage/')
         except Patients.DoesNotExist:
             return redirect('/patients/')
 
 
+# TODO change request.session to getting the id from the url
 @login_required
 def add_procedure(request):
     if request.method == 'POST':
         try:
-            patient = Patients.objects.get(id=request.session['patient_id'])
+            patient = Patients.objects.get(id=request.GET.get('id'))
 
             form = RoadmapProcedureLinkForm(request.POST)
             if form.is_valid():
                 cd = form.cleaned_data
                 for procedure_item in cd['procedure']:
                     AssignedProcedures.assign_procedure_to_patient(cd['phase'], patient, procedure_item)
-                return redirect('/patients/profile/?id=' + str(patient.id))
+                    return redirect('/patients/profile/procedures/?id=' + str(patient.id))
             else:
+                # TODO INVALID FORM
                 return redirect('/homepage/')
         except Patients.DoesNotExist:
             return redirect('/patients/')
 
 
+# TODO change request.session to getting the id from the url
 @login_required
 def remove_pairs_from_patient(request):
     if request.method == 'POST':
         checked_boxes = request.POST.getlist('selection[]')
         try:
-            patient = Patients.objects.get(id=request.session['patient_id'])
-            for pair in checked_boxes:
-                cleaned_pair = tuple(pair.split(','))
-                AssignedProcedures.remove_assigned_procedure(patient, cleaned_pair[0],
-                                                             cleaned_pair[1])
-            return redirect('/patients/profile/?id=' + str(patient.id))
+            patient = Patients.objects.get(id=request.GET.get('id'))
+            if checked_boxes:
+                for pair in checked_boxes:
+                    cleaned_pair = tuple(pair.split(','))
+                    AssignedProcedures.remove_assigned_procedure(patient, cleaned_pair[0],
+                                                                 cleaned_pair[1])
+                return redirect('/patients/profile/procedures/?id=' + str(patient.id))
+            else:
+                #TODO Warning saying "You didn't select any items to be removed"
+                return redirect('/patients/profile/procedures/?id=' + str(patient.id))
         except Patients.DoesNotExist:
+            #TODO Patient you selected doesn't exist message
             return redirect('/patients/')
 
 
+# TODO change request.session to getting the id from the url
 def flag_patient(request):
     if request.method == 'POST':
         try:
@@ -226,7 +234,6 @@ def flag_patient(request):
 
             if form.is_valid():
                 patient = Patients.objects.get(id=request.GET.get('id'))
-                request.session['patient_id'] = patient.id
 
                 cd = form.cleaned_data
 
@@ -238,6 +245,7 @@ def flag_patient(request):
                 return redirect('/patients/profile/?id=' + str(patient.id))
 
             else:
+                # TODO INVALID FORM
                 return redirect('/patients/')
 
         except Patients.DoesNotExist:
@@ -248,7 +256,6 @@ def unflag_patient(request):
     if request.method == 'POST':
         try:
             patient = Patients.objects.get(id=request.GET.get('id'))
-            request.session['patient_id'] = patient.id
 
             patient.patient_flagged_reason = ""
             if patient.flagged:

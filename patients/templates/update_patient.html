@@ -23,7 +23,7 @@
                 </div>
             {% endif %}
             <h2> Update information for: {{ patient.first_name }} {{ patient.last_name }} </h2>
-            <form action="update/" method="POST"> {% csrf_token %}
+            <form action="/patients/profile/update/?id={{ patient.id }}" method="POST"> {% csrf_token %}
                 <div class="form-group">
                     <label for="firstName">First Name</label>
                     {{ form.first_name }}
@@ -69,7 +69,7 @@
                             <h5>Are you sure?</h5>
                         </div>
                         <div class="modal-footer">
-                            <form action="delete/" method="POST"> {% csrf_token %}
+                            <form action="/patients/profile/delete/?id={{ patient.id }}" method="POST"> {% csrf_token %}
                                 <button type="submit" class="btn btn-danger mb-4">Delete Patient</button>
                             </form>
                         </div>
