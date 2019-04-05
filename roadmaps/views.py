@@ -5,6 +5,7 @@ from homepage.forms import VerifyActionForm
 from roadmaps.forms import RoadmapForm, RoadmapProcedureLinkForm, RoadmapForm
 from roadmaps.models import Roadmap, RoadmapProcedureLink
 
+
 @login_required
 def roadmaps_index(request):
     if request.method == 'POST':
@@ -14,6 +15,7 @@ def roadmaps_index(request):
         breadcrumbs = [('#', 'Roadmaps')]
         return render(request, 'roadmaps_main.html',
                       {'roadmaps': Roadmap.objects.all(), 'title': 'Roadmaps', 'breadcrumbs': breadcrumbs})
+
 
 @login_required
 def create_roadmap(request):
@@ -36,6 +38,7 @@ def create_roadmap(request):
                       {'form': RoadmapForm(initial={'time_frame': 'days'}), 'title': 'Create Roadmap',
                        'breadcrumbs': breadcrumbs})
 
+
 @login_required
 def view_roadmap(request):
     # User wants to update the roadmap currently being viewed
@@ -54,7 +57,7 @@ def view_roadmap(request):
                            'update_form': RoadmapForm(initial={'time': roadmap.est_days_to_complete,
                                                                'time_frame': 'days',
                                                                'roadmap_name': roadmap.roadmap_name}),
-                           'verification-form': VerifyActionForm()})
+                           'verification_form': VerifyActionForm()})
         except Roadmap.DoesNotExist:
             return redirect('/roadmaps/')
 
@@ -71,6 +74,7 @@ def view_roadmap(request):
         except Roadmap.DoesNotExist:
             # Roadmap object doesn't exist
             return redirect('/roadmaps/')
+
 
 @login_required
 def add_to_roadmap(request):
@@ -96,11 +100,12 @@ def add_to_roadmap(request):
                                'update_form': RoadmapForm(initial={'time': roadmap.est_days_to_complete,
                                                                    'time_frame': 'days',
                                                                    'roadmap_name': roadmap.roadmap_name}),
-                               'verification-form': VerifyActionForm()})
+                               'verification_form': VerifyActionForm()})
             except Roadmap.DoesNotExist:
                 return redirect('/roadmaps')
         else:
             return redirect('/homepage/')
+
 
 @login_required
 def remove_selected_pairs(request):
@@ -124,22 +129,56 @@ def remove_selected_pairs(request):
                            'update_form': RoadmapForm(initial={'time': roadmap.est_days_to_complete,
                                                                'time_frame': 'days',
                                                                'roadmap_name': roadmap.roadmap_name}),
-                           'verification-form': VerifyActionForm()})
+                           'verification_form': VerifyActionForm()})
         except Roadmap.DoesNotExist:
             return redirect('/roadmaps')
+
+        current_username = request.user.username
+        user = authenticate
+
 
 @login_required
 def delete_roadmap(request):
     if request.method == 'POST':
-
-        roadmap_id = request.session['roadmap_id']
+        form = VerifyActionForm(request.POST)
         try:
+            roadmap_id = request.session['roadmap_id']
             roadmap = Roadmap.objects.get(id=roadmap_id)
-            RoadmapProcedureLink.remove_all_pairs_from_roadmap(roadmap_id)
-            roadmap.delete()
+            roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
+            breadcrumbs = [('/roadmaps/', 'Roadmaps'),
+                           ('/roadmaps/view_roadmap/?id=' + str(roadmap.id), roadmap.roadmap_name),
+                           ('#', 'Modifying: ' + roadmap.roadmap_name)]
+            current_username = request.user.username
+            if form.is_valid():
+                cd = form.cleaned_data
+                user = authenticate(username=current_username, password=cd['password'])
+                if user is not None:
+
+                    RoadmapProcedureLink.remove_all_pairs_from_roadmap(roadmap_id)
+                    roadmap.delete()
+                    return redirect('/roadmaps/')
+                else:
+                    return render(request, 'modify_roadmap.html',
+                                  {'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs,
+                                   'roadmap': roadmap,
+                                   'title': 'Modifying: ' + roadmap.roadmap_name, 'breadcrumbs': breadcrumbs,
+                                   'update_form': RoadmapForm(initial={'time': roadmap.est_days_to_complete,
+                                                                       'time_frame': 'days',
+                                                                       'roadmap_name': roadmap.roadmap_name}),
+                                   'verification_form': VerifyActionForm(initial={'password': ""})})
+            else:
+                # invalid form should render the modify_roadmap.html with all of its forms and info
+                return render(request, 'modify_roadmap.html',
+                              {'form': RoadmapProcedureLinkForm(), 'roadmap_pairs': roadmap_pairs,
+                               'roadmap': roadmap,
+                               'title': 'Modifying: ' + roadmap.roadmap_name, 'breadcrumbs': breadcrumbs,
+                               'update_form': RoadmapForm(initial={'time': roadmap.est_days_to_complete,
+                                                                   'time_frame': 'days',
+                                                                   'roadmap_name': roadmap.roadmap_name}),
+                               'verification_form': VerifyActionForm(initial={'password': ""}), 'failed_delete': True})
         except Roadmap.DoesNotExist:
             return redirect('/homepage')
-        return redirect('/roadmaps')
+
 
 @login_required
 def update_roadmap(request):
@@ -163,7 +202,7 @@ def update_roadmap(request):
                                'update_form': RoadmapForm(initial={'time': roadmap.est_days_to_complete,
                                                                    'time_frame': 'days',
                                                                    'roadmap_name': roadmap.roadmap_name}),
-                               'verification-form': VerifyActionForm()})
+                               'verification_form': VerifyActionForm(initial={'password': ""})})
             except Roadmap.DoesNotExist:
                 return redirect('/homepage')
         return redirect('/roadmaps')
