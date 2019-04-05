@@ -17,10 +17,10 @@ class RoadmapForm(forms.Form):
         )
     )
 
-    time = forms.CharField(
+    time = forms.IntegerField(
         label='Projected Timeline',
         max_length=10,
-        widget=forms.TextInput(
+        widget=forms.NumberInput(
             attrs={
                 'class': 'form-control',
                 'id': 'procedureName',
@@ -60,34 +60,3 @@ class SelectFromRoadmap(forms.Form):
                                              'class': 'form-control'
                                          }
                                      ))
-
-
-class UpdateRoadmapInfo(forms.Form):
-    roadmap_name = forms.CharField(
-        label='Roadmap Name',
-        max_length=100,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                'id': 'roadmapName',
-                'placeholder': 'Enter Roadmap Name'
-            }
-        )
-    )
-
-    time = forms.CharField(
-        label='Projected Timeline',
-        max_length=10,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                'id': 'procedureName',
-                'placeholder': 'Enter Projected Completion Time'
-            }
-        )
-    )
-
-    CHOICES = [('days', 'Days'),
-               ('weeks', 'Weeks')]
-
-    time_frame = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect)

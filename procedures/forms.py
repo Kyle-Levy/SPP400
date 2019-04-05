@@ -40,10 +40,10 @@ class NewProcedure(forms.Form):
         )
     )
 
-    time = forms.CharField(
+    time = forms.IntegerField(
         label='Projected Timeline',
         max_length=10,
-        widget=forms.TextInput(
+        widget=forms.NumberInput(
             attrs={
                 'class': 'form-control',
                 'id': 'procedureName',
