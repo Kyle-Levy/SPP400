@@ -115,13 +115,17 @@ def remove_selected_pairs(request):
     if request.method == 'POST':
         checked_boxes = request.POST.getlist('selection[]')
         roadmap_id = request.GET.get('id')
+        try:
+            Roadmap.objects.get(id=request.GET.get('id'))
+            for pair in checked_boxes:
+                cleaned_pair = tuple(pair.split(','))
+                RoadmapProcedureLink.remove_pair_from_roadmap(roadmap_id, cleaned_pair[0],
+                                                              cleaned_pair[1])
 
-        for pair in checked_boxes:
-            cleaned_pair = tuple(pair.split(','))
-            RoadmapProcedureLink.remove_pair_from_roadmap(roadmap_id, cleaned_pair[0],
-                                                          cleaned_pair[1])
-
-        return redirect('/roadmaps/view_roadmap/modify/?id=' + str(roadmap_id))
+            return redirect('/roadmaps/view_roadmap/modify/?id=' + str(roadmap_id))
+        except Roadmap.DoesNotExist:
+            messages.warning(request, "The roadmap you tried to reach doesn't exist!")
+            return redirect('/roadmaps/')
 
 
 @login_required
@@ -130,7 +134,6 @@ def delete_roadmap(request):
         form = VerifyActionForm(request.POST)
         try:
             roadmap_id = request.GET.get('id')
-            print(roadmap_id)
             roadmap = Roadmap.objects.get(id=roadmap_id)
             current_username = request.user.username
 
