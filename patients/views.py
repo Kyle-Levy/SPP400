@@ -196,18 +196,14 @@ def add_procedure(request):
             if form.is_valid():
                 cd = form.cleaned_data
                 for procedure_item in cd['procedure']:
-                    Procedure.objects.get(id=procedure_item.id)
                     AssignedProcedures.assign_procedure_to_patient(cd['phase'], patient, procedure_item)
-                    return redirect('/patients/profile/procedures/?id=' + str(patient.id))
+                return redirect('/patients/profile/procedures/?id=' + str(patient.id))
             else:
                 messages.error(request, 'Invalid Form!')
                 return redirect('/homepage/')
         except Patients.DoesNotExist:
             messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
-        except Procedure.DoesNotExist:
-            messages.warning(request, "The procedure(s) you tried to add doesn't exist!")
-            return redirect('/procedures/')
 
 
 # TODO change request.session to getting the id from the url
