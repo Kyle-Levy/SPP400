@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from patients.forms import NewPatient, SearchPatients, FlagForm
+from procedures.models import Procedure
 from roadmaps.forms import SelectFromRoadmap, RoadmapProcedureLinkForm
 from patients.models import Patients
 from assigned_procedures.models import AssignedProcedures
@@ -47,10 +48,8 @@ def new_patient(request):
             patient.save()
             return redirect('/homepage/')
         else:
-            breadcrumbs = [('/patients/', 'Patients'), ('#', 'New Patient')]
-            return render(request, 'new_patient.html',
-                          {'form': NewPatient(), 'failed_creation': True, 'title': 'New Patient',
-                           'breadcrumbs': breadcrumbs}, status=401)
+            messages.error(request, 'Invalid Form!')
+            return redirect('/patients/create/')
 
 
 # TODO This post currently takes you to the update patient page. Instead, this should be a seperate method that use request.GET
@@ -71,7 +70,7 @@ def profile(request):
                            'breadcrumbs': breadcrumbs, 'assigned_procedures': all_assigned_procedures,
                            'flag_form': FlagForm()})
         except Patients.DoesNotExist:
-            # TODO: add in error message here
+            messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
 
 
@@ -98,7 +97,7 @@ def update(request):
                            'breadcrumbs': breadcrumbs})
 
         except Patients.DoesNotExist:
-            # TODO: add in error message here "The patient page you tried to access does not exist"
+            messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
     if request.method == 'POST':
         form = NewPatient(request.POST)
@@ -117,10 +116,10 @@ def update(request):
                 patient.save()
                 return redirect("/patients/profile/?id=" + str(patient.id))
             else:
-                messages.error(request, 'Please try entering your patient information again.')
+                messages.error(request, 'Invalid Form!')
                 return redirect('/patients/profile/update/?id=' + str(patient.id))
         except Patients.DoesNotExist:
-            # TODO: add in error message here
+            messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
 
 
@@ -134,7 +133,7 @@ def delete(request):
             patient.delete()
             return redirect("/patients/")
         except Patients.DoesNotExist:
-            # TODO: add in error message here
+            messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
 
 
@@ -161,7 +160,7 @@ def procedures(request):
                            'title': page_title,
                            'roadmap_pairs': roadmap_pairs})
         except Patients.DoesNotExist:
-            # TODO: add in error message here
+            messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
 
 
@@ -179,9 +178,10 @@ def add_roadmap(request):
                 AssignedProcedures.add_roadmap_to_patient(roadmap, patient)
                 return redirect('/patients/profile/procedures/?id=' + str(patient.id))
             else:
-                #TODO INVALID FORM
+                messages.error(request, 'Invalid Form!')
                 return redirect('/homepage/')
         except Patients.DoesNotExist:
+            messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
 
 
@@ -196,13 +196,18 @@ def add_procedure(request):
             if form.is_valid():
                 cd = form.cleaned_data
                 for procedure_item in cd['procedure']:
+                    Procedure.objects.get(id=procedure_item.id)
                     AssignedProcedures.assign_procedure_to_patient(cd['phase'], patient, procedure_item)
                     return redirect('/patients/profile/procedures/?id=' + str(patient.id))
             else:
-                # TODO INVALID FORM
+                messages.error(request, 'Invalid Form!')
                 return redirect('/homepage/')
         except Patients.DoesNotExist:
+            messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
+        except Procedure.DoesNotExist:
+            messages.warning(request, "The procedure(s) you tried to add doesn't exist!")
+            return redirect('/procedures/')
 
 
 # TODO change request.session to getting the id from the url
@@ -222,7 +227,7 @@ def remove_pairs_from_patient(request):
                 #TODO Warning saying "You didn't select any items to be removed"
                 return redirect('/patients/profile/procedures/?id=' + str(patient.id))
         except Patients.DoesNotExist:
-            #TODO Patient you selected doesn't exist message
+            messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
 
 
@@ -245,10 +250,11 @@ def flag_patient(request):
                 return redirect('/patients/profile/?id=' + str(patient.id))
 
             else:
-                # TODO INVALID FORM
+                messages.error(request, 'Invalid Form!')
                 return redirect('/patients/')
 
         except Patients.DoesNotExist:
+            messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
 
 
@@ -265,4 +271,5 @@ def unflag_patient(request):
             return redirect('/patients/profile/?id=' + str(patient.id))
 
         except Patients.DoesNotExist:
+            messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
