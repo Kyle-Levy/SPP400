@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from homepage.forms import VerifyActionForm
 from roadmaps.forms import RoadmapForm, RoadmapProcedureLinkForm, RoadmapForm
 from roadmaps.models import Roadmap, RoadmapProcedureLink
+from django.contrib import messages
 
 
 @login_required
@@ -19,6 +20,14 @@ def roadmaps_index(request):
 
 @login_required
 def create_roadmap(request):
+    if request.method == "GET":
+
+        breadcrumbs = [('/roadmaps/', 'Roadmaps'), ('#', 'Create Roadmap')]
+
+        return render(request, "create_roadmap.html",
+                      {'form': RoadmapForm(initial={'time_frame': 'days'}), 'title': 'Create Roadmap',
+                       'breadcrumbs': breadcrumbs})
+
     if request.method == "POST":
         form = RoadmapForm(request.POST)
         if form.is_valid():
@@ -26,20 +35,12 @@ def create_roadmap(request):
             roadmap = Roadmap(roadmap_name=cd['roadmap_name'])
             roadmap.add_time_estimate(cd['time'], str(request.POST.get('time_frame')))
             roadmap.save()
+            #Maybe success message here
             return redirect('/roadmaps/')
         else:
-            breadcrumbs = [('/roadmaps/', 'Roadmaps'), ('#', 'Create Roadmap')]
-            return render(request, "create_roadmap.html",
-                          {'form': RoadmapForm(), 'title': 'Create Roadmap', 'failed_creation': True,
-                           'breadcrumbs': breadcrumbs}, status=401)
-    if request.method == "GET":
-        breadcrumbs = [('/roadmaps/', 'Roadmaps'), ('#', 'Create Roadmap')]
-        return render(request, "create_roadmap.html",
-                      {'form': RoadmapForm(initial={'time_frame': 'days'}), 'title': 'Create Roadmap',
-                       'breadcrumbs': breadcrumbs})
+            messages.error(request, 'Invalid Form!')
+            return redirect('/roadmaps/create/')
 
-
-# Todo this method used to set the session
 @login_required
 def view_roadmap(request):
     if request.method == 'GET':
@@ -52,8 +53,9 @@ def view_roadmap(request):
             return render(request, 'view_roadmap.html',
                           {'roadmap': roadmap, 'title': 'View: ' + roadmap.roadmap_name,
                            'seperated_by_phase': seperated_by_phase, 'breadcrumbs': breadcrumbs})
+
         except Roadmap.DoesNotExist:
-            # Roadmap object doesn't exist
+            messages.warning(request, "The roadmap you tried to reach doesn't exist!")
             return redirect('/roadmaps/')
 
 
@@ -81,11 +83,10 @@ def modify_roadmap(request):
                            'verification_form': VerifyActionForm()})
 
         except Roadmap.DoesNotExist:
-            # TODO ERROR MESSAGE "Roadmap doesn't exist"
+            messages.warning(request, "The roadmap you tried to reach doesn't exist!")
             return redirect('/roadmaps/')
 
 
-# TODO THIS METHOD USED TO USE THE SESSION
 @login_required
 def add_to_roadmap(request):
     if request.method == 'POST':
@@ -100,11 +101,9 @@ def add_to_roadmap(request):
                     RoadmapProcedureLink.link_procedure_to_roadmap(procedure_item.id, roadmap_id, cd['phase'])
             return redirect('/roadmaps/view_roadmap/modify/?id=' + str(roadmap_id))
         else:
-            #TODO ERROR MESSAGE Invalid Form Submitted
+            messages.error(request, 'Invalid Form!')
             return redirect('/roadmaps/view_roadmap/modify/?id=' + str(roadmap_id))
 
-
-# TODO THIS METHOD USED TO USE THE SESSION
 
 @login_required
 def remove_selected_pairs(request):
@@ -119,10 +118,6 @@ def remove_selected_pairs(request):
 
         return redirect('/roadmaps/view_roadmap/modify/?id=' + str(roadmap_id))
 
-
-
-
-# TODO THIS METHOD USED TO USE THE SESSION
 
 @login_required
 def delete_roadmap(request):
@@ -145,18 +140,16 @@ def delete_roadmap(request):
                     return redirect('/roadmaps/')
                 #Password doesn't match
                 else:
-                    #TODO ERROR MESSAGE Wrong Password
+                    messages.error(request, 'Incorrect password!')
                     return redirect('/roadmaps/view_roadmap/modify/?id=' + str(roadmap_id))
             else:
-
-                #TODO Error message INVALID FORM
+                messages.error(request, 'Invalid Form!')
                 return redirect('/roadmaps/view_roadmap/modify/?id=' + str(roadmap_id))
         except Roadmap.DoesNotExist:
-            #TODO The roadmap you tried to reach doesn't exist
+            messages.warning(request, "The roadmap you tried to reach doesn't exist!")
             return redirect('/roadmaps/')
 
 
-# TODO THIS METHOD USED TO USE THE SESSION
 @login_required
 def update_roadmap(request):
     if request.method == 'POST':
@@ -171,8 +164,8 @@ def update_roadmap(request):
                 roadmap.save()
                 return redirect('/roadmaps/view_roadmap/modify/?id=' + str(roadmap_id))
             except Roadmap.DoesNotExist:
-                # TODO The roadmap you tried to reach doesn't exist
+                messages.warning(request, "The roadmap you tried to reach doesn't exist!")
                 return redirect('/homepage')
         else:
-            #TODO Error Message INVALID FORM
+            messages.error(request, 'Invalid Form!')
             return redirect('/roadmaps/view_roadmap/modify/?id=' + str(roadmap_id))

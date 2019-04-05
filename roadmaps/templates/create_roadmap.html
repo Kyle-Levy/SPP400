@@ -14,11 +14,7 @@
     <div id="content">
 
         {% include "menu_bar.html" %}
-        {% if failed_creation %}
-            <div class="alert alert-danger" role="alert">
-                <strong>Form requirements not met!</strong> Try entering your roadmap data again.
-            </div>
-        {% endif %}
+
         <div class="container-fixed">
             <h2> New Roadmap </h2>
             <form action="/roadmaps/create/" method="POST"> {% csrf_token %}
