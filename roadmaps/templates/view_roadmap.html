@@ -18,10 +18,10 @@
         <div class="container-fixed">
             <h2>{{ roadmap.roadmap_name }}</h2>
             <h5>Projected Timeline: {{ roadmap.est_days_to_complete }} days</h5>
-            <form action="/roadmaps/view_roadmap/?id={{ roadmap.id }}"
-                  method="post"> {% csrf_token %}
-                <button type="submit" class="btn btn-warning mb-4">Modify Roadmap</button>
-            </form>
+
+
+            <a href="/roadmaps/view_roadmap/modify/?id={{ roadmap.id }}" class="btn btn-warning mb-4">Modify Roadmap</a>
+
         </div>
 
         <div class="accordion" id="accordion">
@@ -43,14 +43,14 @@
                             <div id="collapse{{ phase_num }}" class="collapse" aria-labelledby="heading{{ phase_num }}"
                                  data-parent="#accordion">
                                 <div class="card-body">
-                                <ul>
-                                    {% for procedure in procedure_list %}
+                                    <ul>
+                                        {% for procedure in procedure_list %}
 
 
-                                        <li>{{ procedure.procedure_name }}</li>
+                                            <li>{{ procedure.procedure_name }}</li>
 
-                                    {% endfor %}
-                                </ul>
+                                        {% endfor %}
+                                    </ul>
                                 </div>
                             </div>
                         </div>
