@@ -4,7 +4,7 @@ from django.contrib.sessions.middleware import SessionMiddleware
 
 from .views import *
 from .models import Patients
-
+from django.contrib.messages.storage.fallback import FallbackStorage
 
 # Create your tests here.
 class TestCreatePatient(TestCase):
@@ -146,7 +146,7 @@ class TestCreatePatient(TestCase):
         response = profile(request)
         self.assertEqual(response.status_code, 200)
 
-    def test_get_view_procedure_invalid_id(self):
+    def test_get_view_profile_invalid_id(self):
         request = self.factory.get('/patients/profile/?id=' + str(999999999999))
         request.user = self.user
         self.middleware.process_request(request)
@@ -155,37 +155,31 @@ class TestCreatePatient(TestCase):
         response = profile(request)
         self.assertEqual(response.status_code, 302)
 
-    def test_post_view_procedure_valid_id(self):
-        request = self.factory.post('/patients/profile/?id=' + str(self.test_patient.id))
+    def test_get_update_page_valid_id(self):
+        request = self.factory.get('/patients/profile/update/?id=' + str(self.test_patient.id))
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
 
-        response = profile(request)
+        response = update(request)
         self.assertEqual(response.status_code, 200)
 
-    def test_post_view_procedure_invalid_id(self):
-        request = self.factory.post('/patients/profile/?id=' + str(99999))
+    def test_get_update_page_invalid_id(self):
+        request = self.factory.get('/patients/profile/update/?id=' + str(99999))
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
 
-        response = profile(request)
+        response = update(request)
         self.assertEqual(response.status_code, 302)
 
     def test_post_update_patient_valid_id(self):
-        profile_request = self.factory.post('/patients/profile/?id=' + str(self.test_patient.id))
-        profile_request.user = self.user
-        self.middleware.process_request(profile_request)
-        profile_request.session.save()
-
-        profile(profile_request)
-
-        request = self.factory.post('/patients/profile/update',
+        request = self.factory.post('/patients/profile/update/?id=' + str(self.test_patient.id),
                                     {'first_name': 'Bill', 'last_name': 'Jobs', 'record_number': 'a',
-                                     'birth_date': '2000-03-03', 'referring_physician': 'Dr. Seuss', 'date_of_referral': '02/02/2019'})
+                                     'birth_date': '2000-03-03', 'referring_physician': 'Dr. Seuss',
+                                     'date_of_referral': '02/02/2019'})
         request.user = self.user
-        request.session = profile_request.session
+        self.middleware.process_request(request)
         request.session.save()
 
         response = update(request)
@@ -196,22 +190,11 @@ class TestCreatePatient(TestCase):
         self.assertIsNotNone(updated_patient)
 
     def test_post_update_patient_invalid_id(self):
-        profile_request = self.factory.post('/patients/profile/?id=' + str(self.test_patient.id))
-        profile_request.user = self.user
-        self.middleware.process_request(profile_request)
-        profile_request.session.save()
-
-        profile(profile_request)
-
-        request = self.factory.post('/patients/profile/update',
+        request = self.factory.post('/patients/profile/update/?id=' +str(99999),
                                     {'first_name': 'Bill', 'last_name': 'Jobs', 'record_number': 'a',
                                      'birth_date': '2000-03-03', 'referring_physician': 'Dr. Seuss', 'date_of_referral': '02/02/2019'})
         request.user = self.user
-        request.session = profile_request.session
-        request.session.save()
-
-        # Fudge the id
-        request.session['patient_id'] = 9999999
+        self.middleware.process_request(request)
         request.session.save()
 
         response = update(request)
@@ -226,22 +209,21 @@ class TestCreatePatient(TestCase):
             self.assertIsNone(updated_patient)
 
     def test_post_update_patient_invalid_form(self):
-        profile_request = self.factory.post('/patients/profile/?id=' + str(self.test_patient.id))
-        profile_request.user = self.user
-        self.middleware.process_request(profile_request)
-        profile_request.session.save()
-
-        profile(profile_request)
-
-        request = self.factory.post('/patients/profile/update',
-                                    {'first_name': 'Bill', 'record_number': 'a', 'birth_date': '2000-03-03'})
+        request = self.factory.post('/patients/profile/update/?id=' + str(self.test_patient.id),
+                                    {'first_name': 'Bill', 'record_number': 'a', 'birth_date': '2000'})
         request.user = self.user
-        request.session = profile_request.session
+        self.middleware.process_request(request)
         request.session.save()
+
+        #This unit tests encounters a bug in django with the messages app, so this must be done as a way to mock messages
+        # https://stackoverflow.com/questions/11938164/why-dont-my-django-unittests-know-that-messagemiddleware-is-installed
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
 
         response = update(request)
 
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 302)
 
         # If an entry exists, it will overwrite None, thus failing the test
         try:
@@ -251,16 +233,9 @@ class TestCreatePatient(TestCase):
             self.assertIsNone(updated_patient)
 
     def test_post_delete_patient_valid_id(self):
-        profile_request = self.factory.post('/patients/profile/?id=' + str(self.test_patient.id))
-        profile_request.user = self.user
-        self.middleware.process_request(profile_request)
-        profile_request.session.save()
-
-        profile(profile_request)
-
-        request = self.factory.post('/patients/profile/delete')
+        request = self.factory.post('/patients/profile/delete/?id=' + str(self.test_patient.id))
         request.user = self.user
-        request.session = profile_request.session
+        self.middleware.process_request(request)
         request.session.save()
 
         response = delete(request)
@@ -275,20 +250,9 @@ class TestCreatePatient(TestCase):
             self.assertIsNone(updated_patient)
 
     def test_post_delete_patient_invalid_id(self):
-        profile_request = self.factory.post('/patients/profile/?id=' + str(self.test_patient.id))
-        profile_request.user = self.user
-        self.middleware.process_request(profile_request)
-        profile_request.session.save()
-
-        profile(profile_request)
-
-        request = self.factory.post('/patients/profile/delete')
+        request = self.factory.post('/patients/profile/delete/?id=' + str(99999))
         request.user = self.user
-        request.session = profile_request.session
-        request.session.save()
-
-        # Fudge the id
-        request.session['patient_id'] = 9999999
+        self.middleware.process_request(request)
         request.session.save()
 
         response = delete(request)
@@ -359,7 +323,25 @@ class TestCreatePatient(TestCase):
         self.assertEqual(response.status_code, 302)
 
 
+    def test_get_procedures_page_valid_id(self):
+        request = self.factory.get('/patients/profile/procedures/?id=' + str(self.test_patient.id))
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
 
+        response = procedures(request)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_procedures_page_invalid_id(self):
+        request = self.factory.get('/patients/profile/procedures/?id=' + str(99999))
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+
+        response = procedures(request)
+
+        self.assertEqual(response.status_code, 302)
 
 '''
 #If the patient does exist, the value of None will be overwritten.
