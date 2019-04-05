@@ -1,8 +1,6 @@
-$(document).ready(function () {
-
-    time = new Date().getHours();
+time = new Date().getHours();
     username = $('#greeting').text()
-
+    $('#greeting').text("");
     greeting = "";
 
     if(time >=3 && time < 12){
@@ -12,6 +10,10 @@ $(document).ready(function () {
     } else{
         greeting = "Good evening, "
     }
+
+$(document).ready(function () {
+
+
 
     $('#greeting').text(greeting + username);
 
