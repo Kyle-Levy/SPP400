@@ -25,7 +25,7 @@ a:focus {
 }
 
 .navbar {
-    padding: 22px 10px;
+    padding: 34px 10px;
     background: #fff;
     border: none;
     border-radius: 0;
@@ -58,7 +58,7 @@ a:focus {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: gold;
+    background: #FFCD00;
 }
 
 #sidebar ul.components {
@@ -79,7 +79,7 @@ a:focus {
 
 #sidebar ul li a:hover {
     color: #2c2c2c;
-    background: gold;
+    background: #FFCD00;
 }
 
 #sidebar ul li.active>a, a[aria-expanded="true"] {
@@ -182,7 +182,5 @@ a[aria-expanded="true"]::after {
     #content.active {
         width: calc(100% - 250px);
     }
-    #sidebarCollapse span {
-        display: none;
-    }
+
 }
