@@ -1,3 +1,4 @@
+from django.contrib.messages.storage.fallback import FallbackStorage
 from django.test import RequestFactory, TestCase
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.contrib.auth.models import User
@@ -45,6 +46,10 @@ class TestProcedures(TestCase):
         self.middleware.process_request(request)
         request.session.save()
 
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
         response = new_procedure(request)
         self.assertEqual(response.status_code, 302)
 
@@ -89,6 +94,10 @@ class TestProcedures(TestCase):
         self.middleware.process_request(request)
         request.session.save()
 
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
         response = view_procedure(request)
         self.assertEqual(response.status_code, 302)
 
@@ -106,6 +115,10 @@ class TestProcedures(TestCase):
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
 
         response = update_procedure(request)
         self.assertEqual(response.status_code, 302)
@@ -134,6 +147,10 @@ class TestProcedures(TestCase):
         self.middleware.process_request(request)
         request.session.save()
 
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
         response = update_procedure(request)
 
         self.assertEqual(response.status_code, 302)
@@ -153,6 +170,10 @@ class TestProcedures(TestCase):
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
 
         response = update_procedure(request)
 
@@ -189,6 +210,10 @@ class TestProcedures(TestCase):
         self.middleware.process_request(request)
         request.session.save()
 
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+        
         response = delete_this_procedure(request)
 
         self.assertEqual(response.status_code, 302)

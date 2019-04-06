@@ -4,15 +4,7 @@ from django.shortcuts import render, redirect
 from homepage.forms import VerifyActionForm
 from procedures.forms import NewProcedure, SearchProcedures
 from procedures.models import Procedure
-
-'''
-breadcrumbs = [('/patients/', 'Patients'),
-                               ('/patients/profile/?id=' + str(patient.id), patient.last_name + ', ' + patient.first_name),
-                               ('#', 'Update: ' + patient.last_name + ', ' + patient.first_name)]
-                               
-, 'breadcrumbs': breadcrumbs
-'''
-
+from django.contrib import messages
 
 @login_required
 def index(request):
@@ -56,7 +48,7 @@ def new_procedure(request):
             procedure.save()
             return redirect('/procedures/')
         else:
-            #TODO Error creating procedure message here
+            messages.error(request, 'Invalid Form!')
             return redirect('/procedures/create/')
 
 
@@ -74,7 +66,7 @@ def view_procedure(request):
                           {'procedure': procedure, 'title': 'View: ' + procedure.procedure_name,
                            'breadcrumbs': breadcrumbs})
         except Procedure.DoesNotExist:
-            # TODO: add in error message here "Procedure you attempted to reach doesn't exist
+            messages.warning(request, "The procedure you tried to reach doesn't exist!")
             return redirect('/procedures/')
 
 
@@ -98,7 +90,7 @@ def update_procedure(request):
                 'breadcrumbs': breadcrumbs,
                 'verification-form': VerifyActionForm()})
         except Procedure.DoesNotExist:
-            # TODO: add in error message here "Procedure you attempted to reach doesn't exist
+            messages.warning(request, "The procedure you tried to reach doesn't exist!")
             return redirect('/procedures/')
 
     if request.method == 'POST':
@@ -116,10 +108,10 @@ def update_procedure(request):
                 return redirect("/procedures/view_procedure/?id=" + str(procedure.id))
 
             else:
-                # TODO: Error filling out form message
+                messages.error(request, 'Invalid Form!')
                 return redirect('/procedures/view_procedure/update/?id=' + str(procedure.id))
         except Procedure.DoesNotExist:
-            # TODO: add in error message here
+            messages.warning(request, "The procedure you tried to reach doesn't exist!")
             return redirect('/procedures/')
 
 
@@ -132,5 +124,5 @@ def delete_this_procedure(request):
             procedure.delete()
             return redirect("/procedures/")
         except Procedure.DoesNotExist:
-            # TODO: add in error message here
+            messages.warning(request, "The procedure you tried to reach doesn't exist!")
             return redirect('/procedures/')
