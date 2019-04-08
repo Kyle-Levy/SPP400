@@ -118,11 +118,22 @@ def update_procedure(request):
 @login_required
 def delete_this_procedure(request):
     if request.method == 'POST':
+        form = VerifyActionForm(request.POST)
         try:
-            # Get desired patient id from url
             procedure = Procedure.objects.get(id=request.GET.get('id'))
-            procedure.delete()
-            return redirect("/procedures/")
+            # Get desired patient id from url
+            if form.is_valid():
+                cd = form.cleaned_data
+                if procedure.procedure_name == cd['item_name']:
+                    procedure.delete()
+                    return redirect('/procedures/')
+                else:
+                    messages.error(request, 'Incorrect procedure name!')
+                    return redirect('procedures/view_procedure/update/?id=' + str(procedure.id))
+            else:
+                messages.error(request, 'Invalid Form!')
+                return redirect('procedures/view_procedure/update/?id=' + str(procedure.id))
+
         except Procedure.DoesNotExist:
             messages.warning(request, "The procedure you tried to reach doesn't exist!")
             return redirect('/procedures/')
