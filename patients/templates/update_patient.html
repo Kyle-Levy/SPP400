@@ -65,14 +65,22 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
-                            <h5>Are you sure?</h5>
-                        </div>
-                        <div class="modal-footer">
-                            <form action="/patients/profile/delete/?id={{ patient.id }}" method="POST"> {% csrf_token %}
+                        <form action="/patients/profile/delete/?id={{ patient.id }}" method="POST"> {% csrf_token %}
+
+                            <div class="modal-body">
+                                <p>This action <strong>cannot</strong> be undone. This will permamantly delete
+                                    the patient <strong>{{ patient.last_name }}, {{ patient.first_name }}: {{ patient.record_number }}</strong> from the system.</p>
+
+                                <p>Please type in the MRN of the patient to confirm.</p>
+                                <div class="form-group">
+                                    {{ verification_form.item_name }}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
                                 <button type="submit" class="btn btn-danger mb-4">Delete Patient</button>
-                            </form>
-                        </div>
+
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

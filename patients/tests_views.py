@@ -6,6 +6,7 @@ from .views import *
 from .models import Patients
 from django.contrib.messages.storage.fallback import FallbackStorage
 
+
 # Create your tests here.
 class TestCreatePatient(TestCase):
     # create setUp so every test can have access to the requestFactory
@@ -19,7 +20,8 @@ class TestCreatePatient(TestCase):
 
         request = self.factory.post('patients/create/',
                                     {'first_name': 'John', 'last_name': 'Smith', 'birth_date': '1950-01-01',
-                                     'record_number': '111', 'referring_physician': 'Dr. Who', 'date_of_referral': '2019-01-01'})
+                                     'record_number': '111', 'referring_physician': 'Dr. Who',
+                                     'date_of_referral': '2019-01-01'})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -29,7 +31,9 @@ class TestCreatePatient(TestCase):
     def test_create_valid_patient(self):
 
         request = self.factory.post('patients/create/',
-                                    {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01', 'record_number': '112', 'referring_physician': 'Dr. Who', 'date_of_referral': '2019-01-01'})
+                                    {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01',
+                                     'record_number': '112', 'referring_physician': 'Dr. Who',
+                                     'date_of_referral': '2019-01-01'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
@@ -46,7 +50,9 @@ class TestCreatePatient(TestCase):
 
     def test_missing_first_name(self):
 
-        request = self.factory.post('patients/create/', {'last_name': 'Smith', 'birth_date': '1950-02-01', 'record_number': '111', 'referring_physician': 'Dr. Who', 'date_of_referral': '2019-01-01'})
+        request = self.factory.post('patients/create/',
+                                    {'last_name': 'Smith', 'birth_date': '1950-02-01', 'record_number': '111',
+                                     'referring_physician': 'Dr. Who', 'date_of_referral': '2019-01-01'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
@@ -61,7 +67,9 @@ class TestCreatePatient(TestCase):
 
     def test_missing_last_name(self):
 
-        request = self.factory.post('patients/create/', {'first_name': 'Marie', 'birth_date': '1950-02-01', 'record_number': '111', 'referring_physician': 'Dr. Who', 'date_of_referral': '2019-01-01'})
+        request = self.factory.post('patients/create/',
+                                    {'first_name': 'Marie', 'birth_date': '1950-02-01', 'record_number': '111',
+                                     'referring_physician': 'Dr. Who', 'date_of_referral': '2019-01-01'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
@@ -76,7 +84,9 @@ class TestCreatePatient(TestCase):
 
     def test_missing_bday(self):
 
-        request = self.factory.post('patients/create/', {'first_name': 'Marie', 'last_name': 'Smith', 'record_number': '111', 'referring_physician': 'Dr. Who', 'date_of_referral': '2019-01-01'})
+        request = self.factory.post('patients/create/',
+                                    {'first_name': 'Marie', 'last_name': 'Smith', 'record_number': '111',
+                                     'referring_physician': 'Dr. Who', 'date_of_referral': '2019-01-01'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
@@ -92,7 +102,8 @@ class TestCreatePatient(TestCase):
     def test_missing_mrn(self):
 
         request = self.factory.post('patients/create/',
-                                    {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01', 'referring_physician': 'Dr. Who', 'date_of_referral': '2019-01-01'})
+                                    {'first_name': 'Marie', 'last_name': 'Smith', 'birth_date': '1950-02-01',
+                                     'referring_physician': 'Dr. Who', 'date_of_referral': '2019-01-01'})
         self.middleware.process_request(request)
         request.session.save()
         request.user = self.user
@@ -139,7 +150,7 @@ class TestCreatePatient(TestCase):
 
         self.assertEqual(response.status_code, 302)
 
-#####################################################################################################
+    #####################################################################################################
 
     def test_get_patients(self):
         request = self.factory.get('/patients/')
@@ -185,7 +196,6 @@ class TestCreatePatient(TestCase):
         response = profile(request)
         self.assertEqual(response.status_code, 302)
 
-
     def test_get_update_page_valid_id(self):
         request = self.factory.get('/patients/profile/update/?id=' + str(self.test_patient.id))
         request.user = self.user
@@ -224,7 +234,6 @@ class TestCreatePatient(TestCase):
         updated_patient = Patients.objects.get(first_name='Bill', last_name='Jobs', bday='2000-03-03')
         self.assertIsNotNone(updated_patient)
 
-
     def test_post_update_patient_invalid_id(self):
         request = self.factory.post('/patients/profile/update/?id=' + str(99999),
                                     {'first_name': 'Bill', 'last_name': 'Jobs', 'record_number': 'a',
@@ -248,7 +257,6 @@ class TestCreatePatient(TestCase):
             updated_patient = Patients.objects.get(first_name='Bill', last_name='Jobs', bday='2000-03-03')
         except Patients.DoesNotExist:
             self.assertIsNone(updated_patient)
-
 
     def test_post_update_patient_invalid_form(self):
         request = self.factory.post('/patients/profile/update/?id=' + str(self.test_patient.id),
@@ -274,14 +282,16 @@ class TestCreatePatient(TestCase):
         except Patients.DoesNotExist:
             self.assertIsNone(updated_patient)
 
-
     def test_post_delete_patient_valid_id(self):
-        request = self.factory.post('/patients/profile/delete/?id=' + str(self.test_patient.id), {'item_name': str(self.test_patient.record_number)})
+        request = self.factory.post('/patients/profile/delete/?id=' + str(self.test_patient.id),
+                                    {'item_name': str(self.test_patient.record_number)})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
 
         response = delete(request)
+
+
 
         self.assertEqual(response.status_code, 302)
 
@@ -292,9 +302,9 @@ class TestCreatePatient(TestCase):
         except Patients.DoesNotExist:
             self.assertIsNone(updated_patient)
 
-
     def test_post_delete_patient_invalid_id(self):
-        request = self.factory.post('/patients/profile/delete/?id=' + str(99999), {'item_name': str(self.test_patient.record_number)})
+        request = self.factory.post('/patients/profile/delete/?id=' + str(99999),
+                                    {'item_name': str(self.test_patient.record_number)})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -313,7 +323,8 @@ class TestCreatePatient(TestCase):
         self.assertIsNotNone(updated_patient)
 
     def test_post_delete_patient_invalid_record_number(self):
-        request = self.factory.post('/patients/profile/delete/?id=' + str(self.test_patient.id), {'item_name': str(self.test_patient.record_number + "99999")})
+        request = self.factory.post('/patients/profile/delete/?id=' + str(self.test_patient.id),
+                                    {'item_name': str(self.test_patient.record_number + "99999")})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -447,5 +458,3 @@ class TestCreatePatient(TestCase):
         response = procedures(request)
 
         self.assertEqual(response.status_code, 302)
-
-

@@ -1,5 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+
+from homepage.forms import VerifyActionForm
 from patients.forms import NewPatient, SearchPatients, FlagForm
 from procedures.models import Procedure
 from roadmaps.forms import SelectFromRoadmap, RoadmapProcedureLinkForm
@@ -94,7 +96,7 @@ def update(request):
 
             return render(request, 'update_patient.html',
                           {'form': NewPatient(initial=initial_form_dict), 'patient': patient, 'title': page_title,
-                           'breadcrumbs': breadcrumbs})
+                           'breadcrumbs': breadcrumbs, 'verification_form': VerifyActionForm()})
 
         except Patients.DoesNotExist:
             messages.warning(request, "The patient you tried to reach doesn't exist!")
@@ -125,13 +127,22 @@ def update(request):
 
 @login_required
 def delete(request):
-    # TODO: This method can be dangerous if patient_id isnt properly set i think
     if request.method == 'POST':
+        form = VerifyActionForm(request.POST)
         try:
             # Get desired patient id from url
             patient = Patients.objects.get(id=request.GET.get('id'))
-            patient.delete()
-            return redirect("/patients/")
+            if form.is_valid():
+                cd = form.cleaned_data
+                if patient.record_number == cd['item_name']:
+                    patient.delete()
+                    return redirect('/patients/')
+                else:
+                    messages.error(request, 'Incorrect patient MRN!')
+                    return redirect('/patients/profile/update/?id=' + str(patient.id))
+            else:
+                messages.error(request, 'Invalid Form!2')
+                return redirect('/patients/profile/update/?id=' + str(patient.id))
         except Patients.DoesNotExist:
             messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
