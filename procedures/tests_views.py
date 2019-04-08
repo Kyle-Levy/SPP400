@@ -15,7 +15,9 @@ class TestProcedures(TestCase):
         self.user.save()
 
         # Creating procedure for testing the ability to manipulate a procedure
-        request = self.factory.post('procedures/create/', {'procedure_name': 'View Procedure', 'notes': 'These are test notes', 'time_frame': 'days', 'time': '22'})
+        request = self.factory.post('procedures/create/',
+                                    {'procedure_name': 'View Procedure', 'notes': 'These are test notes',
+                                     'time_frame': 'days', 'time': '22'})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -25,8 +27,8 @@ class TestProcedures(TestCase):
 
     def test_create_new_procedure(self):
         request = self.factory.post('procedures/create/', {'procedure_name': 'Leeches',
-                                        'notes': 'have been used for clinical bloodletting for at least 2,500 years',
-                                        'time_frame': 'days', 'time': '22'})
+                                                           'notes': 'have been used for clinical bloodletting for at least 2,500 years',
+                                                           'time_frame': 'days', 'time': '22'})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -124,7 +126,7 @@ class TestProcedures(TestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_post_update_procedure_valid_id(self):
-        request = self.factory.post('/procedures/view_procedure/update/?id=' +str(self.test_procedure.id),
+        request = self.factory.post('/procedures/view_procedure/update/?id=' + str(self.test_procedure.id),
                                     {'procedure_name': 'Updated Procedure', 'notes': 'Updated Procedure Info'
                                         , 'time_frame': 'days', 'time': '22'})
         request.user = self.user
@@ -187,7 +189,9 @@ class TestProcedures(TestCase):
             self.assertIsNone(updated_procedure)
 
     def test_post_delete_procedure_valid_id(self):
-        request = self.factory.post('/procedures/view_procedure/delete/?id=' + str(self.test_procedure.id))
+        request = self.factory.post('/procedures/view_procedure/delete/?id=' + str(self.test_procedure.id),
+                                    {'item_name': str(self.test_procedure.procedure_name)})
+
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -205,7 +209,8 @@ class TestProcedures(TestCase):
             self.assertIsNone(deleted_procedure)
 
     def test_post_delete_procedure_invalid_id(self):
-        request = self.factory.post('/procedures/view_procedure/delete/?id=' + str(99999))
+        request = self.factory.post('/procedures/view_procedure/delete/?id=' + str(99999),
+                                    {'item_name': str(self.test_procedure.procedure_name)})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -213,7 +218,7 @@ class TestProcedures(TestCase):
         setattr(request, 'session', 'session')
         messages = FallbackStorage(request)
         setattr(request, '_messages', messages)
-        
+
         response = delete_this_procedure(request)
 
         self.assertEqual(response.status_code, 302)
@@ -222,6 +227,46 @@ class TestProcedures(TestCase):
                                                   procedure_info='These are test notes')
         # deleted_procedure can still be retrieved since the wrong ID was used.
         self.assertIsNotNone(deleted_procedure)
+
+    def test_post_delete_procedure_name_incorrect(self):
+        request = self.factory.post('/procedures/view_procedure/delete/?id=' + str(self.test_procedure.id),
+                                    {'item_name': str(self.test_procedure.procedure_name) + "111111"})
+        request.user = self.user
+        self.middleware.process_request(request)
+        request.session.save()
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = delete_this_procedure(request)
+
+        self.assertEqual(response.status_code, 302)
+
+        deleted_procedure = Procedure.objects.get(procedure_name='View Procedure',
+                                                  procedure_info='These are test notes')
+        # deleted_procedure can still be retrieved since the wrong ID was used.
+        self.assertIsNotNone(deleted_procedure)
+
+    def test_post_delete_procedure_invalid_form(self):
+        request = self.factory.post('/procedures/view_procedure/delete/?id=' + str(self.test_procedure.id), {})
+        request.user = self.user
+        self.middleware.process_request(request)
+        request.session.save()
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = delete_this_procedure(request)
+
+        self.assertEqual(response.status_code, 302)
+
+        deleted_procedure = Procedure.objects.get(procedure_name='View Procedure',
+                                                  procedure_info='These are test notes')
+        # deleted_procedure can still be retrieved since the wrong ID was used.
+        self.assertIsNotNone(deleted_procedure)
+
 
     def test_search_procedures(self):
         request = self.factory.post('/procedures/', {'search_terms': 'view'})
