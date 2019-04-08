@@ -135,20 +135,19 @@ def delete_roadmap(request):
         try:
             roadmap_id = request.GET.get('id')
             roadmap = Roadmap.objects.get(id=roadmap_id)
-            current_username = request.user.username
+
 
             #Text exists in the password box
             if form.is_valid():
                 cd = form.cleaned_data
-                user = authenticate(username=current_username, password=cd['password'])
                 #Password matches
-                if user is not None:
+                if roadmap.roadmap_name == cd['item_name'] :
                     RoadmapProcedureLink.remove_all_pairs_from_roadmap(roadmap_id)
                     roadmap.delete()
                     return redirect('/roadmaps/')
                 #Password doesn't match
                 else:
-                    messages.error(request, 'Incorrect password!')
+                    messages.error(request, 'Incorrect roadmap name!')
                     return redirect('/roadmaps/view_roadmap/modify/?id=' + str(roadmap_id))
             else:
                 messages.error(request, 'Invalid Form!')
