@@ -280,7 +280,7 @@ class TestProcedures(TestCase):
 
         # Delete the roadmap
         delete_request = self.factory.post('/roadmaps/view_roadmap/delete/?id=' + str(self.test_roadmap.id),
-                                           {'password': 'supersecretpass'})
+                                           {'item_name': str(self.test_roadmap.roadmap_name)})
 
         delete_request.user = self.user
         self.middleware.process_request(delete_request)
@@ -297,12 +297,12 @@ class TestProcedures(TestCase):
         # Assert the roadmap itself no longer exists
         self.assertListEqual(expected_list, list(Roadmap.objects.filter(id=self.test_roadmap.id)))
 
-    def test_delete_roadmap_password_mismatch(self):
+    def test_delete_roadmap_name_mismatch(self):
         self.test_add_to_roadmap()
 
         # Delete the roadmap
         delete_request = self.factory.post('/roadmaps/view_roadmap/delete/?id=' + str(self.test_roadmap.id),
-                                           {'password': 'soupsecretpass'})
+                                           {'item_name': str(self.test_roadmap.roadmap_name) + "bad text"})
 
         delete_request.user = self.user
         self.middleware.process_request(delete_request)
@@ -358,7 +358,7 @@ class TestProcedures(TestCase):
 
         # Delete the roadmap
         delete_request = self.factory.post('/roadmaps/view_roadmap/delete/?id=' + str(99999),
-                                           {'password': 'supersecretpass'})
+                                           {'item_name': str(self.test_roadmap.roadmap_name)})
 
         delete_request.user = self.user
         self.middleware.process_request(delete_request)

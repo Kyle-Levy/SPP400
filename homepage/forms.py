@@ -21,11 +21,10 @@ class LoginForm(forms.Form):
     ))
 
 class VerifyActionForm(forms.Form):
-    password = forms.CharField(widget=forms.PasswordInput(
+    item_name = forms.CharField(widget=forms.TextInput(
         attrs={
             'class': 'form-control',
-            'id': 'loginPassword',
-            'placeholder': 'Password'
+            'id': 'item-name',
         }
     ))
 
