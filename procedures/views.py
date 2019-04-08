@@ -88,7 +88,7 @@ def update_procedure(request):
                 'procedure': procedure,
                 'title': 'Update: ' + procedure.procedure_name,
                 'breadcrumbs': breadcrumbs,
-                'verification-form': VerifyActionForm()})
+                'verification_form': VerifyActionForm()})
         except Procedure.DoesNotExist:
             messages.warning(request, "The procedure you tried to reach doesn't exist!")
             return redirect('/procedures/')

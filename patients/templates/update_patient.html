@@ -69,7 +69,10 @@
 
                             <div class="modal-body">
                                 <p>This action <strong>cannot</strong> be undone. This will permamantly delete
-                                    the patient <strong>{{ patient.last_name }}, {{ patient.first_name }}: {{ patient.record_number }}</strong> from the system.</p>
+                                    the patient <strong>
+                                        <ul><li>{{ patient.last_name }}, {{ patient.first_name }}</li>
+                                            <li>MRN: {{ patient.record_number }}</li></ul></strong> from the system.
+                                </p>
 
                                 <p>Please type in the MRN of the patient to confirm.</p>
                                 <div class="form-group">
@@ -78,7 +81,6 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-danger mb-4">Delete Patient</button>
-
                             </div>
                         </form>
                     </div>
