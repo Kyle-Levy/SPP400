@@ -276,7 +276,7 @@ class TestCreatePatient(TestCase):
 
 
     def test_post_delete_patient_valid_id(self):
-        request = self.factory.post('/patients/profile/delete/?id=' + str(self.test_patient.id))
+        request = self.factory.post('/patients/profile/delete/?id=' + str(self.test_patient.id), {'item_name': str(self.test_patient.record_number)})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -294,7 +294,7 @@ class TestCreatePatient(TestCase):
 
 
     def test_post_delete_patient_invalid_id(self):
-        request = self.factory.post('/patients/profile/delete/?id=' + str(99999))
+        request = self.factory.post('/patients/profile/delete/?id=' + str(99999), {'item_name': str(self.test_patient.record_number)})
         request.user = self.user
         self.middleware.process_request(request)
         request.session.save()
@@ -312,6 +312,43 @@ class TestCreatePatient(TestCase):
         updated_patient = Patients.objects.get(first_name='John', last_name='Smith', bday='1950-01-01')
         self.assertIsNotNone(updated_patient)
 
+    def test_post_delete_patient_invalid_record_number(self):
+        request = self.factory.post('/patients/profile/delete/?id=' + str(self.test_patient.id), {'item_name': str(self.test_patient.record_number + "99999")})
+        request.user = self.user
+        self.middleware.process_request(request)
+        request.session.save()
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = delete(request)
+
+        self.assertEqual(response.status_code, 302)
+
+        # If an entry exists, it will overwrite None, thus failing the test
+
+        updated_patient = Patients.objects.get(first_name='John', last_name='Smith', bday='1950-01-01')
+        self.assertIsNotNone(updated_patient)
+
+    def test_post_delete_patient_missing_record_number(self):
+        request = self.factory.post('/patients/profile/delete/?id=' + str(self.test_patient.id), {})
+        request.user = self.user
+        self.middleware.process_request(request)
+        request.session.save()
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = delete(request)
+
+        self.assertEqual(response.status_code, 302)
+
+        # If an entry exists, it will overwrite None, thus failing the test
+
+        updated_patient = Patients.objects.get(first_name='John', last_name='Smith', bday='1950-01-01')
+        self.assertIsNotNone(updated_patient)
 
     def test_search_patients(self):
         request = self.factory.post('/patients/', {'search_terms': 'john'})
