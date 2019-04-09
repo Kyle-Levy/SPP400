@@ -21,7 +21,7 @@
             {% endif %}
         <div class="container-fixed">
             <h2> New Procedure </h2>
-            <form action="" method="POST"> {% csrf_token %}
+            <form action="/procedures/create/" method="POST"> {% csrf_token %}
                 <div class="form-group">
                     <label for="procedure_name">Procedure Name</label>
                     {{ form.procedure_name }}

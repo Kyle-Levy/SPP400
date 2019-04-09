@@ -33,7 +33,7 @@
                     <div class="container-fixed card-body">
 
 
-                        <form action="/roadmaps/view_roadmap/update/" method="POST"> {% csrf_token %}
+                        <form action="/roadmaps/view_roadmap/update/?id={{ roadmap.id }}" method="POST"> {% csrf_token %}
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -82,7 +82,7 @@
                      data-parent="#accordion">
                     <!-- Add procedure to roadmap -->
                     <div class="container-fixed card-body">
-                        <form action="/roadmaps/view_roadmap/add/" method="POST"> {% csrf_token %}
+                        <form action="/roadmaps/view_roadmap/add/?id={{ roadmap.id }}" method="POST"> {% csrf_token %}
                             <div class="form-group">
                                 <label for="id_procedure">Procedures: </label>
                                 {{ form.procedure }}
@@ -112,7 +112,7 @@
                      data-parent="#accordion">
                     <!-- Roadmap Table -->
                     <div class="container-fixed">
-                        <form action="/roadmaps/view_roadmap/remove/" method="post">{% csrf_token %}
+                        <form action="/roadmaps/view_roadmap/remove/?id={{ roadmap.id }}" method="post">{% csrf_token %}
                             <table class="table table-hover border">
                                 <thead>
                                 <tr>
@@ -159,7 +159,7 @@
                             </div>
                         </form>
 
-                        <form action="/roadmaps/view_roadmap/delete/" method="post">{% csrf_token %}
+                        <form action="/roadmaps/view_roadmap/delete/?id={{ roadmap.id }}" method="post">{% csrf_token %}
                             <button type="button" class="btn btn-danger ml-3 mb-3" data-toggle="modal"
                                     data-target="#deleteRoadmap">
                                 Delete Roadmap
@@ -170,23 +170,32 @@
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4 class="modal-title" id="deleteRoadmapLabel">Delete
-                                                Roadmap: {{ roadmap.roadmap_name }}</h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <h4 class="modal-title" id="deleteRoadmapLabel">Are you sure?</h4>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <h5>Are you sure?</h5>
+                                            <p>This action <strong>cannot</strong> be undone. This will permamantly delete
+                                                the roadmap <strong>{{ roadmap.roadmap_name }}</strong> from the system.</p>
+
+                                            <p>Please type in the name of the roadmap to confirm.</p>
+                                            <div class="form-group">
+                                                {{ verification_form.item_name }}
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="submit" class="btn btn-danger mb-4">Delete Roadmap</button>
+                                            <button type="submit" class="btn btn-outline-danger mb-2 btn-block">Delete Roadmap
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </form>
                     </div>
+
                 </div>
             </div>
         </div>

@@ -141,9 +141,9 @@
                                 </div>
                             </div>
 
-                            <form action="/patients/profile/?id={{ patient.id }}" method="post">{% csrf_token %}
-                                <button type="submit" class="btn btn-warning">Update Patient</button>
-                            </form>
+
+                                <a href="/patients/profile/update/?id={{ patient.id }}" class="btn btn-warning my-4">Update Patient</a>
+
 
                             <a href="/patients/profile/procedures/?id={{ patient.id }}" class="btn btn-warning my-4">Patient's
                                 Procedures</a>

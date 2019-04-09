@@ -22,8 +22,8 @@
                     <strong>Form requirements not met!</strong> Try entering your patient information again.
                 </div>
             {% endif %}
-            <h2> Update information for: {{patient.first_name}} {{patient.last_name}} </h2>
-            <form action="update/" method="POST"> {% csrf_token %}
+            <h2> Update information for: {{ patient.first_name }} {{ patient.last_name }} </h2>
+            <form action="/patients/profile/update/?id={{ patient.id }}" method="POST"> {% csrf_token %}
                 <div class="form-group">
                     <label for="firstName">First Name</label>
                     {{ form.first_name }}
@@ -50,14 +50,47 @@
                 </div>
                 <button type="submit" class="btn btn-warning mb-4">Update Patient</button>
             </form>
-            <form action="delete/" method="POST"> {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Delete Patient</button>
-            </form>
+
+
+            <button type="button" class="btn btn-danger my-4" data-toggle="modal" data-target="#deletePatient">
+                Delete Patient
+            </button>
+            <div class="modal fade" id="deletePatient" tabindex="-1" role="dialog" aria-labelledby="deletePatientLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="deletePatientLabel">Delete Patient</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form action="/patients/profile/delete/?id={{ patient.id }}" method="POST"> {% csrf_token %}
+
+                            <div class="modal-body">
+                                <p>This action <strong>cannot</strong> be undone. This will permamantly delete
+                                    the patient <strong>
+                                        <ul><li>{{ patient.last_name }}, {{ patient.first_name }}</li>
+                                            <li>MRN: {{ patient.record_number }}</li></ul></strong> from the system.
+                                </p>
+
+                                <p>Please type in the MRN of the patient to confirm.</p>
+                                <div class="form-group">
+                                    {{ verification_form.item_name }}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-danger mb-4">Delete Patient</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
 </div>
-
 
 
 {% include "global_js.html" %}

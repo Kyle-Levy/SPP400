@@ -20,7 +20,13 @@ class LoginForm(forms.Form):
             }
     ))
 
-
+class VerifyActionForm(forms.Form):
+    item_name = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+            'id': 'item-name',
+        }
+    ))
 
 class NewKeyForm(forms.Form):
     username = forms.CharField(

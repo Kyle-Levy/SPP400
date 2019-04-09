@@ -25,4 +25,15 @@
         </nav>
     {% endif %}
 
+    {% for message in messages %}
+            <div class="alert alert-danger" role="alert">
+            {% if message.tags == "error" %}
+                <strong>{{ message }}</strong> Please try again.
+            {% endif %}
+            {% if message.tags == "warning" %}
+                <strong>{{ message }}</strong>
+            {% endif %}
+            </div>
+        {% endfor %}
+
 {% endblock %}

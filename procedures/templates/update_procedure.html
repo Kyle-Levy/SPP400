@@ -16,7 +16,7 @@
 
         <div class="container-fixed">
             <h2> Update Procedure: {{ procedure.procedure_name }}</h2>
-            <form action="update/" method="POST"> {% csrf_token %}
+            <form action="/procedures/view_procedure/update/?id={{ procedure.id }}" method="POST"> {% csrf_token %}
                 <div class="form-group">
                     <label for="procedure_name">Procedure Name</label>
                     {{ form.procedure_name }}
@@ -35,9 +35,40 @@
                 </div>
                 <button type="submit" class="btn btn-warning mb-4">Update {{ procedure.procedure_name }}</button>
             </form>
-            <form action="delete/" method="post">{% csrf_token %}
-                <button type="submit" class="btn btn-danger">Delete Procedure</button>
-            </form>
+            <button type="button" class="btn btn-danger my-4" data-toggle="modal" data-target="#deleteProcedure">
+                Delete Procedure
+            </button>
+            <div class="modal fade" id="deleteProcedure" tabindex="-1" role="dialog"
+                 aria-labelledby="deleteProcedureLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="deleteProcedureLabel">Delete Procedure</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form action="/procedures/view_procedure/delete/?id={{ procedure.id }}"
+                              method="POST"> {% csrf_token %}
+                            <div class="modal-body">
+                                <p>This action <strong>cannot</strong> be undone. This will permamantly delete
+                                    the procedure <strong>{{ procedure.procedure_name }}</strong> from the system.</p>
+
+                                <p>Please type in the name of the procedure to confirm.</p>
+                                <div class="form-group">
+                                    {{ verification_form.item_name }}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-danger mb-4">Delete Procedure</button>
+                            </div>
+                        </form>
+                    </div>
+
+
+                </div>
+            </div>
         </div>
     </div>
 
