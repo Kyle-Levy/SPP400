@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'roadmaps',
     'assigned_procedures',
     'errorpage',
+    'analytics',
 ]
 
 MIDDLEWARE = [
