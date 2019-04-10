@@ -24,3 +24,19 @@ class Analytics(models.Model):
         Analytics.behind_procedure_perc = percentBehind
 
         return percentBehind
+
+    @staticmethod
+    def return_all_behind_procedures():
+        allLateProcedures = []
+
+        for incompleteProcedure in AssignedProcedures.get_all_active_procedures():
+            incompleteProcedurePatient = incompleteProcedure.patient.all()[0]
+            incompleteProcedureProc = incompleteProcedure.procedure.all()[0]
+
+
+            assignedProcStatus = AssignedProcedures.check_goal_status(incompleteProcedurePatient, incompleteProcedureProc)
+            if assignedProcStatus == "in progress (behind)":
+                allLateProcedures.append(incompleteProcedure)
+
+        return allLateProcedures
+
