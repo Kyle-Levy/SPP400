@@ -14,7 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist
 @login_required()
 def homepage(request):
     if request.method == 'GET':
-        return render(request, 'homepage.html', {'title':'Home', 'patients' : Patients.objects.all(), 'alert_patients': AssignedProcedures.update_all_patient_goal_flags()})
+        return render(request, 'homepage.html', {'title':'Home', 'patients' : Patients.objects.all(), 'alert_patients': AssignedProcedures.update_and_return_all_patient_goal_flags()})
 
 
 def log_in(request):
