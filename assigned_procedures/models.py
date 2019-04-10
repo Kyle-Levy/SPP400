@@ -24,14 +24,19 @@ class AssignedProcedures(models.Model):
     completed = models.BooleanField(default=False)
     #ONLY check est_date_complete if the est_flag is TRUE
     est_date_complete = models.DateTimeField(default= timezone.now)
+    #if est_flag is false the assigned procedure does not have a goal date and doesn't need to be checked
     est_flag = models.BooleanField(default=False)
+
 
 
     @classmethod
     def assign_procedure_to_patient(cls, step, patientToLink,procedureToLink, proc_est=0, return_visit=False):
-        if proc_est is not 0 and procedureToLink.est_days_to_complete is not 0:
+        if proc_est is not 0 or procedureToLink.est_days_to_complete is not 0:
             est_flag = True
-            proc_est = AssignedProcedures.convert_days_to_date(proc_est)
+            if proc_est is not 0:
+                proc_est = AssignedProcedures.convert_days_to_date(proc_est)
+            else:
+                proc_est = AssignedProcedures.convert_days_to_date(procedureToLink.est_days_to_complete)
         else:
             est_flag = False
             proc_est = timezone.now()
@@ -88,8 +93,8 @@ class AssignedProcedures(models.Model):
 
     #this method is used when a patient is returning for a new procedure
     @staticmethod
-    def last_visit_id(plz):
-        assignments = AssignedProcedures.objects.filter(patient=plz.id)
+    def last_visit_id(searchPatient):
+        assignments = AssignedProcedures.objects.filter(patient=searchPatient.id)
         maxVisitID = 0
         for retrieved in assignments:
             if retrieved.visitID > maxVisitID:
@@ -165,3 +170,11 @@ class AssignedProcedures(models.Model):
                     behindPatients.append(patient)
         return list(set(behindPatients))
 
+
+    @staticmethod
+    def get_all_active_procedures():
+        allAssignedProcedures = []
+        quiriedAssignedProcedures = AssignedProcedures.objects.filter(completed=False)
+        for assignedProc in quiriedAssignedProcedures:
+            allAssignedProcedures.append(assignedProc)
+        return allAssignedProcedures
