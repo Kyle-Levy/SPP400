@@ -2,7 +2,7 @@ behave==1.2.6
 behave-django==1.1.0
 certifi==2018.11.29
 coverage==4.5.2
-Django==2.1.6
+Django==2.1.5
 django-filter==2.1.0
 django-material==1.4.3
 django-select-multiple-field==0.4.2
