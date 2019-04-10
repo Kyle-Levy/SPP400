@@ -113,7 +113,7 @@ class TestAssignedProcedures(TestCase):
         self.assertEqual(toCheck, correct)
 
     def test_update_all_patient_goal_flags(self):
-        result = AssignedProcedures.update_all_patient_goal_flags()
+        result = AssignedProcedures.update_and_return_all_patient_goal_flags()
         self.assertEqual(result, [])
         tPatient = Patients.objects.create(first_name="Kyle", last_name="Dorcey", bday=datetime(1996, 10, 24))
         tPatient.save()
@@ -129,5 +129,5 @@ class TestAssignedProcedures(TestCase):
         AssignedProcedures.assign_procedure_to_patient(2,tPatient,testProcedure2,-10)
         AssignedProcedures.assign_procedure_to_patient(1, tPatient2, testProcedure)
         AssignedProcedures.assign_procedure_to_patient(2, tPatient2, testProcedure2, -10)
-        result = AssignedProcedures.update_all_patient_goal_flags()
+        result = AssignedProcedures.update_and_return_all_patient_goal_flags()
         self.assertEqual(result,[tPatient, tPatient2])
