@@ -97,7 +97,8 @@ class AssignedProcedures(models.Model):
 
         return maxVisitID
 
-    # returns list of tuples structured: (procedure object, procedure step)
+    # returns a list of all procedures assigned to a patient
+    # returned as a list of tuples structured: (procedure object, procedure step)
     @staticmethod
     def get_all_procedures(searchPatient, searchVisitID=1):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, visitID=searchVisitID)
@@ -150,8 +151,10 @@ class AssignedProcedures(models.Model):
                                                                       procedure=procedureToDelete, procedureStep=phase,
                                                                       visitID=visitID).delete()
 
+
+    # updates all patient flags and returns a list of any flagged patients
     @staticmethod
-    def update_all_patient_goal_flags():
+    def update_and_return_all_patient_goal_flags():
         behindPatients = []
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(completed=False)
         for assignedProc in quiriedAssignedProcedures:
