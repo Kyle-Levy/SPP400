@@ -196,6 +196,7 @@ class AssignedProcedures(models.Model):
         total_days = 0
         total_procedures = 0
         for procedure in completed_procedures:
-            total_days += (procedure.date_completed - timezone.now).days
+            total_days += (procedure.date_completed - procedure.created_at).days
             total_procedures += 1
+        return total_days/total_procedures
 
