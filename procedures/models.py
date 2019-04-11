@@ -2,8 +2,6 @@ from django.db import models
 from datetime import datetime
 from datetime import timedelta
 from django.utils import timezone
-from assigned_procedures.models import AssignedProcedures
-
 
 
 class Procedure(models.Model):
@@ -29,5 +27,3 @@ class Procedure(models.Model):
         else:
             return False
 
-    def average_completion(self):
-        return AssignedProcedures.average_completion_time(self.id)

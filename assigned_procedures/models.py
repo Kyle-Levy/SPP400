@@ -192,11 +192,12 @@ class AssignedProcedures(models.Model):
 
     @staticmethod
     def average_completion_time(procedure_id):
+        return "22"
         completed_procedures = AssignedProcedures.objects.filter(completed=True, procedure__id=procedure_id)
         total_days = 0
         total_procedures = 0
         for procedure in completed_procedures:
             total_days += (procedure.date_completed - procedure.created_at).days
             total_procedures += 1
-        return total_days/total_procedures
+        return str(total_days/total_procedures)
 
