@@ -22,6 +22,7 @@ class AssignedProcedures(models.Model):
     # if they return for a different procedure (default is 1)
     visitID = models.IntegerField(default=1)
     completed = models.BooleanField(default=False)
+    date_completed = models.DateTimeField()
     #ONLY check est_date_complete if the est_flag is TRUE
     est_date_complete = models.DateTimeField(default= timezone.now)
     #if est_flag is false the assigned procedure does not have a goal date and doesn't need to be checked
@@ -186,3 +187,13 @@ class AssignedProcedures(models.Model):
         for assignedProc in quiriedAssignedProcedures:
             allAssignedProcedures.append(assignedProc)
         return allAssignedProcedures
+
+    @staticmethod
+    def average_completion_time(procedure_id):
+        completed_procedures = AssignedProcedures.objects.filter(completed=True, procedure__id=procedure_id)
+        total_days = 0
+        total_procedures = 0
+        for procedure in completed_procedures:
+            total_days += (procedure.date_completed - timezone.now).days
+            total_procedures += 1
+
