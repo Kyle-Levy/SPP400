@@ -178,3 +178,11 @@ class AssignedProcedures(models.Model):
         for assignedProc in quiriedAssignedProcedures:
             allAssignedProcedures.append(assignedProc)
         return allAssignedProcedures
+
+    @staticmethod
+    def get_all_complete_procedures():
+        allAssignedProcedures = []
+        quiriedAssignedProcedures = AssignedProcedures.objects.filter(completed=True)
+        for assignedProc in quiriedAssignedProcedures:
+            allAssignedProcedures.append(assignedProc)
+        return allAssignedProcedures
