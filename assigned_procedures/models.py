@@ -22,6 +22,7 @@ class AssignedProcedures(models.Model):
     # if they return for a different procedure (default is 1)
     visitID = models.IntegerField(default=1)
     completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
     date_completed = models.DateTimeField()
     #ONLY check est_date_complete if the est_flag is TRUE
     est_date_complete = models.DateTimeField(default= timezone.now)
