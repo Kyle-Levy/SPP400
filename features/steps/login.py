@@ -45,7 +45,7 @@ def step_impl(context):
 
     assert br.find_element_by_name('csrfmiddlewaretoken').is_enabled()
     br.find_element_by_name('key').send_keys(94759374)
-    br.find_element_by_name('submit_son').click()
+    br.find_element_by_name('submit').click()
 
 
 @then('I am redirected to the homepage')
