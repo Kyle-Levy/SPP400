@@ -8,6 +8,7 @@ def step_impl(context):
 
     u = UserFactory(username='foo', email='foo@example.com')
     u.set_password('bar')
+    u.profile.key = 94759374
 
     u.save()
 
@@ -24,12 +25,30 @@ def step_impl(context):
     br.find_element_by_name('submit').click()
 
 
-@then('I am redirected to the homepage')
+@then('I am redirected to 2-factor')
 def step_impl(context):
     br = context.browser
 
     # Still routes to login for 2-factor - fine for now will need another when/then
     assert br.current_url.endswith('/login/')
+
+
+@when('I submit my key to 2-factor')
+def step_impl(context):
+    br = context.browser
+    br.get(context.base_url + '/login/')
+
+    assert br.find_element_by_name('csrfmiddlewaretoken').is_enabled()
+
+    br.find_element_by_name('key').send_keys('94759374')
+    br.find_element_by_name('submit').click()
+
+
+@then('I am redirected to the homepage')
+def step_impl(context):
+    br = context.browser
+
+    assert br.current_url.endswith('/homepage/')
 
 
 @when('I submit an invalid login page')
