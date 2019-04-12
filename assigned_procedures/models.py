@@ -124,7 +124,7 @@ class AssignedProcedures(models.Model):
         for assignedProc in quiriedAssignedProcedures:
             if assignedProc.completed is False:
                 assignedProc.completed = True
-                assignedProc.date_completed = timezone.now
+                # assignedProc.date_completed = timezone.now
                 assignedProc.save()
                 return True
             elif assignedProc.completed is True:
