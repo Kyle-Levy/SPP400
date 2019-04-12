@@ -11,4 +11,4 @@ def modulo(num, val):
 
 @register.simple_tag()
 def average_completion_time(procedure_id):
-    return AssignedProcedures.average_completion_time(procedure_id)
+    return AssignedProcedures.average_completion_time(procedure_id) + " days"

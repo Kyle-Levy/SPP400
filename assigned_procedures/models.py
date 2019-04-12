@@ -25,7 +25,7 @@ class AssignedProcedures(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     date_completed = models.DateTimeField()
     #ONLY check est_date_complete if the est_flag is TRUE
-    est_date_complete = models.DateTimeField(default= timezone.now)
+    est_date_complete = models.DateTimeField(default=timezone.now)
     #if est_flag is false the assigned procedure does not have a goal date and doesn't need to be checked
     est_flag = models.BooleanField(default=False)
 
