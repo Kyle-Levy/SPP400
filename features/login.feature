@@ -6,6 +6,8 @@ Feature: Login form
 
     Given an anonymous user
     When I submit a valid login page
+    Then I am redirected to 2-factor
+    When I submit my key to 2-factor
     Then I am redirected to the homepage
 
     Given an anonymous user
