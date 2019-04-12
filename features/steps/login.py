@@ -1,5 +1,6 @@
 from behave import given, when, then
 from test.factories.accounts import UserFactory
+from django.contrib.auth import authenticate
 
 
 @given('an anonymous user')
@@ -8,7 +9,6 @@ def step_impl(context):
 
     u = UserFactory(username='foo', email='foo@example.com')
     u.set_password('bar')
-    u.profile.key = 94759374
 
     u.save()
 
@@ -36,12 +36,16 @@ def step_impl(context):
 @when('I submit my key to 2-factor')
 def step_impl(context):
     br = context.browser
-    br.get(context.base_url + '/login/')
 
     assert br.find_element_by_name('csrfmiddlewaretoken').is_enabled()
 
-    br.find_element_by_name('key').send_keys('94759374')
-    br.find_element_by_name('submit').click()
+    user = authenticate(username='foo', password='bar')
+    user.profile.key = 94759374
+    user.save()
+
+    assert br.find_element_by_name('csrfmiddlewaretoken').is_enabled()
+    br.find_element_by_name('key').send_keys(94759374)
+    br.find_element_by_name('submit_son').click()
 
 
 @then('I am redirected to the homepage')
