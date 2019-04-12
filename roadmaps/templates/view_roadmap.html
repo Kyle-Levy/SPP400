@@ -3,6 +3,7 @@
 <head>
     {% load static %}
     {% include "global_styles.html" %}
+    {% load roadmap_extras %}
 </head>
 
 <body>
@@ -48,7 +49,7 @@
 
 
                                             <li>{{ procedure.procedure_name }}</li>
-
+                                            <li>{% average_completion_time procedure.id %}</li>
                                         {% endfor %}
                                     </ul>
                                 </div>
