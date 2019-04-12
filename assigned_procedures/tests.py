@@ -83,6 +83,26 @@ class TestAssignedProcedures(TestCase):
         quiriedProcedure = AssignedProcedures.get_all_active_procedures()
         self.assertTrue(assigned not in quiriedProcedure)
 
+    def test_get_average_completed(self):
+        testAssign, testPatient, testProcedure = self.test_create_assignedProcedure()
+        # test 1 procedure 0 time
+        tProcedure = Procedure.objects.create(procedure_name="bloodwork")
+        assigned = AssignedProcedures.assign_procedure_to_patient(2,testPatient,tProcedure)
+        spoof_time = assigned.created_at
+        assigned.completed = True
+        assigned.date_completed = spoof_time
+        assigned.save()
+        time = AssignedProcedures.average_completion_time(tProcedure.id)
+        self.assertEqual(time, "0")
+        # test 2 procedures 1 time
+        assigned = AssignedProcedures.assign_procedure_to_patient(2,testPatient,tProcedure)
+        spoof_time = assigned.created_at
+        assigned.completed = True
+        assigned.date_completed = spoof_time + timedelta(days=2)
+        assigned.save()
+        time = AssignedProcedures.average_completion_time(tProcedure.id)
+        self.assertEqual(time, "1")
+
     def test_toggle_completed(self):
         testAssign, testPatient, testProcedure = self.test_create_assignedProcedure()
         result = AssignedProcedures.toggle_completed(searchPatient=testPatient,searchProcedure=testProcedure)

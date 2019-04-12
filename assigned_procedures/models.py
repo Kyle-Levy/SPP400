@@ -8,6 +8,7 @@ from datetime import datetime
 from datetime import timedelta
 from django.utils import timezone
 from django.utils.timezone import now
+import math
 
 
 
@@ -201,5 +202,5 @@ class AssignedProcedures(models.Model):
 
         if total_days == 0:
             return "0"
-        return str(total_days/total_procedures)
+        return str(int(math.floor(abs(total_days/total_procedures))))
 
