@@ -59,6 +59,17 @@ class TestAssignedProcedures(TestCase):
         quiriedProcedure = AssignedProcedures.get_all_procedures(testPatient)
         self.assertEqual(quiriedProcedure,[(testProcedure,1),(tProcedure,2)])
 
+    def test_get_all_completed(self):
+        #one linked procedure case
+        testAssign, testPatient, testProcedure = self.test_create_assignedProcedure()
+        quiriedProcedure = AssignedProcedures.get_all_complete_procedures()
+        self.assertEqual(quiriedProcedure, [])
+        #two linked procedures case
+        tProcedure = Procedure.objects.create(procedure_name="bloodwork")
+        AssignedProcedures.assign_procedure_to_patient(2,testPatient,tProcedure)
+        quiriedProcedure = AssignedProcedures.get_all_procedures(testPatient)
+        self.assertEqual(quiriedProcedure,[(testProcedure,1),(tProcedure,2)])
+
     def test_toggle_completed(self):
         testAssign, testPatient, testProcedure = self.test_create_assignedProcedure()
         result = AssignedProcedures.toggle_completed(searchPatient=testPatient,searchProcedure=testProcedure)
