@@ -3,6 +3,8 @@
 <head>
     {% load static %}
     {% include "global_styles.html" %}
+    {% load roadmap_extras %}
+
 </head>
 
 <body>
@@ -18,7 +20,38 @@
 
 
         <div class="container">
-            analytics
+            <div class="accordion" id="accordion">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card text-white bg-{% cycle 'primary' 'secondary' 'success' 'info' 'warning' %} mb-2">
+                            <div class="card-header" id="heading{{ phase_num }}">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link text-white" type="button"
+                                            data-toggle="collapse"
+                                            data-target="#collapse{{ phase_num }}"
+                                            aria-expanded="true"
+                                            aria-controls="collapse{{ phase_num }}">
+                                        Individual Procedure Statistics
+                                    </button>
+                                </h5>
+                            </div>
+
+
+                            <div id="collapse{{ phase_num }}" class="collapse"
+                                 aria-labelledby="heading{{ phase_num }}"
+                                 data-parent="#accordion">
+                                <div class="card-body">
+                                    {% for procedure in procedures%}
+                                    <ul>
+                                            <ul><strong>{{procedure.procedure_name}}:</strong> &nbsp;&nbsp;Average: {% average_completion_time procedure.id %} &nbsp;&nbsp;Goal: {{ procedure.est_days_to_complete}} days</ul>
+                                    </ul>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
 
 
         </div>

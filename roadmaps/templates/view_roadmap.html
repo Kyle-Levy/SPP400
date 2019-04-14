@@ -46,12 +46,7 @@
                                 <div class="card-body">
                                     <ul>
                                         {% for procedure in procedure_list %}
-
-
-                                            <h4>Procedure: {{ procedure.procedure_name }} </h4>
-                                            <ul>Average: {% average_completion_time procedure.id %}</ul>
-                                            <ul>Goal: {{ procedure.est_days_to_complete}} days</ul>
-
+                                        <ul><strong>{{procedure.procedure_name}}:</strong> &nbsp;&nbsp;Average: {% average_completion_time procedure.id %} &nbsp;&nbsp;Goal: {{ procedure.est_days_to_complete}} days</ul>
                                         {% endfor %}
                                     </ul>
                                 </div>
