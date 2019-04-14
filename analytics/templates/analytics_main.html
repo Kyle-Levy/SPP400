@@ -43,9 +43,7 @@
                                  data-parent="#accordion">
                                 <div class="card-body">
                                     {% for procedure in procedures%}
-                                    <ul>
-                                            <ul><strong>{{procedure.procedure_name}}:</strong> &nbsp;&nbsp;Average: {% average_completion_time procedure.id %} &nbsp;&nbsp;Goal: {{ procedure.est_days_to_complete}} days</ul>
-                                    </ul>
+                                            <ul><strong>{{procedure.procedure_name}}:</strong> &nbsp;&nbsp;Average: {% average_completion_time procedure.id %} &nbsp;&nbsp;Goal: {{ procedure.est_days_to_complete}} days&nbsp;&nbsp;<a href="/procedures/view_procedure/?id={{ procedure.id }}">View Procedure</a></ul>
                                     {% endfor %}
                                 </div>
                             </div>
