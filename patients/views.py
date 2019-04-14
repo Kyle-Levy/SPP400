@@ -67,13 +67,18 @@ def profile(request):
 
             all_assigned_procedures = RoadmapProcedureLink.seperate_by_phase(roadmap_pairs)
             ordered = collections.OrderedDict()
-            for phase in sorted(all_assigned_procedures.keys()):
+            phase_order = sorted(all_assigned_procedures.keys())
+            for phase in phase_order:
                 ordered[phase] = all_assigned_procedures[phase]
             all_assigned_procedures = ordered
+            try:
+                goals = all_assigned_procedures[phase_order[-1]]
+            except IndexError:
+                goals = []
             return render(request, 'patient.html',
                           {"patient": patient, 'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name,
                            'breadcrumbs': breadcrumbs, 'assigned_procedures': all_assigned_procedures,
-                           'flag_form': FlagForm()})
+                           'flag_form': FlagForm(), 'goals': goals})
         except Patients.DoesNotExist:
             messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')

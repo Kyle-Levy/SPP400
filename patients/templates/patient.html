@@ -137,9 +137,15 @@
 
                             <div class="card bg-light my-3">
 
-                                <div class="card-header">Procedure Map(s)</div>
+                                <div class="card-header">Goal Procedure(s)</div>
                                 <div class="card-body">
-                                    <p class="card-text">Procedure Name</p>
+                                    {% if goal is None %}
+                                        <p class="card-text">No goals found</p>
+                                    {% else %}
+                                        {% for goal in goals %}
+                                        <p class="card-text">{{goal.procedure_name}}</p>
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
                             </div>
 
