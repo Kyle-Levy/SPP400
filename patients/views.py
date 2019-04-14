@@ -9,7 +9,7 @@ from patients.models import Patients
 from assigned_procedures.models import AssignedProcedures
 from roadmaps.models import RoadmapProcedureLink
 from django.contrib import messages
-
+import collections
 
 @login_required
 def index(request):
@@ -66,7 +66,10 @@ def profile(request):
             roadmap_pairs = AssignedProcedures.get_all_procedures(patient)
 
             all_assigned_procedures = RoadmapProcedureLink.seperate_by_phase(roadmap_pairs)
-
+            ordered = collections.OrderedDict()
+            for phase in sorted(all_assigned_procedures.keys()):
+                ordered[phase] = all_assigned_procedures[phase]
+            all_assigned_procedures = ordered
             return render(request, 'patient.html',
                           {"patient": patient, 'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name,
                            'breadcrumbs': breadcrumbs, 'assigned_procedures': all_assigned_procedures,
