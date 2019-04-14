@@ -5,7 +5,7 @@ from homepage.forms import VerifyActionForm
 from roadmaps.forms import RoadmapForm, RoadmapProcedureLinkForm, RoadmapForm
 from roadmaps.models import Roadmap, RoadmapProcedureLink
 from django.contrib import messages
-
+import collections
 
 @login_required
 def roadmaps_index(request):
@@ -48,7 +48,10 @@ def view_roadmap(request):
             roadmap = Roadmap.objects.get(id=request.GET.get('id'))
             roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
             seperated_by_phase = RoadmapProcedureLink.seperate_by_phase(roadmap_pairs)
-
+            ordered = collections.OrderedDict()
+            for phase in sorted(seperated_by_phase.keys()):
+                ordered[phase] = seperated_by_phase[phase]
+            seperated_by_phase = ordered
             breadcrumbs = [('/roadmaps/', 'Roadmaps'), ('#', roadmap.roadmap_name)]
             return render(request, 'view_roadmap.html',
                           {'roadmap': roadmap, 'title': 'View: ' + roadmap.roadmap_name,
