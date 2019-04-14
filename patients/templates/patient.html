@@ -139,7 +139,7 @@
 
                                 <div class="card-header">Goal Procedure(s)</div>
                                 <div class="card-body">
-                                    {% if goal is None %}
+                                    {% if not bool_goals %}
                                         <p class="card-text">No goals found</p>
                                     {% else %}
                                         {% for goal in goals %}

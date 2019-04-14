@@ -71,14 +71,17 @@ def profile(request):
             for phase in phase_order:
                 ordered[phase] = all_assigned_procedures[phase]
             all_assigned_procedures = ordered
+            bool_goals = True
             try:
                 goals = all_assigned_procedures[phase_order[-1]]
             except IndexError:
                 goals = []
+                bool_goals = False
+            print(goals)
             return render(request, 'patient.html',
                           {"patient": patient, 'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name,
                            'breadcrumbs': breadcrumbs, 'assigned_procedures': all_assigned_procedures,
-                           'flag_form': FlagForm(), 'goals': goals})
+                           'flag_form': FlagForm(), 'goals': goals, 'bool_goals': bool_goals})
         except Patients.DoesNotExist:
             messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
