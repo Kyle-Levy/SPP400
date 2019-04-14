@@ -10,7 +10,8 @@ def step_impl(context):
 def step_impl(context):
     br = context.browser
     assert br.current_url.endswith('/homepage/')
-    br.find_element_by_id('patients').click()
+    br.switch_to_frame("sidebar")
+    br.find_element_by_id("patients").click()
 
 @then('I am directed to the patients page')
 def step_impl(context):
