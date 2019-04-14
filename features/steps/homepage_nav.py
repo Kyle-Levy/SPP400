@@ -30,9 +30,32 @@ def step_impl(context):
 
 @when('I click the roadmaps tab')
 def step_impl(context):
-    Then I am directed to the roadmaps page
+    br = context.browser
+    assert br.current_url.endswith('/homepage/')
+    br.find_element_by_id('roadmaps').click()
 
-    When I click the profile tab
-    Then The dropdown opens
-    When I click logout
-    Then I am logged out
+@then('I am directed to the roadmaps page')
+def step_impl(context):
+    br = context.browser
+    assert br.current_url.endswith('/roadmaps/')
+
+@when('I click the profile tab')
+def step_impl(context):
+    br = context.browser
+    assert br.current_url.endswith('/homepage/')
+    br.find_element_by_id('profile').click()
+
+@then('The dropdown opens')
+def step_impl(context):
+    br = context.browser
+    assert br.find_element_by_id('profileSubmenu').is_displayed()
+
+@when('I click logout')
+def step_impl(context):
+    br = context.browser
+    br.find_element_by_link_text('Logout').click()
+
+@then('I am logged out')
+def step_impl(context):
+    br = context.browser
+    assert br.current_url.endswith('/logout/')
