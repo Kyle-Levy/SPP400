@@ -45,4 +45,6 @@ def step_impl(context):
 
 @then('I am redirected to the procedures page')
 def step_impl(context):
-    
+    br = context.browser
+
+    assert br.current_url.endswith('/procedures/')
