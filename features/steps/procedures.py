@@ -35,4 +35,14 @@ def step_impl(context):
 
     assert br.current_url.endswith('/homepage/')
 
-@when('')
+@when('I click on the procedures tab')
+def step_impl(context):
+    br = context.browser
+
+    assert br.find_element_by_name('csrfmiddlewaretoken').is_enabled()
+
+    br.find_element_by_id('procedures').click()
+
+@then('I am redirected to the procedures page')
+def step_impl(context):
+    
