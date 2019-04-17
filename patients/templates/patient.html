@@ -159,7 +159,7 @@
 
                             <div class="card bg-light my-3">
 
-                                <div class="card-header">Next Procedures</div>
+                                <div class="card-header">Procedures</div>
                                 <div class="card-body">
 
                                     <div class="accordion" id="accordion">
@@ -188,7 +188,8 @@
                                                                     {% for procedure in procedure_list %}
 
 
-                                                                        <li>{{ procedure.procedure_name }}</li>
+                                                                        <li>{{ procedure.procedure_name }}
+                                                                        <input type="checkbox"></li>
 
                                                                     {% endfor %}
                                                                 </ul>
@@ -205,21 +206,10 @@
 
                             <div class="card bg-light my-3">
 
-                                <div class="card-header">Remaining Procedures</div>
-                                <div class="card-body">
-                                    <h5 class="card-title">Procedure Name</h5>
-                                    <h5 class="card-title">Procedure Name</h5>
-                                </div>
-                            </div>
-
-                            <div class="card bg-light my-3">
-
                                 <div class="card-header">Analytics</div>
                                 <div class="card-body">
                                     <h5 class="card-title">Analytic Name</h5>
-                                    <p class="card-text">Im guessing something like average time to schedule, time since
-                                        starting process,
-                                        estimated time to complete procedure workflow can go here</p>
+                                    <p class="card-text">Analytic Details</p>
                                 </div>
                             </div>
 
