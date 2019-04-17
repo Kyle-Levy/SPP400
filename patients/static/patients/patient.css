@@ -1,0 +1,19 @@
+ul#patient-list li.nav-item {
+    font-size: 1.05em;
+    border-bottom: 1px solid #e7ebee;
+    padding: 10px 0;
+}
+
+ul#patient-list li.nav-item:last-child {
+    border-bottom: none;
+}
+
+
+ul#patient-list li.nav-item a svg{
+    fill: grey;
+    height: 18px;
+    width: 18px;
+}
+ul#patient-list li.nav-item a:hover svg{
+    fill: lightskyblue;
+}
