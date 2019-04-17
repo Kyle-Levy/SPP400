@@ -1,19 +1,42 @@
 ul#patient-list li.nav-item {
     font-size: 1.05em;
+    font-weight: 500;
     border-bottom: 1px solid #e7ebee;
     padding: 10px 0;
+    color: #6c757d;
 }
 
 ul#patient-list li.nav-item:last-child {
     border-bottom: none;
 }
 
+ul#patient-list li.nav-item:hover{
+    background-color: #f7f5fc;
+    color: #5b9bd1;
+}
+
 
 ul#patient-list li.nav-item a svg{
-    fill: grey;
+    fill: #6c757d;
     height: 18px;
     width: 18px;
 }
 ul#patient-list li.nav-item a:hover svg{
-    fill: lightskyblue;
+    fill: #5b9bd1;
 }
+ul#patient-list li.nav-item button svg{
+    fill: white;
+    height: 18px;
+    width: 18px;
+    margin-right: 5px;
+}
+
+#patient-info div {
+    padding: 3px 0;
+    margin: 5px 0;
+}
+
+#patient-info div:first-child{
+    border-bottom: 1px solid #dfe0e1;
+}
+
