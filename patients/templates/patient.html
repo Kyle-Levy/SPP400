@@ -154,55 +154,44 @@
                 <div class="col-sm-9">
 
                     <div class="card bg-light mb-3">
-                        <div class="card-header text-center" style="font-size:250%;">Patient Records</div>
+                        <div class="card-header text-center" style="font-size:200%;">Patient Records</div>
                         <div class="card-body">
-
-                            <div class="card bg-light my-3">
-
-                                <div class="card-header">Procedures</div>
-                                <div class="card-body">
-
-                                    <div class="accordion" id="accordion">
-                                        {% for phase_num, procedure_list in assigned_procedures.items %}
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <div class="card text-white bg-{% cycle 'primary' 'secondary' 'success' 'info' 'warning' %} mb-2">
-                                                        <div class="card-header" id="heading{{ phase_num }}">
-                                                            <h5 class="mb-0">
-                                                                <button class="btn btn-link text-white" type="button"
-                                                                        data-toggle="collapse"
-                                                                        data-target="#collapse{{ phase_num }}"
-                                                                        aria-expanded="true"
-                                                                        aria-controls="collapse{{ phase_num }}">
-                                                                    Phase: {{ phase_num }}
-                                                                </button>
-                                                            </h5>
-                                                        </div>
-
-
-                                                        <div id="collapse{{ phase_num }}" class="collapse"
-                                                             aria-labelledby="heading{{ phase_num }}"
-                                                             data-parent="#accordion">
-                                                            <div class="card-body">
-                                                                <ul>
-                                                                    {% for procedure in procedure_list %}
-
-
-                                                                        <li>{{ procedure.procedure_name }}
-                                                                        <input type="checkbox"></li>
-
-                                                                    {% endfor %}
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        {% endfor %}
+                            <div class="accordion" id="procedure-accordian">
+                                <div class="card">
+                                    <div class="card-header" id="headingAssignedProcedures">
+                                        <h5 class="mb-0">
+                                            <button class="btn btn-link" type="button" data-toggle="collapse"
+                                                    data-target="#assignedProcedures" aria-expanded="true"
+                                                    aria-controls="assignedProcedures">
+                                                Assigned Procedures
+                                            </button>
+                                        </h5>
                                     </div>
 
+                                    <div id="assignedProcedures" class="collapse"
+                                         aria-labelledby="headingAssignedProcedures"
+                                         data-parent="#procedure-accordian">
+                                        <div class="card-body funkyradio">
+                                            {% for phase_num, procedure_list in assigned_procedures.items %}
+                                                <h6>Phase: {{ phase_num }}</h6>
+                                                <ul class="list-unstyled">
+                                                    {% for procedure in procedure_list %}
+                                                        <li>
+                                                            <div class="funkyradio-success">
+                                                                <input type="checkbox" name="checkbox" id="
+                                                                        {{ procedure.procedure_name }}{{ phase_num }}"/>
+                                                                <label for="
+                                                                        {{ procedure.procedure_name }}{{ phase_num }}">{{ procedure.procedure_name }}</label>
+                                                            </div>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
 
                             <div class="card bg-light my-3">
 
