@@ -3,6 +3,7 @@
 <head>
     {% load static %}
     {% include "global_styles.html" %}
+    {% load roadmap_extras %}
 </head>
 
 <body>
@@ -45,10 +46,7 @@
                                 <div class="card-body">
                                     <ul>
                                         {% for procedure in procedure_list %}
-
-
-                                            <li>{{ procedure.procedure_name }}</li>
-
+                                        <ul><strong>{{procedure.procedure_name}}:</strong> &nbsp;&nbsp;Average: {% average_completion_time procedure.id %} &nbsp;&nbsp;Goal: {{ procedure.est_days_to_complete}} days</ul>
                                         {% endfor %}
                                     </ul>
                                 </div>
