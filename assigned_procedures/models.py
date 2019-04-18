@@ -8,6 +8,7 @@ from datetime import datetime
 from datetime import timedelta
 from django.utils import timezone
 from django.utils.timezone import now
+import math
 
 
 
@@ -22,8 +23,10 @@ class AssignedProcedures(models.Model):
     # if they return for a different procedure (default is 1)
     visitID = models.IntegerField(default=1)
     completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    date_completed = models.DateTimeField(default=timezone.now)
     #ONLY check est_date_complete if the est_flag is TRUE
-    est_date_complete = models.DateTimeField(default= timezone.now)
+    est_date_complete = models.DateTimeField(default=timezone.now)
     #if est_flag is false the assigned procedure does not have a goal date and doesn't need to be checked
     est_flag = models.BooleanField(default=False)
 
@@ -122,6 +125,7 @@ class AssignedProcedures(models.Model):
         for assignedProc in quiriedAssignedProcedures:
             if assignedProc.completed is False:
                 assignedProc.completed = True
+                # assignedProc.date_completed = timezone.now
                 assignedProc.save()
                 return True
             elif assignedProc.completed is True:
@@ -178,3 +182,25 @@ class AssignedProcedures(models.Model):
         for assignedProc in quiriedAssignedProcedures:
             allAssignedProcedures.append(assignedProc)
         return allAssignedProcedures
+
+    @staticmethod
+    def get_all_complete_procedures():
+        allAssignedProcedures = []
+        quiriedAssignedProcedures = AssignedProcedures.objects.filter(completed=True)
+        for assignedProc in quiriedAssignedProcedures:
+            allAssignedProcedures.append(assignedProc)
+        return allAssignedProcedures
+
+    @staticmethod
+    def average_completion_time(procedure_id):
+        completed_procedures = AssignedProcedures.objects.filter(completed=True, procedure__id=procedure_id)
+        total_days = 0
+        total_procedures = 0
+        for procedure in completed_procedures:
+            total_days += (procedure.date_completed - procedure.created_at).days
+            total_procedures += 1
+
+        if total_days == 0:
+            return "0"
+        return str(int(math.floor(abs(total_days/total_procedures))))
+
