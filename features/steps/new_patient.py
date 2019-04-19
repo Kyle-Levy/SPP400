@@ -9,8 +9,8 @@ def step_impl(context):
 @when('I click on add a new patient')
 def step_impl(context):
     br = context.browser
-    assert br.current_url.endwith('/patients/')
-    br.find_element_by_link_text("Add New Patient").click()
+    assert br.current_url.endswith('/patients/')
+    br.find_element_by_name('createNewPatient').click()
 
 @then('I am redirected to the new patients page')
 def step_impl(context):
