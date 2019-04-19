@@ -18,6 +18,7 @@ def update(request):
             form = AssignedProcedureForm(initial={'assigned_date': procedure.created_at, 'scheduled': procedure.scheduled, 'completed': procedure.completed, 'notes': procedure.notes})
             form.initial['scheduled_date'] = procedure.date_scheduled
             form.initial['completed_date'] = procedure.date_completed
+            form.initial['completion_goal'] = procedure.est_date_complete
 
             patient = None
             name = ""
@@ -50,6 +51,7 @@ def update(request):
                 procedure.date_completed = cd['completed_date']
                 procedure.completed = cd['completed']
                 procedure.notes = cd['notes']
+                procedure.est_date_complete = cd['completion_goal']
                 procedure.save()
 
                 patient = None

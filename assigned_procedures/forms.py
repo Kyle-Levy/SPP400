@@ -37,6 +37,18 @@ class AssignedProcedureForm(forms.Form):
         )
     )
 
+    completion_goal = forms.DateField(
+        label='Completion Goal',
+        required=False,
+        widget=forms.DateInput(
+            attrs={
+                'class': 'form-control',
+                'id': 'completionGoal',
+                'placeholder': 'YYYY-MM-DD',
+            }
+        )
+    )
+
     notes = forms.CharField(
         label='Notes',
         required=False,
