@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% include "global_styles.html" %}
+</head>
+
+<body>
+
+<!-- Div holding the entire page -->
+<div class="wrapper">
+
+    {% include "sidebar.html" %}
+
+    <div id="content">
+
+        {% include "menu_bar.html" %}
+    hi
+
+    </div>
+
+</div>
+
+{% include "global_js.html" %}
+<!-- Personal JS -->
+<script src={% static "patients/patients.js" %}></script>
+</body>
+</html>
