@@ -15,7 +15,7 @@ class AssignedProcedures(models.Model):
     patient = models.ManyToManyField(Patients)
     procedure = models.ManyToManyField(Procedure)
     # procedure steps that share the same visitID and number are concurrent
-    procedureStep = models.IntegerField()
+    phaseNumber = models.IntegerField()
     # visitID is a way to distinguish what step a patient is on
     # if they return for a different procedure (default is 1)
     visitID = models.IntegerField(default=1)
@@ -46,12 +46,12 @@ class AssignedProcedures(models.Model):
 
         if return_visit is True:
             new_visit_id = AssignedProcedures.last_visit_id(patientToLink) + 1
-            new_assignment = AssignedProcedures.objects.create(procedureStep=step, visitID=new_visit_id, est_date_complete=proc_est, est_flag = est_flag)
+            new_assignment = AssignedProcedures.objects.create(phaseNumber=step, visitID=new_visit_id, est_date_complete=proc_est, est_flag = est_flag)
             new_assignment.patient.add(patientToLink)
             new_assignment.procedure.add(procedureToLink)
             new_assignment.save()
         else:
-            new_assignment = AssignedProcedures.objects.create(procedureStep=step, est_date_complete=proc_est, est_flag = est_flag)
+            new_assignment = AssignedProcedures.objects.create(phaseNumber=step, est_date_complete=proc_est, est_flag = est_flag)
             new_assignment.patient.add(patientToLink)
             new_assignment.procedure.add(procedureToLink)
             new_assignment.save()
@@ -112,7 +112,7 @@ class AssignedProcedures(models.Model):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, visitID=searchVisitID)
         procedureList = []
         for assignedProcedures in quiriedAssignedProcedures:
-            procStep = assignedProcedures.procedureStep
+            procStep = assignedProcedures.phaseNumber
             quiriedProcedures = assignedProcedures.procedure.all()
             for procedures in quiriedProcedures:
                 procedureList.append((procedures, procStep))
@@ -138,7 +138,7 @@ class AssignedProcedures(models.Model):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id,
                                                                       procedure=searchProcedure, visitID=searchVisitID)
         for assignedProc in quiriedAssignedProcedures:
-            assignedProc.procedureStep = newStepNumber
+            assignedProc.phaseNumber = newStepNumber
             assignedProc.save()
 
     @staticmethod
@@ -157,7 +157,7 @@ class AssignedProcedures(models.Model):
     @staticmethod
     def remove_assigned_procedure(patientToChange, procedureToDelete, phase, visitID=1):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=patientToChange.id,
-                                                                      procedure=procedureToDelete, procedureStep=phase,
+                                                                      procedure=procedureToDelete, phaseNumber=phase,
                                                                       visitID=visitID).delete()
 
 
