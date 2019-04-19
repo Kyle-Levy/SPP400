@@ -208,6 +208,17 @@ class AssignedProcedures(models.Model):
         return allAssignedProcedures
 
     @staticmethod
+    def get_last_completed_date(patient):
+        queriedAssignedProcedures = AssignedProcedures.objects.filter(completed=True, patient=patient)
+        if queriedAssignedProcedures:
+            latest_date = queriedAssignedProcedures[0].date_completed
+            for assignedProc in queriedAssignedProcedures:
+                if assignedProc.date_completed > latest_date:
+                    latest_date = assignedProc.date_completed
+            return latest_date
+        return False
+
+    @staticmethod
     def average_completion_time(procedure_id):
         completed_procedures = AssignedProcedures.objects.filter(completed=True, procedure__id=procedure_id)
         total_days = 0

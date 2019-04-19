@@ -3,6 +3,8 @@ from datetime import datetime
 from datetime import timedelta
 from django.utils import timezone
 from django.utils.timezone import now
+
+
 # Create your models here.
 
 
@@ -11,27 +13,27 @@ class Patients(models.Model):
     first_name = models.CharField(max_length=150, default="")
     last_name = models.CharField(max_length=150, default="")
     bday = models.DateField(auto_now=False, auto_now_add=False)
-    doc_notes = models.CharField(max_length = 1000, default="")
+    doc_notes = models.CharField(max_length=1000, default="")
     flagged = models.BooleanField(default=False)
-    patient_flagged_reason = models.CharField(max_length = 1000, default="")
+    patient_flagged_reason = models.CharField(max_length=1000, default="")
     today_flag = models.BooleanField(default=False)
     today_flag_end = models.DateTimeField(default=timezone.now)
-    today_flag_reason = models.CharField(max_length = 1000, default="")
+    today_flag_reason = models.CharField(max_length=1000, default="")
     record_number = models.CharField(max_length=150, default="########")
     # Foreign key for a patent's procedure step.
     procedure_step = models.CharField(max_length=1000, default="")
     # Fields for referring physician and date of referral.
     referring_physician = models.CharField(max_length=150, default='')
     date_of_referral = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
-    #flag used to show when a patient is behind for a procedure
+    # flag used to show when a patient is behind for a procedure
     behind_flag = models.BooleanField(default=False)
-
-
 
     @classmethod
     def create_patient(cls, first_name, last_name, birth_date, record_number, referring_physician, date_of_referral):
-        patient = cls(first_name=first_name, last_name=last_name, bday=birth_date, record_number=record_number, referring_physician=referring_physician, date_of_referral=date_of_referral)
+        patient = cls(first_name=first_name, last_name=last_name, bday=birth_date, record_number=record_number,
+                      referring_physician=referring_physician, date_of_referral=date_of_referral)
         return patient
+
     def toggle_today_flag(self):
         if self.today_flag is False:
             self.today_flag = True
@@ -42,7 +44,7 @@ class Patients(models.Model):
             self.today_flag_end = None
             return False
 
-    #returns true if flag is still valid
+    # returns true if flag is still valid
     def check_today_flag(self):
         if self.today_flag is True and timezone.now().day <= self.today_flag_end.day is True:
             return True
@@ -71,11 +73,10 @@ class Patients(models.Model):
         self.search_field = str(self.first_name) + str(self.last_name) + str(self.record_number)
         super(Patients, self).save(*args, **kwargs)
 
-
-    #Updates the "behind_flag" to "true" if there are any
-    #assigned procedures that are in progress and behind schedule.
-    #it then returns a tuple structured (True, Problematic Procedure)
-    #and if none are behind returns False
+    # Updates the "behind_flag" to "true" if there are any
+    # assigned procedures that are in progress and behind schedule.
+    # it then returns a tuple structured (True, Problematic Procedure)
+    # and if none are behind returns False
 
     def flag_update(self):
         import assigned_procedures
@@ -83,7 +84,7 @@ class Patients(models.Model):
 
         assignedProcs = AssignedProcedures.get_all_procedures(self)
         for procedureToCheck in assignedProcs:
-            result = AssignedProcedures.check_goal_status(self,procedureToCheck[0],1)
+            result = AssignedProcedures.check_goal_status(self, procedureToCheck[0], 1)
             if result == "in progress (behind)":
                 self.behind_flag = True
                 self.save()
@@ -93,12 +94,15 @@ class Patients(models.Model):
         self.save()
         return False, None
 
-
-
     def patient_is_done(self):
         from assigned_procedures.models import AssignedProcedures
-        if (not AssignedProcedures.get_all_active_procedures_for_patient(self)) and (AssignedProcedures.get_all_procedures_completed_by_patient(self)) :
+        if (not AssignedProcedures.get_all_active_procedures_for_patient(self)) and (
+                AssignedProcedures.get_all_procedures_completed_by_patient(self)):
             # This patient has been assigned procedures and has completed them all
             return True
         else:
-            return False;
+            return False
+
+    def patient_completion_date(self):
+        from assigned_procedures.models import AssignedProcedures
+        return AssignedProcedures.get_last_completed_date(self)
