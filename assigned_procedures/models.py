@@ -203,4 +203,3 @@ class AssignedProcedures(models.Model):
         if total_days == 0:
             return "0"
         return str(int(math.floor(abs(total_days/total_procedures))))
-

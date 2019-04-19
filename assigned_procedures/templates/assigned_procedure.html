@@ -16,14 +16,14 @@
 
         {% include "menu_bar.html" %}
         <div class="container-fixed">
-            <h2> Update Procedure:</h2>
-            <form action="/procedures/view_procedure/update/?id={{ procedure.id }}" method="POST"> {% csrf_token %}
+            <h2> Updating Procedure:</h2>
+            <form action="/assigned/procedure/?id={{ procedure.id }}" method="POST"> {% csrf_token %}
                 <div class="form-group">
-                    <label for="assigned_date">Date Assigned</label>
+                    <label for="assigned_date"><strong>Date Assigned</strong></label>
                     {{ form.assigned_date }}
                 </div>
                 <div class="form-group">
-                    <label for="scheduled_date">Scheduled Date</label>
+                    <label for="scheduled_date"><strong>Scheduled Date</strong></label>
                     {{ form.scheduled_date }}
                 </div>
                 <div class="form-group">
@@ -31,7 +31,7 @@
                     {{ form.scheduled.1 }}
                 </div>
                 <div class="form-group">
-                    <label for="completed_date">Date Completed</label>
+                    <label for="completed_date"><strong>Date Completed</strong></label>
                     {{ form.completed_date }}
                 </div>
                 <div class="form-group">
@@ -39,7 +39,7 @@
                     {{ form.completed.1 }}
                 </div>
                 <div class="form-group">
-                    <label for="notes">Notes</label>
+                    <label for="notes"><strong>Notes</strong></label>
                     {{ form.notes }}
                 </div>
                 <button type="submit" class="btn btn-warning mb-4">Update</button>
