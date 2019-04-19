@@ -16,22 +16,18 @@ def update(request):
             procedure = AssignedProcedures.objects.get(id=request.GET.get('id'))
 
             # Build form
+            form = AssignedProcedureForm(initial={'assigned_date': procedure.created_at, 'scheduled': procedure.scheduled, 'completed': procedure.completed, 'notes': procedure.notes})
+            form.initial['scheduled_date'] = procedure.date_scheduled
+            form.initial['completed_date'] = procedure.date_completed
 
-            breadcrumbs = [('/procedures/', 'Procedures'),
-                           ('#', 'View: ' + procedure.procedure_name)]
+            breadcrumbs = [('#', 'Assigned')]
+            return render(request, 'assigned_procedure.html',
+                          {'patients': None, 'form': form,
+                           'title': 'Assigned', 'breadcrumbs': breadcrumbs})
 
-            return render(request, 'view_procedure.html',
-                          {'procedure': procedure, 'title': 'View: ' + procedure.procedure_name,
-                           'breadcrumbs': breadcrumbs})
         except AssignedProcedures.DoesNotExist:
             messages.warning(request, "The procedure you tried to reach doesn't exist!")
             return redirect('/procedures/')
 
-
-
-        breadcrumbs = [('#', 'Assigned')]
-        return render(request, 'assigned_procedure.html',
-                      {'patients': None, 'form': AssignedProcedureForm(),
-                       'title': 'Assigned', 'breadcrumbs': breadcrumbs})
     if request.method == 'POST':
         1+1

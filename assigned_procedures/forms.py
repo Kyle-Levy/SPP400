@@ -8,7 +8,7 @@ class AssignedProcedureForm(forms.Form):
             attrs={
                 'class': 'form-control',
                 'id': 'assignedDate',
-                'placeholder': 'MM/DD/YYYY',
+                'placeholder': 'YYYY-MM-DD',
             }
         )
     )
@@ -20,7 +20,7 @@ class AssignedProcedureForm(forms.Form):
             attrs={
                 'class': 'form-control',
                 'id': 'scheduledDate',
-                'placeholder': 'MM/DD/YYYY',
+                'placeholder': 'YYYY-MM-DD',
             }
         )
     )
@@ -32,7 +32,7 @@ class AssignedProcedureForm(forms.Form):
             attrs={
                 'class': 'form-control',
                 'id': 'completedDate',
-                'placeholder': 'MM/DD/YYYY',
+                'placeholder': 'YYYY-MM-DD',
             }
         )
     )
