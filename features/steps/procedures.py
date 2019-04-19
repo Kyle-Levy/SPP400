@@ -50,3 +50,19 @@ def step_impl(context):
     assert br.find_element_by_name('csrfmiddlewaretoken').is_enabled()
 
     assert br.current_url.endswith('/procedures/')
+
+
+@when('I click on the Add New Procedure button')
+def step_impl(context):
+    br = context.browser
+
+    br.find_element_by_name('new-procedure-button').click()
+
+
+@then('I am redirected to the procedure form page')
+def step_impl(context):
+    br = context.browser
+
+    assert br.find_element_by_name('csrfmiddlewaretoken').is_enabled()
+
+    assert br.current_url.endswith('/procedures/create/')
