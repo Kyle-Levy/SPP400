@@ -4,6 +4,11 @@ from datetime import timedelta
 from assigned_procedures.models import AssignedProcedures
 
 # Create your models here.
+from patients.models import Patients
+from django.utils import timezone
+from dateutil.relativedelta import relativedelta
+
+
 class Analytics(models.Model):
     behind_procedure_perc = models.DecimalField(max_digits=5, decimal_places=2, default=000)
 
@@ -19,7 +24,7 @@ class Analytics(models.Model):
             if flaggedPatients.behind_flag is True:
                 behindProc += 1
 
-        percentBehind = (behindProc/totalProc) * 100
+        percentBehind = (behindProc / totalProc) * 100
 
         Analytics.behind_procedure_perc = percentBehind
 
@@ -33,10 +38,20 @@ class Analytics(models.Model):
             incompleteProcedurePatient = incompleteProcedure.patient.all()[0]
             incompleteProcedureProc = incompleteProcedure.procedure.all()[0]
 
-
-            assignedProcStatus = AssignedProcedures.check_goal_status(incompleteProcedurePatient, incompleteProcedureProc)
+            assignedProcStatus = AssignedProcedures.check_goal_status(incompleteProcedurePatient,
+                                                                      incompleteProcedureProc)
             if assignedProcStatus == "in progress (behind)":
                 allLateProcedures.append(incompleteProcedure)
 
         return allLateProcedures
 
+    @staticmethod
+    def get_all_done_patients_within_6_months():
+        all_patients = Patients.objects.all()
+        six_month_prior = timezone.now().date() - relativedelta(months=6)
+
+        done_patients = []
+        for current_patient in all_patients:
+            if current_patient.patient_is_done() and current_patient.patient_completion_date().date() >= six_month_prior:
+                done_patients.append(current_patient)
+        return done_patients

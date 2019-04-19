@@ -20,7 +20,7 @@
 
 
         <div class="container">
-            <h2><strong>Procedures Behind Schedule: </strong>{{percent_behind}}%</h2>
+            <h2><strong>Procedures Behind Schedule: </strong>{{ percent_behind }}%</h2>
             <div class="accordion" id="accordion">
                 <div class="row">
                     <div class="col-12">
@@ -42,23 +42,42 @@
                                  aria-labelledby="heading{{ phase_num }}"
                                  data-parent="#accordion">
                                 <div class="card-body">
-                                    {% for procedure in procedures%}
-                                            <ul><strong>{{procedure.procedure_name}}:</strong> &nbsp;&nbsp;Average: {% average_completion_time procedure.id %} &nbsp;&nbsp;Goal: {{ procedure.est_days_to_complete}} days&nbsp;&nbsp;<a href="/procedures/view_procedure/?id={{ procedure.id }}">View Procedure</a></ul>
+                                    {% for procedure in procedures %}
+                                        <ul><strong>{{ procedure.procedure_name }}:</strong>
+                                            &nbsp;&nbsp;Average: {% average_completion_time procedure.id %} &nbsp;&nbsp;Goal: {{ procedure.est_days_to_complete }}
+                                            days&nbsp;&nbsp;<a href="/procedures/view_procedure/?id={{ procedure.id }}">View
+                                                Procedure</a></ul>
                                     {% endfor %}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div>
+            All patients done within last 6 months
+                <ul>
+                    {% for patient in 6_month_done %}
+                        <li> {{ patient.first_name }} {{ patient.last_name }}: {{ patient.patient_completion_date.date }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
-
-
-        </div>
-
+        <canvas id="myChart"></canvas>
     </div>
+
 </div>
+</div>
+
 
 {% include "global_js.html" %}
 <!-- Personal JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+<!--
+<script type="text/javascript">
+    var received_data = '{{ date|safe }}';
+</script>
+<script src={% static "analytics/chart_analytics.js" %}></script>
+-->
 </body>
 </html>
