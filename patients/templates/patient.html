@@ -3,6 +3,8 @@
 <head>
     {% load static %}
     {% include "global_styles.html" %}
+    <link rel="stylesheet" type="text/css" href={% static "patients/patient.css" %}>
+
 </head>
 
 <body>
@@ -16,18 +18,12 @@
     <div id="content">
 
         {% include "menu_bar.html" %}
-        {% if failed_update %}
-            <div class="alert alert-danger" role="alert">
-                <strong>Form requirements not met!</strong> Try updating your patient information again.
-            </div>
-        {% endif %}
-
 
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-3">
                     <div class="card bg-light mb-3">
-                        <div class="card-header">
+                        <div class="card-header" id="patient-info">
                             <div style="font-size: 200%;">
                                 {{ patient.first_name }} {{ patient.last_name }}
 
@@ -44,109 +40,112 @@
                             <div>
                                 Date of Referral: {{ patient.date_of_referral }}
                             </div>
+                            {% if patient.flagged %}
+                                <div>
+                                    Reason for Flagging: {{ patient.patient_flagged_reason }}
+                                </div>
+                            {% endif %}
                         </div>
 
                         <div class="card-body">
+                            <div>
+                                <ul class="list-unstyled" id="patient-list">
+                                    <li class="nav-item">
+                                        <a href="/patients/profile/procedures/?id={{ patient.id }}">
+                                            <span>
+                                                {% octicon "book" %}
+                                                Patient's Procedures</span></a>
+                                    </li>
 
-                            <div class="card bg-light my-3">
+                                    <li class="nav-item">
+                                        <a href="/patients/profile/update/?id={{ patient.id }}">
+                                            <span>
+                                                {% octicon "pencil" %}
+                                                Update Patient Info</span>
+                                        </a>
+                                    </li>
 
-                                <div class="card-header">Alerts</div>
-                                <div class="card-body">
-                                    <button type="button" class="btn btn-info" data-toggle="modal"
-                                            data-target="#flagModal">
+                                    {% if patient.flagged %}
+                                        <li class="nav-item">
+                                            <button type="button" class="btn btn-danger btn-block mt-2"
+                                                    data-toggle="modal"
+                                                    data-target="#unflagModal">
+                                                {% octicon "report" %}
+                                                Unflag Patient
+                                            </button>
+                                            <div class="modal fade" id="unflagModal" tabindex="-1" role="dialog"
+                                                 aria-labelledby="unflagModalLabel"
+                                                 aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title" id="unflagModalLabel">
+                                                                Unflag: {{ patient.last_name }}, {{ patient.first_name }}</h4>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <h5>Are you sure?</h5>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <form action="/patients/profile/unflag/?id={{ patient.id }}"
+                                                                  method="POST">
+                                                                {% csrf_token %}
+                                                                <button type="submit" class="btn btn-danger mb-4">Unflag
+                                                                    Patient
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% else %}
+                                        <li class="nav-item">
+                                            <button type="button" class="btn btn-info btn-block mt-2"
+                                                    data-toggle="modal"
+                                                    data-target="#flagModal">
                                     <span>
                                         {% octicon "report" %}
                                         Flag Patient
                                     </span>
-                                    </button>
-                                    <div class="modal fade" id="flagModal" tabindex="-1" role="dialog"
-                                         aria-labelledby="flagModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="flagModalLabel">Flag Notes</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <form action="/patients/profile/flag/?id={{ patient.id }}"
-                                                      method="POST">
-                                                    {% csrf_token %}
-                                                    <div class="modal-body">
-                                                        <label for="notes">Reason for Flagging:</label>
-                                                        {{ flag_form.notes }}
+                                            </button>
+                                            <div class="modal fade" id="flagModal" tabindex="-1" role="dialog"
+                                                 aria-labelledby="flagModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="flagModalLabel">Flag Notes</h5>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <form action="/patients/profile/flag/?id={{ patient.id }}"
+                                                              method="POST">
+                                                            {% csrf_token %}
+                                                            <div class="modal-body">
+                                                                <label for="notes">Reason for Flagging:</label>
+                                                                {{ flag_form.notes }}
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Save
+                                                                    changes
+                                                                </button>
+                                                            </div>
+                                                        </form>
                                                     </div>
-                                                    <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-primary">Save changes
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-danger my-4" data-toggle="modal"
-                                            data-target="#unflagModal">
-                                        Unflag Patient
-                                    </button>
-                                    <div class="modal fade" id="unflagModal" tabindex="-1" role="dialog"
-                                         aria-labelledby="unflagModalLabel"
-                                         aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title" id="unflagModalLabel">
-                                                        Unflag: {{ patient.last_name }}, {{ patient.first_name }}</h4>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <h5>Are you sure?</h5>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <form action="/patients/profile/unflag/?id={{ patient.id }}"
-                                                          method="POST">
-                                                        {% csrf_token %}
-                                                        <button type="submit" class="btn btn-danger mb-4">Unflag Patient
-                                                        </button>
-                                                    </form>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    </form>
-                                    <p class="card-text">{% if patient.flagged %}
-                                        Reason for Flagging: {{ patient.patient_flagged_reason }}
+                                        </li>
                                     {% endif %}
-                                    </p>
-                                </div>
+
+
+                                </ul>
                             </div>
 
-                            <div class="card bg-light my-3">
-
-                                <div class="card-header">Scheduled For</div>
-                                <div class="card-body">
-                                    <h5 class="card-title">Procedure Name</h5>
-                                    <p class="card-text">Procedure Date</p>
-                                </div>
-                            </div>
-
-                            <div class="card bg-light my-3">
-
-                                <div class="card-header">Procedure Map(s)</div>
-                                <div class="card-body">
-                                    <p class="card-text">Procedure Name</p>
-                                </div>
-                            </div>
-
-
-                                <a href="/patients/profile/update/?id={{ patient.id }}" class="btn btn-warning my-4">Update Patient</a>
-
-
-                            <a href="/patients/profile/procedures/?id={{ patient.id }}" class="btn btn-warning my-4">Patient's
-                                Procedures</a>
 
                         </div>
                     </div>
@@ -155,72 +154,51 @@
                 <div class="col-sm-9">
 
                     <div class="card bg-light mb-3">
-                        <div class="card-header text-center" style="font-size:250%;">Patient Records</div>
+                        <div class="card-header text-center" style="font-size:200%;">Patient Records</div>
                         <div class="card-body">
-
-                            <div class="card bg-light my-3">
-
-                                <div class="card-header">Next Procedures</div>
-                                <div class="card-body">
-
-                                    <div class="accordion" id="accordion">
-                                        {% for phase_num, procedure_list in assigned_procedures.items %}
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <div class="card text-white bg-{% cycle 'primary' 'secondary' 'success' 'info' 'warning' %} mb-2">
-                                                        <div class="card-header" id="heading{{ phase_num }}">
-                                                            <h5 class="mb-0">
-                                                                <button class="btn btn-link text-white" type="button"
-                                                                        data-toggle="collapse"
-                                                                        data-target="#collapse{{ phase_num }}"
-                                                                        aria-expanded="true"
-                                                                        aria-controls="collapse{{ phase_num }}">
-                                                                    Phase: {{ phase_num }}
-                                                                </button>
-                                                            </h5>
-                                                        </div>
-
-
-                                                        <div id="collapse{{ phase_num }}" class="collapse"
-                                                             aria-labelledby="heading{{ phase_num }}"
-                                                             data-parent="#accordion">
-                                                            <div class="card-body">
-                                                                <ul>
-                                                                    {% for procedure in procedure_list %}
-
-
-                                                                        <li>{{ procedure.procedure_name }}</li>
-
-                                                                    {% endfor %}
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        {% endfor %}
+                            <div class="accordion" id="procedure-accordian">
+                                <div class="card">
+                                    <div class="card-header" id="headingAssignedProcedures">
+                                        <h5 class="mb-0">
+                                            <button class="btn btn-link" type="button" data-toggle="collapse"
+                                                    data-target="#assignedProcedures" aria-expanded="true"
+                                                    aria-controls="assignedProcedures">
+                                                Assigned Procedures
+                                            </button>
+                                        </h5>
                                     </div>
 
+                                    <div id="assignedProcedures" class="collapse"
+                                         aria-labelledby="headingAssignedProcedures"
+                                         data-parent="#procedure-accordian">
+                                        <div class="card-body funkyradio">
+                                            {% for phase_num, procedure_list in assigned_procedures.items %}
+                                                <h6>Phase: {{ phase_num }}</h6>
+                                                <ul class="list-unstyled">
+                                                    {% for procedure in procedure_list %}
+                                                        <li>
+                                                            <div class="funkyradio-success">
+                                                                <input type="checkbox" name="checkbox" id="
+                                                                        {{ procedure.procedure_name }}{{ phase_num }}"/>
+                                                                <label for="
+                                                                        {{ procedure.procedure_name }}{{ phase_num }}">{{ procedure.procedure_name }}</label>
+                                                            </div>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="card bg-light my-3">
-
-                                <div class="card-header">Remaining Procedures</div>
-                                <div class="card-body">
-                                    <h5 class="card-title">Procedure Name</h5>
-                                    <h5 class="card-title">Procedure Name</h5>
-                                </div>
-                            </div>
 
                             <div class="card bg-light my-3">
 
                                 <div class="card-header">Analytics</div>
                                 <div class="card-body">
                                     <h5 class="card-title">Analytic Name</h5>
-                                    <p class="card-text">Im guessing something like average time to schedule, time since
-                                        starting process,
-                                        estimated time to complete procedure workflow can go here</p>
+                                    <p class="card-text">Analytic Details</p>
                                 </div>
                             </div>
 

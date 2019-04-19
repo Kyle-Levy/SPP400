@@ -26,3 +26,4 @@ class Procedure(models.Model):
 
         else:
             return False
+

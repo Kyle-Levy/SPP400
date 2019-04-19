@@ -114,15 +114,15 @@ ul ul a {
     }
 }
 
-li a svg{
+#sidebar li a svg{
     fill: white;
 }
-li a:hover svg{
+#sidebar li a:hover svg{
     fill: black;
 }
 
 
-li.active a:hover svg{
+#sidebar li.active a:hover svg{
     fill: white;
 }
 

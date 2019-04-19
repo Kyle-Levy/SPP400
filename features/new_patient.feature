@@ -8,3 +8,4 @@ Feature: Patient's Page
     When I click on add a new patient
     Then I am redirected to the new patients page
     When I submit a valid new patient
+    Then I am redirected to the homepage
