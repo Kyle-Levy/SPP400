@@ -40,14 +40,13 @@ def step_impl(context):
 def step_impl(context):
     br = context.browser
 
-    br.find_element_by_id('procedures').click()
+    br.find_element_by_name('procedures').click()
 
 
 @then('I am redirected to the procedures page')
 def step_impl(context):
     br = context.browser
 
-    #assert br.find_element_by_name('csrfmiddlewaretoken').is_enabled()
-    print(br.current_url)
+    assert br.find_element_by_name('csrfmiddlewaretoken').is_enabled()
 
     assert br.current_url.endswith('/procedures/')
