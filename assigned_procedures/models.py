@@ -10,9 +10,6 @@ from django.utils import timezone
 from django.utils.timezone import now
 import math
 
-
-
-
 # Create your models here.
 class AssignedProcedures(models.Model):
     patient = models.ManyToManyField(Patients)
@@ -27,10 +24,11 @@ class AssignedProcedures(models.Model):
     date_completed = models.DateTimeField(default=timezone.now)
     scheduled = models.BooleanField(default=False)
     date_scheduled = models.DateTimeField(default=timezone.now)
-    #ONLY check est_date_complete if the est_flag is TRUE
+    # ONLY check est_date_complete if the est_flag is TRUE
     est_date_complete = models.DateTimeField(default=timezone.now)
-    #if est_flag is false the assigned procedure does not have a goal date and doesn't need to be checked
+    # if est_flag is false the assigned procedure does not have a goal date and doesn't need to be checked
     est_flag = models.BooleanField(default=False)
+    notes = models.CharField(default="", max_length=500)
 
 
 
