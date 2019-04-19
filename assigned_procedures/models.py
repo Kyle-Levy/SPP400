@@ -192,6 +192,22 @@ class AssignedProcedures(models.Model):
         return allAssignedProcedures
 
     @staticmethod
+    def get_all_active_procedures_for_patient(patient):
+        allAssignedProcedures = []
+        quiriedAssignedProcedures = AssignedProcedures.objects.filter(completed=False, patient=patient)
+        for assignedProc in quiriedAssignedProcedures:
+            allAssignedProcedures.append(assignedProc)
+        return allAssignedProcedures
+
+    @staticmethod
+    def get_all_procedures_completed_by_patient(patient):
+        allAssignedProcedures = []
+        quiriedAssignedProcedures = AssignedProcedures.objects.filter(completed=True, patient=patient)
+        for assignedProc in quiriedAssignedProcedures:
+            allAssignedProcedures.append(assignedProc)
+        return allAssignedProcedures
+
+    @staticmethod
     def average_completion_time(procedure_id):
         completed_procedures = AssignedProcedures.objects.filter(completed=True, procedure__id=procedure_id)
         total_days = 0

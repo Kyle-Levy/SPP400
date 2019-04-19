@@ -95,3 +95,10 @@ class Patients(models.Model):
 
 
 
+    def patient_is_done(self):
+        from assigned_procedures.models import AssignedProcedures
+        if (not AssignedProcedures.get_all_active_procedures_for_patient(self)) and (AssignedProcedures.get_all_procedures_completed_by_patient(self)) :
+            # This patient has been assigned procedures and has completed them all
+            return True
+        else:
+            return False;
