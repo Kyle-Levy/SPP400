@@ -30,8 +30,6 @@ class AssignedProcedures(models.Model):
     est_flag = models.BooleanField(default=False)
     notes = models.CharField(default="", max_length=500)
 
-
-
     @classmethod
     def assign_procedure_to_patient(cls, step, patientToLink,procedureToLink, proc_est=0, return_visit=False):
         if proc_est is not 0 or procedureToLink.est_days_to_complete is not 0:
@@ -56,6 +54,9 @@ class AssignedProcedures(models.Model):
             new_assignment.procedure.add(procedureToLink)
             new_assignment.save()
 
+            new_assignment.est_date_complete = new_assignment.created_at + timedelta(days=procedureToLink.est_days_to_complete)
+            new_assignment.save()
+
         return new_assignment
 
 
@@ -73,16 +74,14 @@ class AssignedProcedures(models.Model):
     def check_goal_status(searchPatient, searchProcedure, searchVisitID=1):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, procedure=searchProcedure, visitID=searchVisitID).select_related()
         for assignedProc in quiriedAssignedProcedures:
-
             if assignedProc.est_flag is True:
-
                 if assignedProc.est_date_complete > timezone.now() and assignedProc.completed is False:
                     return "in progress (on time)"
-                elif assignedProc.est_date_complete > timezone.now() and assignedProc.completed is True:
+                elif assignedProc.est_date_complete > assignedProc.date_completed and assignedProc.completed is True:
                     return "completed (on time)"
                 elif assignedProc.est_date_complete < timezone.now() and assignedProc.completed is False:
                     return "in progress (behind)"
-                elif assignedProc.est_date_complete < timezone.now() and assignedProc.completed is True:
+                elif assignedProc.est_date_complete < assignedProc.date_completed and assignedProc.completed is True:
                     return "completed (behind)"
             else:
                 return "not scheduled"
