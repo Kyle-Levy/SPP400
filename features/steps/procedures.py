@@ -63,6 +63,4 @@ def step_impl(context):
 def step_impl(context):
     br = context.browser
 
-    assert br.find_element_by_name('csrfmiddlewaretoken').is_enabled()
-
     assert br.current_url.endswith('/procedures/create/')
