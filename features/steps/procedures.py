@@ -85,3 +85,23 @@ def step_impl(context):
     assert br.find_element_by_name('csrfmiddlewaretoken').is_enabled()
 
     assert br.current_url.endswith('/procedures/')
+
+
+@when('I fail to fill out the procedure form correctly')
+def step_impl(context):
+    br = context.browser
+
+    assert br.find_element_by_name('csrfmiddlewaretoken').is_enabled()
+
+    br.find_element_by_name('procedure_name').send_keys('urine test')
+    br.find_element_by_name('notes').send_keys('Pee in a cup.')
+    br.find_element_by_name('submit_procedure').click()
+
+
+@then('I will remain on the create procedure page')
+def step_impl(context):
+    br = context.browser
+
+    assert br.find_element_by_name('csrfmiddlewaretoken').is_enabled()
+
+    assert br.current_url.endswith('/procedures/create/')
