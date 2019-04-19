@@ -18,7 +18,7 @@
         <div class="container-fixed">
             <h2> For Patient: {{ patient }}</h2>
             <h3> Updating Procedure: {{ procedure }}</h3>
-            <form action="/assigned/procedure/?id={{ procedure.id }}" method="POST"> {% csrf_token %}
+            <form action="/assigned/procedure/?id={{ id }}" method="POST"> {% csrf_token %}
                 <div class="form-group">
                     <label for="assigned_date"><strong>Date Assigned</strong></label>
                     {{ form.assigned_date }}

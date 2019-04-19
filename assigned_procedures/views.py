@@ -2,10 +2,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from homepage.forms import VerifyActionForm
 from assigned_procedures.forms import AssignedProcedureForm
-
 from assigned_procedures.models import AssignedProcedures
 from django.contrib import messages
-import collections
+
 # Create your views here.
 
 @login_required
@@ -14,6 +13,7 @@ def update(request):
         try:
             # Get desired id from url
             procedure = AssignedProcedures.objects.get(id=request.GET.get('id'))
+            id = procedure.id
             # Build form
             form = AssignedProcedureForm(initial={'assigned_date': procedure.created_at, 'scheduled': procedure.scheduled, 'completed': procedure.completed, 'notes': procedure.notes})
             form.initial['scheduled_date'] = procedure.date_scheduled
@@ -28,9 +28,9 @@ def update(request):
             for proc in procedure.procedure.all():
                 proc_name = proc.procedure_name
 
-            breadcrumbs = [('#', 'Assigned')]
+            breadcrumbs = [("/patients/profile/?id=" + str(patient.id), 'Patient'),('#', 'Assigned')]
             return render(request, 'assigned_procedure.html',
-                          {'procedure': proc_name, 'form': form, 'patient': name,
+                          {'procedure': proc_name, 'form': form, 'patient': name, 'id': id,
                            'title': 'Assigned', 'breadcrumbs': breadcrumbs})
 
         except AssignedProcedures.DoesNotExist:
@@ -51,21 +51,16 @@ def update(request):
                 procedure.completed = cd['completed']
                 procedure.notes = cd['notes']
                 procedure.save()
+
+                patient = None
+                for pat in procedure.patient.all():
+                    patient = pat
+                return redirect("/patients/profile/?id=" + str(patient.id))
             except AssignedProcedures.DoesNotExist:
                 messages.warning(request, "The procedure you tried to reach doesn't exist!")
                 return redirect('/patients/')
-
-            form = AssignedProcedureForm(initial={'assigned_date': procedure.created_at, 'scheduled': procedure.scheduled, 'completed': procedure.completed, 'notes': procedure.notes})
-            form.initial['scheduled_date'] = procedure.date_scheduled
-            form.initial['completed_date'] = procedure.date_completed
-
-            breadcrumbs = [('#', 'Assigned')]
-
-            return render(request, 'assigned_procedure.html',
-                          {'procedure': procedure, 'form': form,
-                           'title': 'Assigned', 'breadcrumbs': breadcrumbs})
         else:
             messages.error(request, 'Invalid Form!')
-            return redirect('/assigned/?id=1/')
+            return redirect('/assigned/procedure/?id=' + str(request.GET.get('id')))
 
 
