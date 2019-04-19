@@ -19,9 +19,18 @@ def update(request):
             form.initial['scheduled_date'] = procedure.date_scheduled
             form.initial['completed_date'] = procedure.date_completed
 
+            patient = None
+            name = ""
+            proc_name = ""
+            for pat in procedure.patient.all():
+                name = pat.first_name + " " + pat.last_name
+                patient = pat
+            for proc in procedure.procedure.all():
+                proc_name = proc.procedure_name
+
             breadcrumbs = [('#', 'Assigned')]
             return render(request, 'assigned_procedure.html',
-                          {'procedure': procedure, 'form': form,
+                          {'procedure': proc_name, 'form': form, 'patient': name,
                            'title': 'Assigned', 'breadcrumbs': breadcrumbs})
 
         except AssignedProcedures.DoesNotExist:

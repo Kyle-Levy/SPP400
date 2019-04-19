@@ -16,7 +16,8 @@
 
         {% include "menu_bar.html" %}
         <div class="container-fixed">
-            <h2> Updating Procedure:</h2>
+            <h2> For Patient: {{ patient }}</h2>
+            <h3> Updating Procedure: {{ procedure }}</h3>
             <form action="/assigned/procedure/?id={{ procedure.id }}" method="POST"> {% csrf_token %}
                 <div class="form-group">
                     <label for="assigned_date"><strong>Date Assigned</strong></label>
