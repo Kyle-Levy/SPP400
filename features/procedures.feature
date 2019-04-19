@@ -11,4 +11,3 @@ Feature: Procedure form
     Then I am redirected to the procedure form page
     When I successfully fill out and submit the procedure form
     Then I am redirected to the procedures landing page
-    Then I can see my newly created procedure
