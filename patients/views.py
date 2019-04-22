@@ -77,7 +77,6 @@ def profile(request):
             except IndexError:
                 goals = []
                 bool_goals = False
-            print(goals)
             return render(request, 'patient.html',
                           {"patient": patient, 'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name,
                            'breadcrumbs': breadcrumbs, 'assigned_procedures': all_assigned_procedures,

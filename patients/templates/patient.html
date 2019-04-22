@@ -3,6 +3,8 @@
 <head>
     {% load static %}
     {% include "global_styles.html" %}
+    {% load roadmap_extras %}
+
     <link rel="stylesheet" type="text/css" href={% static "patients/patient.css" %}>
 
 </head>
@@ -183,6 +185,7 @@
                                                                 <label for="
                                                                         {{ procedure.procedure_name }}{{ phase_num }}">{{ procedure.procedure_name }}</label>
                                                             </div>
+                                                            <a class="text-primary" href="/assigned/procedure/?id={% assigned_procedure_id patient procedure phase_num %}">Update Info</a>
                                                         </li>
                                                     {% endfor %}
                                                 </ul>
