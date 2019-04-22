@@ -4,8 +4,10 @@ Feature: Patient's Page
 
   Scenario: Create a New Patient
 
-    Given I am on the patients page
+    Given a successful login
+    When I click on the patients tab
+    Then I am redirected to the patients page
     When I click on add a new patient
     Then I am redirected to the new patients page
     When I submit a valid new patient
-    Then I am redirected to the homepage
+    Then I am redirected to the patients landing page
