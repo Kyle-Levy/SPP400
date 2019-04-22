@@ -5,17 +5,16 @@ $(document).ready(function () {
     $("#analytic > a:nth-child(1)").attr("href", "#");
 
 
-     //var data = JSON.parse(received_data);
+     var data = JSON.parse(received_data);
 
-     item = 0;
-var ctx = document.getElementById('myChart');
+var ctx = document.getElementById('patientsIn6MonthsChart');
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         datasets: [{
             label: '# of Patients',
-            data: [1, 2, 4, 8, 16, 4, 8, 2, 16, 1, 4, 2],
+            data: data,
             backgroundColor: [
                 'rgba(170, 152, 169, .4)',
                 'rgba(153, 102, 204, .4)',

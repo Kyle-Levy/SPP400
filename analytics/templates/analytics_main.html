@@ -62,8 +62,8 @@
                     {% endfor %}
                 </ul>
             </div>
+                <canvas id="patientsIn6MonthsChart"></canvas>
         </div>
-        <canvas id="myChart"></canvas>
     </div>
 
 </div>
@@ -73,11 +73,13 @@
 {% include "global_js.html" %}
 <!-- Personal JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
-<!--
+
 <script type="text/javascript">
-    var received_data = '{{ date|safe }}';
+    var received_data = '{{ 6_months_done_data|safe }}';
 </script>
+
+
 <script src={% static "analytics/chart_analytics.js" %}></script>
--->
+
 </body>
 </html>

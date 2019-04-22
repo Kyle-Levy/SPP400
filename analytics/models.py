@@ -55,3 +55,14 @@ class Analytics(models.Model):
             if current_patient.patient_is_done() and current_patient.patient_completion_date().date() >= six_month_prior:
                 done_patients.append(current_patient)
         return done_patients
+
+    @staticmethod
+    def get_all_done_patients_within_6_months_data():
+        all_patients = Patients.objects.all()
+        six_month_prior = timezone.now().date() - relativedelta(months=6)
+
+        done_patients_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        for current_patient in all_patients:
+            if current_patient.patient_is_done() and current_patient.patient_completion_date().date() >= six_month_prior:
+                done_patients_data[current_patient.patient_completion_date().date().month - 1] += 1
+        return done_patients_data
