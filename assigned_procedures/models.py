@@ -10,27 +10,25 @@ from django.utils import timezone
 from django.utils.timezone import now
 import math
 
-
-
-
 # Create your models here.
 class AssignedProcedures(models.Model):
     patient = models.ManyToManyField(Patients)
     procedure = models.ManyToManyField(Procedure)
     # procedure steps that share the same visitID and number are concurrent
-    procedureStep = models.IntegerField()
+    phaseNumber = models.IntegerField()
     # visitID is a way to distinguish what step a patient is on
     # if they return for a different procedure (default is 1)
     visitID = models.IntegerField(default=1)
     completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     date_completed = models.DateTimeField(default=timezone.now)
-    #ONLY check est_date_complete if the est_flag is TRUE
+    scheduled = models.BooleanField(default=False)
+    date_scheduled = models.DateTimeField(default=timezone.now)
+    # ONLY check est_date_complete if the est_flag is TRUE
     est_date_complete = models.DateTimeField(default=timezone.now)
-    #if est_flag is false the assigned procedure does not have a goal date and doesn't need to be checked
+    # if est_flag is false the assigned procedure does not have a goal date and doesn't need to be checked
     est_flag = models.BooleanField(default=False)
-
-
+    notes = models.CharField(default="", max_length=500)
 
     @classmethod
     def assign_procedure_to_patient(cls, step, patientToLink,procedureToLink, proc_est=0, return_visit=False):
@@ -46,14 +44,17 @@ class AssignedProcedures(models.Model):
 
         if return_visit is True:
             new_visit_id = AssignedProcedures.last_visit_id(patientToLink) + 1
-            new_assignment = AssignedProcedures.objects.create(procedureStep=step, visitID=new_visit_id, est_date_complete=proc_est, est_flag = est_flag)
+            new_assignment = AssignedProcedures.objects.create(phaseNumber=step, visitID=new_visit_id, est_date_complete=proc_est, est_flag = est_flag)
             new_assignment.patient.add(patientToLink)
             new_assignment.procedure.add(procedureToLink)
             new_assignment.save()
         else:
-            new_assignment = AssignedProcedures.objects.create(procedureStep=step, est_date_complete=proc_est, est_flag = est_flag)
+            new_assignment = AssignedProcedures.objects.create(phaseNumber=step, est_date_complete=proc_est, est_flag = est_flag)
             new_assignment.patient.add(patientToLink)
             new_assignment.procedure.add(procedureToLink)
+            new_assignment.save()
+
+            new_assignment.est_date_complete = new_assignment.created_at + timedelta(days=procedureToLink.est_days_to_complete)
             new_assignment.save()
 
         return new_assignment
@@ -73,16 +74,14 @@ class AssignedProcedures(models.Model):
     def check_goal_status(searchPatient, searchProcedure, searchVisitID=1):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, procedure=searchProcedure, visitID=searchVisitID).select_related()
         for assignedProc in quiriedAssignedProcedures:
-
             if assignedProc.est_flag is True:
-
                 if assignedProc.est_date_complete > timezone.now() and assignedProc.completed is False:
                     return "in progress (on time)"
-                elif assignedProc.est_date_complete > timezone.now() and assignedProc.completed is True:
+                elif assignedProc.est_date_complete > assignedProc.date_completed and assignedProc.completed is True:
                     return "completed (on time)"
                 elif assignedProc.est_date_complete < timezone.now() and assignedProc.completed is False:
                     return "in progress (behind)"
-                elif assignedProc.est_date_complete < timezone.now() and assignedProc.completed is True:
+                elif assignedProc.est_date_complete < assignedProc.date_completed and assignedProc.completed is True:
                     return "completed (behind)"
             else:
                 return "not scheduled"
@@ -112,7 +111,7 @@ class AssignedProcedures(models.Model):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, visitID=searchVisitID)
         procedureList = []
         for assignedProcedures in quiriedAssignedProcedures:
-            procStep = assignedProcedures.procedureStep
+            procStep = assignedProcedures.phaseNumber
             quiriedProcedures = assignedProcedures.procedure.all()
             for procedures in quiriedProcedures:
                 procedureList.append((procedures, procStep))
@@ -138,7 +137,7 @@ class AssignedProcedures(models.Model):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id,
                                                                       procedure=searchProcedure, visitID=searchVisitID)
         for assignedProc in quiriedAssignedProcedures:
-            assignedProc.procedureStep = newStepNumber
+            assignedProc.phaseNumber = newStepNumber
             assignedProc.save()
 
     @staticmethod
@@ -157,7 +156,7 @@ class AssignedProcedures(models.Model):
     @staticmethod
     def remove_assigned_procedure(patientToChange, procedureToDelete, phase, visitID=1):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=patientToChange.id,
-                                                                      procedure=procedureToDelete, procedureStep=phase,
+                                                                      procedure=procedureToDelete, phaseNumber=phase,
                                                                       visitID=visitID).delete()
 
 
@@ -230,4 +229,3 @@ class AssignedProcedures(models.Model):
         if total_days == 0:
             return "0"
         return str(int(math.floor(abs(total_days/total_procedures))))
-

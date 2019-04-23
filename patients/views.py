@@ -48,7 +48,7 @@ def new_patient(request):
             patient = Patients.create_patient(cd['first_name'], cd['last_name'], cd['birth_date'], cd['record_number'],
                                               cd['referring_physician'], cd['date_of_referral'])
             patient.save()
-            return redirect('/homepage/')
+            return redirect('/patients/')
         else:
             messages.error(request, 'Invalid Form!')
             return redirect('/patients/create/')
@@ -77,7 +77,6 @@ def profile(request):
             except IndexError:
                 goals = []
                 bool_goals = False
-            print(goals)
             return render(request, 'patient.html',
                           {"patient": patient, 'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name,
                            'breadcrumbs': breadcrumbs, 'assigned_procedures': all_assigned_procedures,

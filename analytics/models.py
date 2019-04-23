@@ -24,7 +24,10 @@ class Analytics(models.Model):
             if flaggedPatients.behind_flag is True:
                 behindProc += 1
 
-        percentBehind = (behindProc / totalProc) * 100
+        if totalProc is 0:
+            percentBehind = 0.0
+        else:
+            percentBehind = (behindProc/totalProc) * 100
 
         Analytics.behind_procedure_perc = percentBehind
 

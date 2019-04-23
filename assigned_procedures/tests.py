@@ -115,9 +115,9 @@ class TestAssignedProcedures(TestCase):
 
     def test_update_procedure_step(self):
         testAssign, testPatient, testProcedure = self.test_create_assignedProcedure()
-        AssignedProcedures.update_procedure_step(2, testPatient, testProcedure)
-        toCheck = AssignedProcedures.objects.get(patient=testPatient, procedure=testProcedure)
-        self.assertEqual(toCheck.procedureStep, 2)
+        AssignedProcedures.update_procedure_step(2, testPatient,testProcedure)
+        toCheck = AssignedProcedures.objects.get(patient=testPatient,procedure=testProcedure)
+        self.assertEqual(toCheck.phaseNumber,2)
 
     def test_convert_days_to_date(self):
         solution = timezone.now() + timedelta(days=3)
