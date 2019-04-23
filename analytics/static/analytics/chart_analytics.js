@@ -6,7 +6,7 @@ $(document).ready(function () {
 
 
      var data = JSON.parse(received_data);
-
+     var max_of_data = Math.max.apply(Math, data);
 var ctx = document.getElementById('patientsIn6MonthsChart');
 var myChart = new Chart(ctx, {
     type: 'bar',
@@ -50,7 +50,8 @@ var myChart = new Chart(ctx, {
         scales: {
             yAxes: [{
                 ticks: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    suggestedMax: max_of_data + 1
                 }
             }]
         }
