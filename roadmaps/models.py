@@ -6,7 +6,6 @@ class Roadmap(models.Model):
     roadmap_name = models.CharField(max_length=100)
     est_days_to_complete = models.IntegerField(default=0)
 
-
     def __str__(self):
         return self.roadmap_name
 
@@ -26,18 +25,16 @@ class Roadmap(models.Model):
             return False
 
     @staticmethod
-    def update_roadmap_name(new_roadmap_name, current_roadmap):
+    def update_roadmap_name(new_roadmap_name, current_roadmap):  # pragma: no cover
         quiried_roadmap = Roadmap.objects.filter(id=current_roadmap.id)
         for roadmap in quiried_roadmap:
             roadmap.roadmap_name = new_roadmap_name
 
 
-
-
 class RoadmapProcedureLink(models.Model):
     roadmap = models.ManyToManyField(Roadmap)
     procedure = models.ManyToManyField(Procedure)
-    #TODO phase should only allow values between 1 & some decided upper bound
+    # TODO phase should only allow values between 1 & some decided upper bound
     phase = models.IntegerField(default=1)
 
     @classmethod
@@ -61,14 +58,9 @@ class RoadmapProcedureLink(models.Model):
         return procedure_phase_list
 
     @staticmethod
-    def update_phase_for_procedure(current_roadmap, current_procedure, new_phase_number):
-        quiried_procedures = RoadmapProcedureLink.objects.filter(roadmap=current_roadmap.id, procedure=current_procedure.id)
-        for procedure in quiried_procedures:
-            procedure.phase = new_phase_number
-
-    @staticmethod
-    def remove_pair_from_roadmap(roadmap_id,procedure_id, phase_number ):
-        queried_pairs = RoadmapProcedureLink.objects.filter(roadmap=roadmap_id, procedure=procedure_id, phase=phase_number)
+    def remove_pair_from_roadmap(roadmap_id, procedure_id, phase_number):
+        queried_pairs = RoadmapProcedureLink.objects.filter(roadmap=roadmap_id, procedure=procedure_id,
+                                                            phase=phase_number)
         for item in queried_pairs:
             item.delete()
 
@@ -89,3 +81,10 @@ class RoadmapProcedureLink(models.Model):
                 seperated_by_phase[phase] = [procedure]
 
         return seperated_by_phase
+    
+    @staticmethod
+    def update_phase_for_procedure(current_roadmap, current_procedure, new_phase_number):  # pragma: no cover
+        quiried_procedures = RoadmapProcedureLink.objects.filter(roadmap=current_roadmap.id,
+                                                                 procedure=current_procedure.id)
+        for procedure in quiried_procedures:
+            procedure.phase = new_phase_number
