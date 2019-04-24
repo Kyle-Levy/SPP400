@@ -34,6 +34,31 @@ class TestRoadmaps(TestCase):
 
         roadmap_list = RoadmapProcedureLink.get_procedures_from_roadmap(t_roadmap)
 
-        test_structure = []
 
-        self.assertEqual(roadmap_list.__class__, test_structure.__class__)
+        expected_structure = [(t_procedure1, 1), (t_procedure2, 2)]
+
+        self.assertListEqual(roadmap_list, expected_structure)
+
+    def test_separate_by_phase(self):
+        test_roadmap = Roadmap.objects.create(roadmap_name='TAVR')
+        test_roadmap.save()
+
+        t_procedure1 = Procedure.objects.create(procedure_name='Procedure 1')
+        t_procedure1.save()
+
+        t_procedure2 = Procedure.objects.create(procedure_name='Procedure 2')
+        t_procedure2.save()
+
+        t_procedure3 = Procedure.objects.create(procedure_name='Procedure 3')
+        t_procedure3.save()
+
+        RoadmapProcedureLink.link_procedure_to_roadmap(t_procedure1, test_roadmap, 1)
+        RoadmapProcedureLink.link_procedure_to_roadmap(t_procedure2, test_roadmap, 1)
+        RoadmapProcedureLink.link_procedure_to_roadmap(t_procedure3, test_roadmap, 2)
+
+        roadmap_pairs = RoadmapProcedureLink.get_procedures_from_roadmap(test_roadmap)
+
+        expected_result = {1: [t_procedure1, t_procedure2], 2: [t_procedure3]}
+        seperated_pairs = RoadmapProcedureLink.seperate_by_phase(roadmap_pairs)
+        self.assertDictEqual(expected_result, seperated_pairs)
+        # print(roadmap_pairs)
