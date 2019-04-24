@@ -6,7 +6,6 @@ from assigned_procedures.models import AssignedProcedures
 # Create your models here.
 from patients.models import Patients
 from django.utils import timezone
-from dateutil.relativedelta import relativedelta
 
 
 class Analytics(models.Model):
@@ -51,7 +50,7 @@ class Analytics(models.Model):
     @staticmethod
     def get_all_done_patients_within_6_months():
         all_patients = Patients.objects.all()
-        six_month_prior = timezone.now().date() - relativedelta(months=6)
+        six_month_prior = timezone.now().date() - timedelta(6*365/12)
 
         done_patients = []
         for current_patient in all_patients:
@@ -62,7 +61,7 @@ class Analytics(models.Model):
     @staticmethod
     def get_all_done_patients_within_6_months_data():
         all_patients = Patients.objects.all()
-        six_month_prior = timezone.now().date() - relativedelta(months=6)
+        six_month_prior = timezone.now().date() - timedelta(6*365/12)
 
         done_patients_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         for current_patient in all_patients:
