@@ -133,6 +133,23 @@ class AssignedProcedures(models.Model):
                 return False
 
     @staticmethod
+    def set_complete(searchPatient, searchProcedure, searchVisitID=1):
+        queriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, procedure=searchProcedure, visitID=searchVisitID)
+
+        for assignedProc in queriedAssignedProcedures:
+            assignedProc.completed = True
+            assignedProc.save()
+
+    @staticmethod
+    def set_incomplete(searchPatient, searchProcedure, searchVisitID=1):
+        queriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id,
+                                                                      procedure=searchProcedure, visitID=searchVisitID)
+
+        for assignedProc in queriedAssignedProcedures:
+            assignedProc.completed = False
+            assignedProc.save()
+
+    @staticmethod
     def update_procedure_step(newStepNumber, searchPatient, searchProcedure, searchVisitID=1):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id,
                                                                       procedure=searchProcedure, visitID=searchVisitID)
@@ -229,3 +246,14 @@ class AssignedProcedures(models.Model):
         if total_days == 0:
             return "0"
         return str(int(math.floor(abs(total_days/total_procedures))))
+
+    @staticmethod
+    def get_first_incomplete_phase(assigned_procedure_dict, patient):
+        final_phase = 0
+        for phase, procedure_list in assigned_procedure_dict.items():
+            for procedure in procedure_list:
+                assigned_obj = AssignedProcedures.objects.get(patient=patient, procedure=procedure, phaseNumber=phase)
+                if not assigned_obj.completed:
+                    return phase
+            final_phase = phase
+        return final_phase

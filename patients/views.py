@@ -11,6 +11,7 @@ from roadmaps.models import RoadmapProcedureLink
 from django.contrib import messages
 import collections
 
+
 @login_required
 def index(request):
     if request.method == 'POST':
@@ -54,7 +55,6 @@ def new_patient(request):
             return redirect('/patients/create/')
 
 
-# TODO This post currently takes you to the update patient page. Instead, this should be a seperate method that use request.GET
 @login_required
 def profile(request):
     if request.method == 'GET':
@@ -66,6 +66,9 @@ def profile(request):
             roadmap_pairs = AssignedProcedures.get_all_procedures(patient)
 
             all_assigned_procedures = RoadmapProcedureLink.seperate_by_phase(roadmap_pairs)
+
+            first_incomplete_phase = AssignedProcedures.get_first_incomplete_phase(all_assigned_procedures, patient)
+
             ordered = collections.OrderedDict()
             phase_order = sorted(all_assigned_procedures.keys())
             for phase in phase_order:
@@ -80,7 +83,7 @@ def profile(request):
             return render(request, 'patient.html',
                           {"patient": patient, 'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name,
                            'breadcrumbs': breadcrumbs, 'assigned_procedures': all_assigned_procedures,
-                           'flag_form': FlagForm(), 'goals': goals, 'bool_goals': bool_goals})
+                           'flag_form': FlagForm(), 'goals': goals, 'bool_goals': bool_goals, 'first_incomplete_phase': first_incomplete_phase})
         except Patients.DoesNotExist:
             messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
@@ -241,14 +244,14 @@ def remove_pairs_from_patient(request):
                                                                  cleaned_pair[1])
                 return redirect('/patients/profile/procedures/?id=' + str(patient.id))
             else:
-                #TODO Warning saying "You didn't select any items to be removed"
+                # TODO Warning saying "You didn't select any items to be removed"
                 return redirect('/patients/profile/procedures/?id=' + str(patient.id))
         except Patients.DoesNotExist:
             messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
 
 
-# TODO change request.session to getting the id from the url
+@login_required
 def flag_patient(request):
     if request.method == 'POST':
         try:
@@ -275,6 +278,7 @@ def flag_patient(request):
             return redirect('/patients/')
 
 
+@login_required
 def unflag_patient(request):
     if request.method == 'POST':
         try:
@@ -290,3 +294,35 @@ def unflag_patient(request):
         except Patients.DoesNotExist:
             messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
+
+
+@login_required
+def checkbox_submission(request):
+    if request.method == 'POST':
+        checked_boxes = request.POST.getlist('selection[]')
+        patient_id = request.GET.get('id')
+        try:
+            patient_obj = Patients.objects.get(id=patient_id)
+            procedures_assigned = AssignedProcedures.objects.filter(patient=patient_obj)
+
+            # In this array are the IDs of the boxes that were submitted checked. These are later set to complete.
+            marked_boxes = []
+            for pair in checked_boxes:
+                cleaned_pair = tuple(pair.split(','))
+                marked_boxes.append(cleaned_pair[0])
+
+            for assigned_procedure in procedures_assigned:
+                procedure_id = assigned_procedure.procedure.all()[0].id
+                procedure_obj = Procedure.objects.get(id=procedure_id)
+                if str(procedure_id) in marked_boxes:
+                    AssignedProcedures.set_complete(patient_obj, procedure_obj)
+                else:
+                    AssignedProcedures.set_incomplete(patient_obj, procedure_obj)
+
+            return redirect('/patients/profile/?id=' + str(patient_id))
+        except Patients.DoesNotExist:
+            messages.warning(request, "The patient you tried to reach doesn't exist!")
+            return redirect('/patients/')
+        except Procedure.DoesNotExist:
+            messages.warning(request, "The procedure you tried to reach doesn't exist!")
+            return redirect('/procedures/')
