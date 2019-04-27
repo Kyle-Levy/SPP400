@@ -1,15 +1,14 @@
 $(document).ready(function () {
 
 
-    $(".disabledBox").on("click", function (e) {
-        console.log("EEK")
-        var checkbox = $(this);
-        // do the confirmation thing here
+    $(".modalCheckbox").on("click", function (e) {
+        var checkboxClicked = $(this).children()[0];
 
+        console.log(checkboxClicked.id)
         e.preventDefault();
-        $('#exampleModalCenter').modal('toggle');
 
-        console.log(checkbox)
+        $('#' + checkboxClicked.id +'Modal').modal('toggle');
+
     });
 
 

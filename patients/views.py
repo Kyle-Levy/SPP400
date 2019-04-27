@@ -308,7 +308,7 @@ def checkbox_submission(request):
             # In this array are the IDs of the boxes that were submitted checked. These are later set to complete.
             marked_boxes = []
             for pair in checked_boxes:
-                cleaned_pair = tuple(pair.split(','))
+                cleaned_pair = tuple(pair.split('-'))
                 marked_boxes.append(cleaned_pair[0])
 
             for assigned_procedure in procedures_assigned:

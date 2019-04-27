@@ -185,22 +185,22 @@
                                                             <li>
                                                                 <div class="funkyradio-success {% if phase_num > first_incomplete_phase %}modalCheckbox{% endif %}">
                                                                     <input type="checkbox" name="selection[]"
-                                                                           value="{{ procedure.id }},{{ phase_num }}"
-                                                                           id="{{ procedure.id }},{{ phase_num }}"
+                                                                           value="{{ procedure.id }}-{{ phase_num }}"
+                                                                           id="{{ procedure.id }}-{{ phase_num }}"
                                                                             {% if completed %} checked {% endif %}/>
-                                                                    <label for="{{ procedure.id }},{{ phase_num }}">{{ procedure.procedure_name }}</label>
+                                                                    <label for="{{ procedure.id }}-{{ phase_num }}">{{ procedure.procedure_name }}</label>
                                                                 </div>
                                                                 {% if phase_num > first_incomplete_phase %}
                                                                     <div class="modal fade"
-                                                                         id="{{ procedure.id }},{{ phase_num }}Modal"
+                                                                         id="{{ procedure.id }}-{{ phase_num }}Modal"
                                                                          tabindex="-1" role="dialog"
-                                                                         aria-labelledby="{{ procedure.id }},{{ phase_num }}ModalLabel"
+                                                                         aria-labelledby="{{ procedure.id }}-{{ phase_num }}ModalLabel"
                                                                          aria-hidden="true">
                                                                         <div class="modal-dialog" role="document">
                                                                             <div class="modal-content">
                                                                                 <div class="modal-header">
                                                                                     <h5 class="modal-title"
-                                                                                        id="{{ procedure.id }},{{ phase_num }}ModalLabel">
+                                                                                        id="{{ procedure.id }}-{{ phase_num }}ModalLabel">
                                                                                         Modal title</h5>
                                                                                     <button type="button" class="close"
                                                                                             data-dismiss="modal"
@@ -214,7 +214,7 @@
                                                                                 <div class="modal-footer">
                                                                                     <button type="button"
                                                                                             class="btn btn-primary modalCheckButton"
-                                                                                            id="{{ procedure.id }},{{ phase_num }}-ModalButton">
+                                                                                            id="{{ procedure.id }}-{{ phase_num }}-ModalButton">
                                                                                         Toggle Checkbox
                                                                                     </button>
                                                                                 </div>
@@ -257,11 +257,11 @@
 
 </div>
 <!-- modal format for later
-<div class="modal fade" id="{{ procedure.id }},{{ phase_num }}Modal" tabindex="-1" role="dialog" aria-labelledby="{{ procedure.id }},{{ phase_num }}ModalLabel" aria-hidden="true">
+<div class="modal fade" id="{{ procedure.id }}-{{ phase_num }}Modal" tabindex="-1" role="dialog" aria-labelledby="{{ procedure.id }}-{{ phase_num }}ModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="{{ procedure.id }},{{ phase_num }}ModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="{{ procedure.id }}-{{ phase_num }}ModalLabel">Modal title</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -270,7 +270,7 @@
         ...
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary modalCheckButton" id="{{ procedure.id }},{{ phase_num }}-ModalButton">Toggle Checkbox</button>
+        <button type="button" class="btn btn-primary modalCheckButton" id="{{ procedure.id }}-{{ phase_num }}-ModalButton">Toggle Checkbox</button>
       </div>
     </div>
   </div>
