@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.utils.timezone import now
 import math
 
+
 # Create your models here.
 class AssignedProcedures(models.Model):
     patient = models.ManyToManyField(Patients)
@@ -31,7 +32,7 @@ class AssignedProcedures(models.Model):
     notes = models.CharField(default="", max_length=500)
 
     @classmethod
-    def assign_procedure_to_patient(cls, step, patientToLink,procedureToLink, proc_est=0, return_visit=False):
+    def assign_procedure_to_patient(cls, step, patientToLink, procedureToLink, proc_est=0, return_visit=False):
         if proc_est is not 0 or procedureToLink.est_days_to_complete is not 0:
             est_flag = True
             if proc_est is not 0:
@@ -44,35 +45,38 @@ class AssignedProcedures(models.Model):
 
         if return_visit is True:
             new_visit_id = AssignedProcedures.last_visit_id(patientToLink) + 1
-            new_assignment = AssignedProcedures.objects.create(phaseNumber=step, visitID=new_visit_id, est_date_complete=proc_est, est_flag = est_flag)
+            new_assignment = AssignedProcedures.objects.create(phaseNumber=step, visitID=new_visit_id,
+                                                               est_date_complete=proc_est, est_flag=est_flag)
             new_assignment.patient.add(patientToLink)
             new_assignment.procedure.add(procedureToLink)
             new_assignment.save()
         else:
-            new_assignment = AssignedProcedures.objects.create(phaseNumber=step, est_date_complete=proc_est, est_flag = est_flag)
+            new_assignment = AssignedProcedures.objects.create(phaseNumber=step, est_date_complete=proc_est,
+                                                               est_flag=est_flag)
             new_assignment.patient.add(patientToLink)
             new_assignment.procedure.add(procedureToLink)
             new_assignment.save()
 
-            new_assignment.est_date_complete = new_assignment.created_at + timedelta(days=procedureToLink.est_days_to_complete)
+            new_assignment.est_date_complete = new_assignment.created_at + timedelta(
+                days=procedureToLink.est_days_to_complete)
             new_assignment.save()
 
         return new_assignment
 
-
-
-    #returns a strings:
-    #completed (on time)
-    #completed (behind)
-    #in progress (behind)
-    #in progress (on time)
-    #not scheduled
-    #"in progress"/"completed" refers to whether the procedure has been completed or not
-    #"behind"/"on time" refers to if the procedure is behind schedule or not.
-    #KNOWN BUG: THIS DOES NOT WORK IF THE SAME PROCEDURE IS ASSIGNED AT DIFFERENT TIMES WITH DIFFERENT GOALS
+    # returns a strings:
+    # completed (on time)
+    # completed (behind)
+    # in progress (behind)
+    # in progress (on time)
+    # not scheduled
+    # "in progress"/"completed" refers to whether the procedure has been completed or not
+    # "behind"/"on time" refers to if the procedure is behind schedule or not.
+    # KNOWN BUG: THIS DOES NOT WORK IF THE SAME PROCEDURE IS ASSIGNED AT DIFFERENT TIMES WITH DIFFERENT GOALS
     @staticmethod
     def check_goal_status(searchPatient, searchProcedure, searchVisitID=1):
-        quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, procedure=searchProcedure, visitID=searchVisitID).select_related()
+        quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id,
+                                                                      procedure=searchProcedure,
+                                                                      visitID=searchVisitID).select_related()
         for assignedProc in quiriedAssignedProcedures:
             if assignedProc.est_flag is True:
                 if assignedProc.est_date_complete > timezone.now() and assignedProc.completed is False:
@@ -86,14 +90,12 @@ class AssignedProcedures(models.Model):
             else:
                 return "not scheduled"
 
-
     @staticmethod
     def convert_days_to_date(days):
         date = timezone.now() + timedelta(days=days)
         return date
 
-
-    #this method is used when a patient is returning for a new procedure
+    # this method is used when a patient is returning for a new procedure
     @staticmethod
     def last_visit_id(searchPatient):
         assignments = AssignedProcedures.objects.filter(patient=searchPatient.id)
@@ -133,17 +135,20 @@ class AssignedProcedures(models.Model):
                 return False
 
     @staticmethod
-    def set_complete(searchPatient, searchProcedure, searchVisitID=1):
-        queriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id, procedure=searchProcedure, visitID=searchVisitID)
+    def set_complete(searchPatient, searchProcedure, phase, searchVisitID=1):
+        queriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id,
+                                                                      procedure=searchProcedure, phaseNumber=phase,
+                                                                      visitID=searchVisitID)
 
         for assignedProc in queriedAssignedProcedures:
             assignedProc.completed = True
             assignedProc.save()
 
     @staticmethod
-    def set_incomplete(searchPatient, searchProcedure, searchVisitID=1):
+    def set_incomplete(searchPatient, searchProcedure, phase, searchVisitID=1):
         queriedAssignedProcedures = AssignedProcedures.objects.filter(patient=searchPatient.id,
-                                                                      procedure=searchProcedure, visitID=searchVisitID)
+                                                                      procedure=searchProcedure, phaseNumber=phase,
+                                                                      visitID=searchVisitID)
 
         for assignedProc in queriedAssignedProcedures:
             assignedProc.completed = False
@@ -161,21 +166,16 @@ class AssignedProcedures(models.Model):
     def add_roadmap_to_patient(roadmap, patient, returnVisit=False):
         proceduresToAssign = RoadmapProcedureLink.get_procedures_from_roadmap(roadmap)
         for tempProc in proceduresToAssign:
-            phaseNumber = tempProc[1] #aka step
+            phaseNumber = tempProc[1]  # aka step
             procedureObj = tempProc[0]
             proc_est = procedureObj.est_days_to_complete
-            AssignedProcedures.assign_procedure_to_patient(phaseNumber,patient,procedureObj,proc_est, returnVisit)
-
-
-
-
+            AssignedProcedures.assign_procedure_to_patient(phaseNumber, patient, procedureObj, proc_est, returnVisit)
 
     @staticmethod
     def remove_assigned_procedure(patientToChange, procedureToDelete, phase, visitID=1):
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(patient=patientToChange.id,
                                                                       procedure=procedureToDelete, phaseNumber=phase,
                                                                       visitID=visitID).delete()
-
 
     # updates all patient flags and returns a list of any flagged patients
     @staticmethod
@@ -189,7 +189,6 @@ class AssignedProcedures(models.Model):
                 if behindCheck or patient.flagged is True:
                     behindPatients.append(patient)
         return list(set(behindPatients))
-
 
     @staticmethod
     def get_all_active_procedures():
@@ -245,7 +244,7 @@ class AssignedProcedures(models.Model):
 
         if total_days == 0:
             return "0"
-        return str(int(math.floor(abs(total_days/total_procedures))))
+        return str(int(math.floor(abs(total_days / total_procedures))))
 
     @staticmethod
     def get_first_incomplete_phase(assigned_procedure_dict, patient):

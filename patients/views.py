@@ -306,23 +306,20 @@ def checkbox_submission(request):
             procedures_assigned = AssignedProcedures.objects.filter(patient=patient_obj)
 
             # In this array are the IDs of the boxes that were submitted checked. These are later set to complete.
-            marked_boxes = []
-            for pair in checked_boxes:
-                cleaned_pair = tuple(pair.split('-'))
-                marked_boxes.append(cleaned_pair[0])
+
 
             for assigned_procedure in procedures_assigned:
                 procedure_id = assigned_procedure.procedure.all()[0].id
                 procedure_obj = Procedure.objects.get(id=procedure_id)
-                if str(procedure_id) in marked_boxes:
-                    AssignedProcedures.set_complete(patient_obj, procedure_obj)
+                phase = assigned_procedure.phaseNumber
+
+                checkbox_id = str(procedure_id) + '-' + str(phase)
+                if str(checkbox_id) in checked_boxes:
+                    AssignedProcedures.set_complete(patient_obj, procedure_obj, phase)
                 else:
-                    AssignedProcedures.set_incomplete(patient_obj, procedure_obj)
+                    AssignedProcedures.set_incomplete(patient_obj, procedure_obj, phase)
 
             return redirect('/patients/profile/?id=' + str(patient_id))
         except Patients.DoesNotExist:
             messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
-        except Procedure.DoesNotExist:
-            messages.warning(request, "The procedure you tried to reach doesn't exist!")
-            return redirect('/procedures/')

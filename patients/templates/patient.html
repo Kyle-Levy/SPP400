@@ -178,7 +178,7 @@
                                                   method="POST">
                                                 {% csrf_token %}
                                                 {% for phase_num, procedure_list in assigned_procedures.items %}
-                                                    <h6>Phase: {{ phase_num }}</h6>
+                                                    <h5>Phase: {{ phase_num }}</h5>
                                                     <ul class="list-unstyled">
                                                         {% for procedure in procedure_list %}
                                                             {% procedure_is_complete patient procedure phase_num as completed %}
