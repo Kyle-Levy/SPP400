@@ -21,3 +21,8 @@ def assigned_procedure_id(patient, procedure, phase):
     for proc in procedures:
         procedure_id = proc.id
     return str(procedure_id)
+
+@register.simple_tag()
+def procedure_is_complete(patient, procedure, phase):
+    procedure = AssignedProcedures.objects.get(patient=patient, procedure=procedure, phaseNumber=phase)
+    return procedure.completed

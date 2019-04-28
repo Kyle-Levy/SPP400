@@ -13,4 +13,5 @@ urlpatterns = [
     path('profile/procedures/remove/', views.remove_pairs_from_patient),
     path('profile/flag/', views.flag_patient),
     path('profile/unflag/', views.unflag_patient),
+    path('profile/check_procedures/', views.checkbox_submission),
 ]

@@ -217,3 +217,27 @@ class TestAssignedProcedures(TestCase):
         actual_return = AssignedProcedures.get_last_completed_date(testPatient)
 
         self.assertEqual(actual_return.date(), timezone.now().date())
+
+    def test_set_complete(self):
+        testAssign, testPatient, testProcedure = self.test_create_assignedProcedure()
+
+        self.assertFalse(testAssign.completed)
+
+        AssignedProcedures.set_complete(testPatient, testProcedure, testAssign.phaseNumber)
+
+        resultAssign = AssignedProcedures.objects.get(patient=testPatient, procedure=testProcedure, phaseNumber=testAssign.phaseNumber)
+
+        self.assertTrue(resultAssign.completed)
+
+        return resultAssign, testPatient, testProcedure
+
+    def test_set_incomplete(self):
+        testAssign, testPatient, testProcedure = self.test_set_complete()
+
+        self.assertTrue(testAssign.completed)
+
+        AssignedProcedures.set_incomplete(testPatient, testProcedure, testAssign.phaseNumber)
+
+        resultAssign = AssignedProcedures.objects.get(patient=testPatient, procedure=testProcedure, phaseNumber=testAssign.phaseNumber)
+
+        self.assertFalse(resultAssign.completed)

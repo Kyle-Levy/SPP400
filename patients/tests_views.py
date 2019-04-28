@@ -291,8 +291,6 @@ class TestCreatePatient(TestCase):
 
         response = delete(request)
 
-
-
         self.assertEqual(response.status_code, 302)
 
         # If an entry exists, it will overwrite None, thus failing the test
@@ -458,3 +456,57 @@ class TestCreatePatient(TestCase):
         response = procedures(request)
 
         self.assertEqual(response.status_code, 302)
+
+    def test_post_checkbox_submission(self):
+        test_procedure1 = Procedure.objects.create(procedure_name="Procedure 1")
+        test_procedure2 = Procedure.objects.create(procedure_name="Procedure 2")
+        test_procedure3 = Procedure.objects.create(procedure_name="Procedure 3")
+
+        AssignedProcedures.assign_procedure_to_patient(1, self.test_patient, test_procedure1)
+        AssignedProcedures.assign_procedure_to_patient(2, self.test_patient, test_procedure2)
+        AssignedProcedures.assign_procedure_to_patient(3, self.test_patient, test_procedure3)
+
+        request = self.factory.post('/patients/profile/check_procedures/?id=' + str(self.test_patient.id),
+                                    {'selection[]': ['1-1', '2-2']})
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+
+        response = checkbox_submission(request)
+
+        test_procedure1_after = AssignedProcedures.objects.get(patient=self.test_patient, procedure=test_procedure1.id, phaseNumber=1)
+        test_procedure2_after = AssignedProcedures.objects.get(patient=self.test_patient, procedure=test_procedure2.id, phaseNumber=2)
+        test_procedure3_after = AssignedProcedures.objects.get(patient=self.test_patient, procedure=test_procedure3.id, phaseNumber=3)
+
+        self.assertTrue(test_procedure1_after.completed)
+        self.assertTrue(test_procedure2_after.completed)
+        self.assertFalse(test_procedure3_after.completed)
+
+    def test_post_checkbox_submission_invalid_patient(self):
+        test_procedure1 = Procedure.objects.create(procedure_name="Procedure 1")
+        test_procedure2 = Procedure.objects.create(procedure_name="Procedure 2")
+        test_procedure3 = Procedure.objects.create(procedure_name="Procedure 3")
+
+        AssignedProcedures.assign_procedure_to_patient(1, self.test_patient, test_procedure1)
+        AssignedProcedures.assign_procedure_to_patient(2, self.test_patient, test_procedure2)
+        AssignedProcedures.assign_procedure_to_patient(3, self.test_patient, test_procedure3)
+
+        request = self.factory.post('/patients/profile/check_procedures/?id=' + str(99999),
+                                    {'selection[]': ['1-1', '2-2']})
+        self.middleware.process_request(request)
+        request.session.save()
+        request.user = self.user
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = checkbox_submission(request)
+
+        test_procedure1_after = AssignedProcedures.objects.get(patient=self.test_patient, procedure=test_procedure1.id, phaseNumber=1)
+        test_procedure2_after = AssignedProcedures.objects.get(patient=self.test_patient, procedure=test_procedure2.id, phaseNumber=2)
+        test_procedure3_after = AssignedProcedures.objects.get(patient=self.test_patient, procedure=test_procedure3.id, phaseNumber=3)
+
+        self.assertFalse(test_procedure1_after.completed)
+        self.assertFalse(test_procedure2_after.completed)
+        self.assertFalse(test_procedure3_after.completed)

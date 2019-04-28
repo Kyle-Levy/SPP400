@@ -174,22 +174,65 @@
                                          aria-labelledby="headingAssignedProcedures"
                                          data-parent="#procedure-accordian">
                                         <div class="card-body funkyradio">
-                                            {% for phase_num, procedure_list in assigned_procedures.items %}
-                                                <h6>Phase: {{ phase_num }}</h6>
-                                                <ul class="list-unstyled">
-                                                    {% for procedure in procedure_list %}
-                                                        <li>
-                                                            <div class="funkyradio-success">
-                                                                <input type="checkbox" name="checkbox" id="
-                                                                        {{ procedure.procedure_name }}{{ phase_num }}"/>
-                                                                <label for="
-                                                                        {{ procedure.procedure_name }}{{ phase_num }}">{{ procedure.procedure_name }}</label>
-                                                            </div>
-                                                            <a class="text-primary" href="/assigned/procedure/?id={% assigned_procedure_id patient procedure phase_num %}">Update Info</a>
-                                                        </li>
-                                                    {% endfor %}
-                                                </ul>
-                                            {% endfor %}
+                                            <form action="/patients/profile/check_procedures/?id={{ patient.id }}"
+                                                  method="POST">
+                                                {% csrf_token %}
+                                                {% for phase_num, procedure_list in assigned_procedures.items %}
+                                                    <h5>Phase: {{ phase_num }}</h5>
+                                                    <ul class="list-unstyled">
+                                                        {% for procedure in procedure_list %}
+                                                            {% procedure_is_complete patient procedure phase_num as completed %}
+                                                            <li>
+                                                                <div class="funkyradio-success {% if phase_num > first_incomplete_phase %}modalCheckbox{% endif %}">
+                                                                    <input type="checkbox" name="selection[]"
+                                                                           value="{{ procedure.id }}-{{ phase_num }}"
+                                                                           id="{{ procedure.id }}-{{ phase_num }}"
+                                                                            {% if completed %} checked {% endif %}/>
+                                                                    <label for="{{ procedure.id }}-{{ phase_num }}">{{ procedure.procedure_name }}</label>
+                                                                </div>
+                                                                {% if phase_num > first_incomplete_phase %}
+                                                                    <div class="modal fade"
+                                                                         id="{{ procedure.id }}-{{ phase_num }}Modal"
+                                                                         tabindex="-1" role="dialog"
+                                                                         aria-labelledby="{{ procedure.id }}-{{ phase_num }}ModalLabel"
+                                                                         aria-hidden="true">
+                                                                        <div class="modal-dialog" role="document">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <h5 class="modal-title"
+                                                                                        id="{{ procedure.id }}-{{ phase_num }}ModalLabel">
+                                                                                        Override Procedure Order?</h5>
+                                                                                    <button type="button" class="close"
+                                                                                            data-dismiss="modal"
+                                                                                            aria-label="Close">
+                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    Procedures that should be done before <strong>{{ procedure.procedure_name }}</strong> have not yet been completed. Are you sure you want to mark this as done?
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button type="button"
+                                                                                            class="btn btn-primary modalCheckButton"
+                                                                                            id="{{ procedure.id }}-{{ phase_num }}-ModalButton">
+                                                                                        Toggle Checkbox
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                {% endif %}
+                                                                <a class="text-primary"
+                                                                   href="/assigned/procedure/?id={% assigned_procedure_id patient procedure phase_num %}">Update
+                                                                    Info</a>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                {% endfor %}
+                                                <button type="submit" class="btn btn-warning">Save
+                                                    changes
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -213,10 +256,30 @@
     </div>
 
 </div>
+<!-- modal format for later
+<div class="modal fade" id="{{ procedure.id }}-{{ phase_num }}Modal" tabindex="-1" role="dialog" aria-labelledby="{{ procedure.id }}-{{ phase_num }}ModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="{{ procedure.id }}-{{ phase_num }}ModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary modalCheckButton" id="{{ procedure.id }}-{{ phase_num }}-ModalButton">Toggle Checkbox</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-
+-->
 {% include "global_js.html" %}
 <!-- Personal JS -->
 <script src={% static "patients/patients.js" %}></script>
+<script src={% static "patients/patient_profile.js" %}></script>
 </body>
 </html>
