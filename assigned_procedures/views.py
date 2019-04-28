@@ -15,7 +15,7 @@ def update(request):
             procedure = AssignedProcedures.objects.get(id=request.GET.get('id'))
             id = procedure.id
             # Build form
-            form = AssignedProcedureForm(initial={'assigned_date': procedure.created_at, 'scheduled': procedure.scheduled, 'completed': procedure.completed, 'notes': procedure.notes})
+            form = AssignedProcedureForm(initial={'assigned_date': procedure.created_at, 'scheduled': procedure.scheduled,'notes': procedure.notes})
             form.initial['scheduled_date'] = procedure.date_scheduled
             form.initial['completed_date'] = procedure.date_completed
             form.initial['completion_goal'] = procedure.est_date_complete
@@ -49,7 +49,6 @@ def update(request):
                 procedure.date_scheduled = cd['scheduled_date']
                 procedure.scheduled = cd['scheduled']
                 procedure.date_completed = cd['completed_date']
-                procedure.completed = cd['completed']
                 procedure.notes = cd['notes']
                 procedure.est_date_complete = cd['completion_goal']
                 procedure.save()
