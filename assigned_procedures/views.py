@@ -32,7 +32,7 @@ def update(request):
 
             breadcrumbs = [("/patients/profile/?id=" + str(patient.id), name),('#', proc_name)]
             return render(request, 'assigned_procedure.html',
-                          {'procedure': proc_name, 'form': form, 'patient': name, 'id': id,
+                          {'procedure': proc_name, 'form': form, 'patient': name, 'id': id, 'phase': procedure.phaseNumber,
                            'title': 'Assigned', 'breadcrumbs': breadcrumbs, 'completed': procedure.completed})
 
         except AssignedProcedures.DoesNotExist:
