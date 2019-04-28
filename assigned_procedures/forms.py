@@ -61,8 +61,6 @@ class AssignedProcedureForm(forms.Form):
     )
 
     CHOICES = [(True, 'Scheduled'), (False, 'Not Scheduled')]
-    CHOICES1 = [(True, 'Complete'), (False, 'Incomplete')]
 
     scheduled = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect)
-    completed = forms.ChoiceField(choices=CHOICES1, widget=forms.RadioSelect)
 
