@@ -29,10 +29,11 @@ def update(request):
             for proc in procedure.procedure.all():
                 proc_name = proc.procedure_name
 
+
             breadcrumbs = [("/patients/profile/?id=" + str(patient.id), 'Patient'),('#', 'Assigned')]
             return render(request, 'assigned_procedure.html',
                           {'procedure': proc_name, 'form': form, 'patient': name, 'id': id,
-                           'title': 'Assigned', 'breadcrumbs': breadcrumbs})
+                           'title': 'Assigned', 'breadcrumbs': breadcrumbs, 'completed': procedure.completed})
 
         except AssignedProcedures.DoesNotExist:
             messages.warning(request, "The procedure you tried to reach doesn't exist!")
