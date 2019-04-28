@@ -30,7 +30,7 @@ def update(request):
                 proc_name = proc.procedure_name
 
 
-            breadcrumbs = [("/patients/profile/?id=" + str(patient.id), 'Patient'),('#', 'Assigned')]
+            breadcrumbs = [("/patients/profile/?id=" + str(patient.id), name),('#', proc_name)]
             return render(request, 'assigned_procedure.html',
                           {'procedure': proc_name, 'form': form, 'patient': name, 'id': id,
                            'title': 'Assigned', 'breadcrumbs': breadcrumbs, 'completed': procedure.completed})
