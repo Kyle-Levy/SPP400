@@ -142,6 +142,7 @@ class AssignedProcedures(models.Model):
 
         for assignedProc in queriedAssignedProcedures:
             assignedProc.completed = True
+            assignedProc.date_completed = timezone.now()
             assignedProc.save()
 
     @staticmethod
