@@ -11,9 +11,8 @@ $(document).ready(function () {
     });
 
     $(".modalCheckButton").on("click", function(e){
-        console.log("EEEK");
        var checkButtonID = e.target.id;
-       var checkboxID = checkButtonID.substring(0,3);
+       var checkboxID = checkButtonID.replace('-ModalButton','');
 
        console.log(checkboxID);
        var checkbox_element = $('#' + checkboxID);
