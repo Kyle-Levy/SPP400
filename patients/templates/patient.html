@@ -19,8 +19,6 @@
 
     <div id="content">
         {% include "menu_bar.html" %}
-<h1>        {{ patient.patient_status }}
-</h1>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-3">
@@ -41,6 +39,9 @@
                             </div>
                             <div>
                                 Date of Referral: {{ patient.date_of_referral }}
+                            </div>
+                            <div>
+                                Patient Status: {{ patient.patient_status }}
                             </div>
                             {% if patient.flagged %}
                                 <div>

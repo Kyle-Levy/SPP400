@@ -272,5 +272,5 @@ class AssignedProcedures(models.Model):
 
         for assigned_procedure in all_procedures_for_patient:
             if assigned_procedure.phaseNumber > phase:
-                phase = assigned_procedure.phase
+                phase = assigned_procedure.phaseNumber
         return phase
