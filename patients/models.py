@@ -106,3 +106,20 @@ class Patients(models.Model):
     def patient_completion_date(self):
         from assigned_procedures.models import AssignedProcedures
         return AssignedProcedures.get_last_completed_date(self)
+
+    def patient_status(self):
+        from assigned_procedures.models import AssignedProcedures
+        # If the patient doesn't have any procedures assigned, then they've only been referred
+        # If the patient has procedures, but the first_incomplete_phase is not the final phase, then they aren't ready for the final procedure(s)
+        # Only procedures left for the patient are the final ones
+        # Patient has procedures that are all completed
+        first_incomplete_phase = AssignedProcedures.get_first_incomplete_phase(self)
+        final_phase_for_patient = AssignedProcedures.get_final_phase_number(self)
+        if not AssignedProcedures.objects.filter(patient=self):
+            return "Referred"
+        elif first_incomplete_phase < final_phase_for_patient:
+            return "In-Progress"
+        elif first_incomplete_phase == final_phase_for_patient:
+            return "Ready"
+        else:
+            return "Done"

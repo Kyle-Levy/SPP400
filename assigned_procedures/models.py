@@ -247,8 +247,15 @@ class AssignedProcedures(models.Model):
             return "0"
         return str(int(math.floor(abs(total_days / total_procedures))))
 
+    # Returns the phase number of the first incomplete phase.
+    # If all procedures are complete, then final_phase is returned, which is equal to max phase in the patient's procedure + 1
     @staticmethod
-    def get_first_incomplete_phase(assigned_procedure_dict, patient):
+    def get_first_incomplete_phase(patient):
+
+        roadmap_pairs = AssignedProcedures.get_all_procedures(patient)
+
+        assigned_procedure_dict = RoadmapProcedureLink.seperate_by_phase(roadmap_pairs)
+
         final_phase = 0
         for phase, procedure_list in assigned_procedure_dict.items():
             for procedure in procedure_list:
@@ -256,4 +263,14 @@ class AssignedProcedures(models.Model):
                 if not assigned_obj.completed:
                     return phase
             final_phase = phase
-        return final_phase
+        return final_phase + 1
+
+    @staticmethod
+    def get_final_phase_number(patient):
+        phase = 0
+        all_procedures_for_patient = AssignedProcedures.objects.filter(patient=patient)
+
+        for assigned_procedure in all_procedures_for_patient:
+            if assigned_procedure.phaseNumber > phase:
+                phase = assigned_procedure.phase
+        return phase

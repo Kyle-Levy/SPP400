@@ -250,24 +250,19 @@ class TestAssignedProcedures(TestCase):
         assigned2 = AssignedProcedures.assign_procedure_to_patient(2, testPatient, testProcedure2)
         assigned3 = AssignedProcedures.assign_procedure_to_patient(3, testPatient, testProcedure3)
 
-
-        roadmap_pairs = AssignedProcedures.get_all_procedures(testPatient)
-
-        all_assigned_procedures = RoadmapProcedureLink.seperate_by_phase(roadmap_pairs)
-
-        first_incomplete_phase = AssignedProcedures.get_first_incomplete_phase(all_assigned_procedures, testPatient)
+        first_incomplete_phase = AssignedProcedures.get_first_incomplete_phase(testPatient)
 
         self.assertEqual(first_incomplete_phase, 1)
 
         AssignedProcedures.set_complete(testPatient, testProcedure, 1)
 
-        first_incomplete_phase = AssignedProcedures.get_first_incomplete_phase(all_assigned_procedures, testPatient)
+        first_incomplete_phase = AssignedProcedures.get_first_incomplete_phase(testPatient)
 
         self.assertEqual(first_incomplete_phase, 2)
 
 
         AssignedProcedures.set_complete(testPatient, testProcedure2, 2)
 
-        first_incomplete_phase = AssignedProcedures.get_first_incomplete_phase(all_assigned_procedures, testPatient)
+        first_incomplete_phase = AssignedProcedures.get_first_incomplete_phase(testPatient)
 
         self.assertEqual(first_incomplete_phase, 3)

@@ -18,9 +18,9 @@
     {% include "sidebar.html" %}
 
     <div id="content">
-
         {% include "menu_bar.html" %}
-
+<h1>        {{ patient.patient_status }}
+</h1>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-3">
@@ -209,7 +209,11 @@
                                                                                     </button>
                                                                                 </div>
                                                                                 <div class="modal-body">
-                                                                                    Procedures that should be done before <strong>{{ procedure.procedure_name }}</strong> have not yet been completed. Are you sure you want to mark this as done?
+                                                                                    Procedures that should be done
+                                                                                    before
+                                                                                    <strong>{{ procedure.procedure_name }}</strong>
+                                                                                    have not yet been completed. Are you
+                                                                                    sure you want to mark this as done?
                                                                                 </div>
                                                                                 <div class="modal-footer">
                                                                                     <button type="button"
