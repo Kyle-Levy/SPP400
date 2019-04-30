@@ -17,7 +17,7 @@
         {% include "menu_bar.html" %}
         <div class="container-fixed">
             <h2> For Patient: {{ patient }}</h2>
-            <h3> Updating Procedure: {{ procedure }}</h3>
+            <h3> Updating Procedure: {{ procedure }}, phase {{phase}}</h3>
             <form action="/assigned/procedure/?id={{ id }}" method="POST"> {% csrf_token %}
                 <div class="form-group">
                     <label for="completion_goal"><strong>Completion Goal</strong></label>
@@ -35,19 +35,22 @@
                     {{ form.scheduled.0 }}
                     {{ form.scheduled.1 }}
                 </div>
+                {% if completed %}
                 <div class="form-group">
                     <label for="completed_date"><strong>Date Completed</strong></label>
                     {{ form.completed_date }}
                 </div>
-                <div class="form-group">
-                    {{ form.completed.0 }}
-                    {{ form.completed.1 }}
-                </div>
+                {% endif %}
                 <div class="form-group">
                     <label for="notes"><strong>Notes</strong></label>
                     {{ form.notes }}
                 </div>
                 <button type="submit" class="btn btn-warning mb-4">Update</button>
+                {% if not completed %}
+                <div class="invisible">
+                    {{ form.completed_date }}
+                </div>
+                {% endif %}
             </form>
         </div>
     </div>
