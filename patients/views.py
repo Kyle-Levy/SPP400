@@ -67,7 +67,7 @@ def profile(request):
 
             all_assigned_procedures = RoadmapProcedureLink.seperate_by_phase(roadmap_pairs)
 
-            first_incomplete_phase = AssignedProcedures.get_first_incomplete_phase(all_assigned_procedures, patient)
+            first_incomplete_phase = AssignedProcedures.get_first_incomplete_phase(patient)
 
             ordered = collections.OrderedDict()
             phase_order = sorted(all_assigned_procedures.keys())

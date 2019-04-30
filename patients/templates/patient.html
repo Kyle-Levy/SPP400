@@ -18,9 +18,7 @@
     {% include "sidebar.html" %}
 
     <div id="content">
-
         {% include "menu_bar.html" %}
-
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-3">
@@ -41,6 +39,9 @@
                             </div>
                             <div>
                                 Date of Referral: {{ patient.date_of_referral }}
+                            </div>
+                            <div>
+                                Patient Status: {{ patient.patient_status }}
                             </div>
                             {% if patient.flagged %}
                                 <div>
@@ -209,7 +210,11 @@
                                                                                     </button>
                                                                                 </div>
                                                                                 <div class="modal-body">
-                                                                                    Procedures that should be done before <strong>{{ procedure.procedure_name }}</strong> have not yet been completed. Are you sure you want to mark this as done?
+                                                                                    Procedures that should be done
+                                                                                    before
+                                                                                    <strong>{{ procedure.procedure_name }}</strong>
+                                                                                    have not yet been completed. Are you
+                                                                                    sure you want to mark this as done?
                                                                                 </div>
                                                                                 <div class="modal-footer">
                                                                                     <button type="button"

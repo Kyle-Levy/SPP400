@@ -50,23 +50,49 @@
 
                     <div class="list-group">
                         {% for current_patient in alert_patients %}
-                            <a href="/patients/profile/?id={{ current_patient.id }}"
-                               class="list-group-item list-group-item-action {% cycle 'list-group-item-danger' 'list-group-item-warning' 'list-group-item-success' 'list-group-item-dark' %} flex-column align-items-start">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">{{ current_patient.last_name }}, {{ current_patient.first_name }}</h5>
-                                    <small>{{ current_patient.date_of_referral }}</small>
-                                </div>
-                                <h6>MRN: {{ current_patient.record_number }}</h6>
-                                <h6 class="mb-1">Procedure Roadmap Title</h6>
-                                <div class="d-flex w-100 justify-content-between">
-                                    <p class="mb-1">Next Procedure(s): {% cycle 'Bloodwork' 'Ekg' 'TAVR' '' %}</p>
-                                    <small>{% cycle '01/18/2019' '02/01/2019' '02/22/2019' '03/01/2019' %}</small>
-                                </div>
-                                {% if current_patient.patient_flagged_reason %}
-                                    <p class="mb-1"> Alert Reason: {{ current_patient.patient_flagged_reason }}</p>
-                                {% endif %}
-                                <small>{% cycle 'Referred' 'In-Progress' 'Ready' 'Done' %}</small>
-                            </a>
+                            {% with current_status=current_patient.patient_status %}
+                                <a href="/patients/profile/?id={{ current_patient.id }}"
+                                   class="list-group-item list-group-item-action flex-column align-items-start
+                                    {% if current_status == "Referred" %}
+                                        list-group-item-danger
+                                    {% elif current_status == "In-Progress" %}
+                                        list-group-item-warning
+                                    {% elif current_status == "Ready" %}
+                                        list-group-item-success
+                                    {% elif current_status == "Done" %}
+                                        list-group-item-dark
+                                    {% endif %}">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ current_patient.last_name }}, {{ current_patient.first_name }}</h5>
+                                        <small>{{ current_patient.date_of_referral }}</small>
+                                    </div>
+                                    <h6>MRN: {{ current_patient.record_number }}</h6>
+                                    <h6 class="mb-1">Final Procedure(s):
+                                        {% for procedure_item in current_patient.patient_final_procedures %}
+                                            {% if forloop.last %}
+                                                {{ procedure_item.procedure_name }}
+                                            {% else %}
+                                                {{ procedure_item.procedure_name }},
+                                            {% endif %}
+                                        {% endfor %}
+                                    </h6>
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <p class="mb-1">Next Procedure(s):
+                                            {% for procedure_item in current_patient.get_patient_next_procedures %}
+                                                {% if forloop.last %}
+                                                    {{ procedure_item.procedure_name }}
+                                                {% else %}
+                                                    {{ procedure_item.procedure_name }},
+                                                {% endif %}
+                                            {% endfor %}
+                                        </p>
+                                    </div>
+                                    {% if current_patient.patient_flagged_reason %}
+                                        <p class="mb-1"> Alert Reason: {{ current_patient.patient_flagged_reason }}</p>
+                                    {% endif %}
+                                    <small>{{ current_status }}</small>
+                                </a>
+                            {% endwith %}
                         {% endfor %}
                     </div>
 
@@ -101,7 +127,53 @@
                     </div>
 
                     <div class="list-group">
+                        {% for current_patient in patients %}
+                            {% if current_patient.has_incomplete_procedure_today %}
+                                {% with current_status=current_patient.patient_status %}
+                                    <a href="/patients/profile/?id={{ current_patient.id }}"
+                                       class="list-group-item list-group-item-action flex-column align-items-start
+                                    {% if current_status == "Referred" %}
+                                        list-group-item-danger
+                                    {% elif current_status == "In-Progress" %}
+                                        list-group-item-warning
+                                    {% elif current_status == "Ready" %}
+                                        list-group-item-success
+                                    {% elif current_status == "Done" %}
+                                        list-group-item-dark
+                                    {% endif %}">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">{{ current_patient.last_name }}, {{ current_patient.first_name }}</h5>
+                                            <small>{{ current_patient.date_of_referral }}</small>
+                                        </div>
+                                        <h6>MRN: {{ current_patient.record_number }}</h6>
 
+                                        <h6 class="mb-1">Final Procedure(s):
+                                            {% for procedure_item in current_patient.patient_final_procedures %}
+                                                {% if forloop.last %}
+                                                    {{ procedure_item.procedure_name }}
+                                                {% else %}
+                                                    {{ procedure_item.procedure_name }},
+                                                {% endif %}
+                                            {% endfor %}
+                                        </h6>
+
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <p class="mb-1">Today's Procedure(s):
+                                                    {% for procedure_item in current_patient.procedures_for_today %}
+                                                        {% if forloop.last %}
+                                                            {{ procedure_item.procedure_name }}
+                                                        {% else %}
+                                                            {{ procedure_item.procedure_name }},
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </p>
+                                            </div>
+                                        
+                                        <small>{{ current_status }}</small>
+                                    </a>
+                                {% endwith %}
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -136,20 +208,51 @@
 
                     <div class="list-group">
                         {% for current_patient in patients %}
-                            <a href="/patients/profile/?id={{ current_patient.id }}"
-                               class="list-group-item list-group-item-action {% cycle 'list-group-item-danger' 'list-group-item-warning' 'list-group-item-success' 'list-group-item-dark' %} flex-column align-items-start">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">{{ current_patient.last_name }}, {{ current_patient.first_name }}</h5>
-                                    <small>{{ current_patient.date_of_referral }}</small>
-                                </div>
-                                <h6>MRN: {{ current_patient.record_number }}</h6>
-                                <h6 class="mb-1">Procedure Roadmap Title</h6>
-                                <div class="d-flex w-100 justify-content-between">
-                                    <p class="mb-1">Next Procedure(s): {% cycle 'Bloodwork' 'Ekg' 'TAVR' '' %}</p>
-                                    <small>{% cycle '01/18/2019' '02/01/2019' '02/22/2019' '03/01/2019' %}</small>
-                                </div>
-                                <small>{% cycle 'Referred' 'In-Progress' 'Ready' 'Done' %}</small>
-                            </a>
+                            {% with current_status=current_patient.patient_status %}
+                                <a href="/patients/profile/?id={{ current_patient.id }}"
+                                   class="list-group-item list-group-item-action flex-column align-items-start
+                                    {% if current_status == "Referred" %}
+                                        list-group-item-danger
+                                    {% elif current_status == "In-Progress" %}
+                                        list-group-item-warning
+                                    {% elif current_status == "Ready" %}
+                                        list-group-item-success
+                                    {% elif current_status == "Done" %}
+                                        list-group-item-dark
+                                    {% endif %}">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ current_patient.last_name }}, {{ current_patient.first_name }}</h5>
+                                        <small>{{ current_patient.date_of_referral }}</small>
+                                    </div>
+                                    <h6>MRN: {{ current_patient.record_number }}</h6>
+
+                                    {% if current_patient.patient_final_procedures %}
+                                        <h6 class="mb-1">Final Procedure(s):
+                                            {% for procedure_item in current_patient.patient_final_procedures %}
+                                                {% if forloop.last %}
+                                                    {{ procedure_item.procedure_name }}
+                                                {% else %}
+                                                    {{ procedure_item.procedure_name }},
+                                                {% endif %}
+                                            {% endfor %}
+                                        </h6>
+                                    {% endif %}
+                                    {% if current_patient.get_patient_next_procedures %}
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <p class="mb-1">Next Procedure(s):
+                                                {% for procedure_item in current_patient.get_patient_next_procedures %}
+                                                    {% if forloop.last %}
+                                                        {{ procedure_item.procedure_name }}
+                                                    {% else %}
+                                                        {{ procedure_item.procedure_name }},
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </p>
+                                        </div>
+                                    {% endif %}
+                                    <small>{{ current_status }}</small>
+                                </a>
+                            {% endwith %}
                         {% endfor %}
                     </div>
 

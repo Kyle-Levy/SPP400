@@ -106,3 +106,98 @@ class Patients(models.Model):
     def patient_completion_date(self):
         from assigned_procedures.models import AssignedProcedures
         return AssignedProcedures.get_last_completed_date(self)
+
+    def patient_status(self):
+        from assigned_procedures.models import AssignedProcedures
+        # If the patient doesn't have any procedures assigned, then they've only been referred
+        # If the patient has procedures, but the first_incomplete_phase is not the final phase, then they aren't ready for the final procedure(s)
+        # Only procedures left for the patient are the final ones
+        # Patient has procedures that are all completed
+        first_incomplete_phase = AssignedProcedures.get_first_incomplete_phase(self)
+        final_phase_for_patient = AssignedProcedures.get_final_phase_number(self)
+        if not AssignedProcedures.objects.filter(patient=self):
+            return "Referred"
+        elif first_incomplete_phase < final_phase_for_patient:
+            return "In-Progress"
+        elif first_incomplete_phase == final_phase_for_patient:
+            return "Ready"
+        else:
+            return "Done"
+
+    def patient_final_procedures(self):
+        from assigned_procedures.models import AssignedProcedures
+        final_phase_for_patient = AssignedProcedures.get_final_phase_number(self)
+        final_procedure_list = []
+
+        final_procedures = AssignedProcedures.objects.filter(patient=self, phaseNumber=final_phase_for_patient)
+        for single_procedure in final_procedures:
+            final_procedure_list.append(single_procedure.procedure.all()[0])
+
+        return final_procedure_list
+
+    def get_patient_next_procedures(self):
+        from assigned_procedures.models import AssignedProcedures
+        first_incomplete_phase = AssignedProcedures.get_first_incomplete_phase(self)
+        next_procedure_list = []
+
+        final_procedures = AssignedProcedures.objects.filter(patient=self, phaseNumber=first_incomplete_phase,
+                                                             completed=False)
+
+        for incomplete_procedure in final_procedures:
+            next_procedure_list.append(incomplete_procedure.procedure.all()[0])
+
+        return next_procedure_list
+
+    def has_incomplete_procedure_today(self):
+        from assigned_procedures.models import AssignedProcedures
+        today = timezone.now()
+
+        todays_incomplete_procedures = AssignedProcedures.objects.filter(patient=self, completed=False,
+                                                                         date_scheduled__year=today.year,
+                                                                         date_scheduled__month=today.month,
+                                                                         date_scheduled__day=today.day,
+                                                                         scheduled=True)
+        if todays_incomplete_procedures:
+            return True
+        else:
+            return False
+
+    def procedures_for_today(self):
+        from assigned_procedures.models import AssignedProcedures
+        today = timezone.now()
+        procedure_list = []
+        todays_incomplete_procedures = AssignedProcedures.objects.filter(patient=self, completed=False,
+                                                                         date_scheduled__year=today.year,
+                                                                         date_scheduled__month=today.month,
+                                                                         date_scheduled__day=today.day,
+                                                                         scheduled=True)
+
+        for assigned_proc_item in todays_incomplete_procedures:
+            procedure_list.append(assigned_proc_item.procedure.all()[0])
+
+        return procedure_list
+
+    def has_missed_appointment(self):
+        from assigned_procedures.models import AssignedProcedures
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
+        yesterday = timezone.now() - timedelta(days=1)
+        procedure_list = ""
+        todays_incomplete_procedures = AssignedProcedures.objects.filter(patient=self, completed=False, scheduled=True,
+                                                                         date_scheduled__lte=yesterday)
+
+        if todays_incomplete_procedures:
+            print(self.first_name + self.last_name)
+            for assigned_proc in todays_incomplete_procedures:
+                procedure_list += assigned_proc.procedure.all()[0].procedure_name + ', '
+
+            # This line removes the last comma and space
+            procedure_list = procedure_list[:-2]
+            print(procedure_list)
+            self.today_flag_reason = "Missed appointment(s): " + procedure_list
+            self.save()
+            return True
+        else:
+            self.today_flag_reason = procedure_list
+            self.save()
+            return False
