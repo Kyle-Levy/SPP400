@@ -47,11 +47,13 @@
 
                             </div>
                             <div class="card bg-light mb-3">
-                                <div class="card-header">Patient's With This Procedure: {{ number_of_patients }}</div>
+                                <div class="card-header">Patient's With This Procedure: {{ number_of_patients |default:0 }}</div>
                                 <div class="card-body">
                                     <ul >
                                         {% for patient in all_patients %}
-                                        <li><a href="/patients/profile/?id={{ patient.id }}" class="card-text">{{ patient.first_name }} {{ patient.last_name }}</a></li>
+                                        <li class="mb-3"><a href="/patients/profile/?id={{ patient.id }}">{{ patient.first_name }} {{ patient.last_name }}</a></li>
+                                            {% empty %}
+                                            <li><p class="card-text"><strong>{{ procedure.procedure_name }}</strong> has not been assigned to any patients.</p></li>
                                         {% endfor %}
                                     </ul>
 
