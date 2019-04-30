@@ -183,15 +183,31 @@ class AssignedProcedures(models.Model):
     def update_and_return_all_patient_goal_flags():
         behindPatients = []
         quiriedAssignedProcedures = AssignedProcedures.objects.filter(completed=False)
-        for assignedProc in quiriedAssignedProcedures:
-            quiriedPatients = assignedProc.patient.all()
-            for patient in quiriedPatients:
+        unassignedPatientQuery = Patients.objects.filter(flagged=True) #accounts for patients who have been flagged but not assigned to a procedure
+
+        if quiriedAssignedProcedures:
+            for assignedProc in quiriedAssignedProcedures:
+                quiriedPatients = assignedProc.patient.all() #this doesn't have patients who are manually flagged but don't have any incomplete procedures
+                quiriedPatients = quiriedPatients.union(quiriedPatients, unassignedPatientQuery)
+
+                for patient in quiriedPatients:
+                    behindCheck, behindProc = patient.flag_update()
+                    # Used to be behindCheck or patient.flagged or patient.has_missed_appointment:
+                    result = patient.has_missed_appointment()
+                    if patient.flagged or result or behindCheck:
+                        behindPatients.append(patient)
+            test =list(set(behindPatients))
+            return test
+        else:
+            for patient in unassignedPatientQuery:
                 behindCheck, behindProc = patient.flag_update()
                 # Used to be behindCheck or patient.flagged or patient.has_missed_appointment:
                 patient.has_missed_appointment()
                 if patient.flagged or patient.has_missed_appointment or behindCheck:
                     behindPatients.append(patient)
-        return list(set(behindPatients))
+            test = list(set(behindPatients))
+            return test
+
 
     @staticmethod
     def get_all_active_procedures():

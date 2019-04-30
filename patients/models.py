@@ -196,7 +196,6 @@ class Patients(models.Model):
 
             # This line removes the last comma and space
             procedure_list = procedure_list[:-2]
-            print(procedure_list)
             self.today_flag_reason = "Missed appointment(s): " + procedure_list
             self.save()
             return True
