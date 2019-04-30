@@ -176,3 +176,28 @@ class Patients(models.Model):
             procedure_list.append(assigned_proc_item.procedure.all()[0])
 
         return procedure_list
+
+    def has_missed_appointment(self):
+        from assigned_procedures.models import AssignedProcedures
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
+        yesterday = timezone.now() - timedelta(days=1)
+        procedure_list = ""
+        todays_incomplete_procedures = AssignedProcedures.objects.filter(patient=self, completed=False, scheduled=True,
+                                                                         date_scheduled__lte=yesterday)
+
+        if todays_incomplete_procedures:
+            print(self.first_name + self.last_name)
+            for assigned_proc in todays_incomplete_procedures:
+                procedure_list += assigned_proc.procedure.all()[0].procedure_name + ', '
+
+            # This line removes the last comma and space
+            procedure_list = procedure_list[:-2]
+            print(procedure_list)
+            self.today_flag_reason = "Missed appointment(s): " + procedure_list
+            self.save()
+            return True
+        else:
+            self.today_flag_reason = procedure_list
+            self.save()
+            return False
