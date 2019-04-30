@@ -138,3 +138,60 @@ class TestPatientModel(TestCase):
         expected_list = [tProcedure3]
         final_procedures_list = tPatient.patient_final_procedures()
         self.assertListEqual(expected_list, final_procedures_list)
+
+    def test_patient_next_procedures(self):
+        from assigned_procedures.models import AssignedProcedures
+        from procedures.models import Procedure
+
+        tPatient = self.create_patient()
+        tPatient.save()
+
+        actualResult = tPatient.patient_status()
+
+        self.assertEqual("Referred", actualResult)
+
+        tProcedure = Procedure.objects.create(procedure_name="leeches")
+        tProcedure.save()
+        tProcedure2 = Procedure.objects.create(procedure_name="Bloodwork")
+        tProcedure2.save()
+        tProcedure3 = Procedure.objects.create(procedure_name="TAVR")
+        tProcedure3.save()
+
+
+        ap1 = AssignedProcedures.assign_procedure_to_patient(1,tPatient,tProcedure)
+        ap2 = AssignedProcedures.assign_procedure_to_patient(2,tPatient,tProcedure2)
+        ap3 = AssignedProcedures.assign_procedure_to_patient(3,tPatient,tProcedure3)
+
+        expected_list = [tProcedure]
+        final_procedures_list = tPatient.get_patient_next_procedures()
+        self.assertListEqual(expected_list, final_procedures_list)
+
+    def test_patient_today(self):
+        from assigned_procedures.models import AssignedProcedures
+        from procedures.models import Procedure
+
+        tPatient = self.create_patient()
+        tPatient.save()
+
+        actualResult = tPatient.patient_status()
+
+        self.assertEqual("Referred", actualResult)
+
+        tProcedure = Procedure.objects.create(procedure_name="leeches")
+        tProcedure.save()
+        tProcedure2 = Procedure.objects.create(procedure_name="Bloodwork")
+        tProcedure2.save()
+        tProcedure3 = Procedure.objects.create(procedure_name="TAVR")
+        tProcedure3.save()
+
+        ap1 = AssignedProcedures.assign_procedure_to_patient(1, tPatient, tProcedure)
+        self.assertFalse(tPatient.has_incomplete_procedure_today())
+        ap1.scheduled = True
+        ap1.save()
+        ap2 = AssignedProcedures.assign_procedure_to_patient(2, tPatient, tProcedure2)
+        ap3 = AssignedProcedures.assign_procedure_to_patient(3, tPatient, tProcedure3)
+
+        expected_list = [tProcedure]
+        final_procedures_list = tPatient.procedures_for_today()
+        self.assertListEqual(expected_list, final_procedures_list)
+        self.assertTrue(tPatient.has_incomplete_procedure_today())

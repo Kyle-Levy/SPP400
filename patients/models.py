@@ -150,7 +150,7 @@ class Patients(models.Model):
 
     def has_incomplete_procedure_today(self):
         from assigned_procedures.models import AssignedProcedures
-        today = timezone.now() - timedelta(hours=5)
+        today = timezone.now()
 
         todays_incomplete_procedures = AssignedProcedures.objects.filter(patient=self, completed=False,
                                                                          date_scheduled__year=today.year,
@@ -164,7 +164,7 @@ class Patients(models.Model):
 
     def procedures_for_today(self):
         from assigned_procedures.models import AssignedProcedures
-        today = timezone.now() - timedelta(hours=5)
+        today = timezone.now()
         procedure_list = []
         todays_incomplete_procedures = AssignedProcedures.objects.filter(patient=self, completed=False,
                                                                          date_scheduled__year=today.year,
