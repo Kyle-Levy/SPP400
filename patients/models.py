@@ -123,3 +123,41 @@ class Patients(models.Model):
             return "Ready"
         else:
             return "Done"
+
+    def patient_final_procedures(self):
+        from assigned_procedures.models import AssignedProcedures
+        final_phase_for_patient = AssignedProcedures.get_final_phase_number(self)
+        final_procedure_list = []
+
+        final_procedures = AssignedProcedures.objects.filter(patient=self, phaseNumber=final_phase_for_patient)
+        for single_procedure in final_procedures:
+            final_procedure_list.append(single_procedure.procedure.all()[0])
+
+        return final_procedure_list
+
+    def get_patient_next_procedures(self):
+        from assigned_procedures.models import AssignedProcedures
+        first_incomplete_phase = AssignedProcedures.get_first_incomplete_phase(self)
+        next_procedure_list = []
+
+        final_procedures = AssignedProcedures.objects.filter(patient=self, phaseNumber=first_incomplete_phase,
+                                                             completed=False)
+
+        for incomplete_procedure in final_procedures:
+            next_procedure_list.append(incomplete_procedure.procedure.all()[0])
+
+        return next_procedure_list
+
+    def has_incomplete_procedure_today(self):
+        from assigned_procedures.models import AssignedProcedures
+        today = timezone.now() - timedelta(hours=5)
+        print(today)
+        todays_incomplete_procedures = AssignedProcedures.objects.filter(patient=self, completed=False,
+                                                                         date_scheduled__year=today.year,
+                                                                         date_scheduled__month=today.month,
+                                                                         date_scheduled__day=today.day,
+                                                                         scheduled=True)
+        if todays_incomplete_procedures:
+            return True
+        else:
+            return False
