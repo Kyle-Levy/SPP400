@@ -266,3 +266,4 @@ class TestAssignedProcedures(TestCase):
         first_incomplete_phase = AssignedProcedures.get_first_incomplete_phase(testPatient)
 
         self.assertEqual(first_incomplete_phase, 3)
+
