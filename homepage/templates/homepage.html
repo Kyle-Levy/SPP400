@@ -87,6 +87,9 @@
                                             {% endfor %}
                                         </p>
                                     </div>
+                                    {% if current_patient.today_flag_reason %}
+                                        <p class="mb-1">{{ current_patient.today_flag_reason }}</p>
+                                    {% endif %}
                                     {% if current_patient.patient_flagged_reason %}
                                         <p class="mb-1"> Alert Reason: {{ current_patient.patient_flagged_reason }}</p>
                                     {% endif %}
@@ -157,18 +160,18 @@
                                             {% endfor %}
                                         </h6>
 
-                                            <div class="d-flex w-100 justify-content-between">
-                                                <p class="mb-1">Today's Procedure(s):
-                                                    {% for procedure_item in current_patient.procedures_for_today %}
-                                                        {% if forloop.last %}
-                                                            {{ procedure_item.procedure_name }}
-                                                        {% else %}
-                                                            {{ procedure_item.procedure_name }},
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </p>
-                                            </div>
-                                        
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <p class="mb-1">Today's Procedure(s):
+                                                {% for procedure_item in current_patient.procedures_for_today %}
+                                                    {% if forloop.last %}
+                                                        {{ procedure_item.procedure_name }}
+                                                    {% else %}
+                                                        {{ procedure_item.procedure_name }},
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </p>
+                                        </div>
+
                                         <small>{{ current_status }}</small>
                                     </a>
                                 {% endwith %}
