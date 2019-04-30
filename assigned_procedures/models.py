@@ -188,10 +188,8 @@ class AssignedProcedures(models.Model):
             for patient in quiriedPatients:
                 behindCheck, behindProc = patient.flag_update()
                 # Used to be behindCheck or patient.flagged or patient.has_missed_appointment:
-                print("wwwoooooooffff")
                 patient.has_missed_appointment()
-                if patient.has_missed_appointment:
-                    print("mooooooooooooooooooooooooooooooooo")
+                if patient.flagged or patient.has_missed_appointment or behindCheck:
                     behindPatients.append(patient)
         return list(set(behindPatients))
 
