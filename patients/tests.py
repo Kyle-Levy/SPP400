@@ -69,3 +69,46 @@ class TestPatientModel(TestCase):
         AssignedProcedures.assign_procedure_to_patient(4, tPatient, tProcedure, -10)
         self.assertEqual(tPatient.flag_update(), (True,(tProcedure,4)))
 
+    def test_patient_status(self):
+        from assigned_procedures.models import AssignedProcedures
+        from procedures.models import Procedure
+
+        tPatient = self.create_patient()
+        tPatient.save()
+
+        actualResult = tPatient.patient_status()
+
+        self.assertEqual("Referred", actualResult)
+
+        tProcedure = Procedure.objects.create(procedure_name="leeches")
+        tProcedure.save()
+        tProcedure2 = Procedure.objects.create(procedure_name="Bloodwork")
+        tProcedure2.save()
+        tProcedure3 = Procedure.objects.create(procedure_name="TAVR")
+        tProcedure3.save()
+
+
+        ap1 = AssignedProcedures.assign_procedure_to_patient(1,tPatient,tProcedure)
+        ap2 = AssignedProcedures.assign_procedure_to_patient(2,tPatient,tProcedure2)
+        ap3 = AssignedProcedures.assign_procedure_to_patient(3,tPatient,tProcedure3)
+
+        actualResult = tPatient.patient_status()
+
+        self.assertEqual("In-Progress", actualResult)
+
+        ap1.completed = True
+        ap1.save()
+        ap2.completed = True
+        ap2.save()
+
+        actualResult = tPatient.patient_status()
+
+        self.assertEqual("Ready", actualResult)
+
+        ap3.completed = True
+        ap3.save()
+
+        actualResult = tPatient.patient_status()
+
+        self.assertEqual("Done", actualResult)
+
