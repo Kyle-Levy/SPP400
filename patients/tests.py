@@ -112,3 +112,29 @@ class TestPatientModel(TestCase):
 
         self.assertEqual("Done", actualResult)
 
+    def test_patient_final_procedures(self):
+        from assigned_procedures.models import AssignedProcedures
+        from procedures.models import Procedure
+
+        tPatient = self.create_patient()
+        tPatient.save()
+
+        actualResult = tPatient.patient_status()
+
+        self.assertEqual("Referred", actualResult)
+
+        tProcedure = Procedure.objects.create(procedure_name="leeches")
+        tProcedure.save()
+        tProcedure2 = Procedure.objects.create(procedure_name="Bloodwork")
+        tProcedure2.save()
+        tProcedure3 = Procedure.objects.create(procedure_name="TAVR")
+        tProcedure3.save()
+
+
+        ap1 = AssignedProcedures.assign_procedure_to_patient(1,tPatient,tProcedure)
+        ap2 = AssignedProcedures.assign_procedure_to_patient(2,tPatient,tProcedure2)
+        ap3 = AssignedProcedures.assign_procedure_to_patient(3,tPatient,tProcedure3)
+
+        expected_list = [tProcedure3]
+        final_procedures_list = tPatient.patient_final_procedures()
+        self.assertListEqual(expected_list, final_procedures_list)
