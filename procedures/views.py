@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
+from assigned_procedures.models import AssignedProcedures
 from homepage.forms import VerifyActionForm
 from procedures.forms import NewProcedure, SearchProcedures
 from procedures.models import Procedure
@@ -62,9 +63,14 @@ def view_procedure(request):
             breadcrumbs = [('/procedures/', 'Procedures'),
                            ('#', 'View: ' + procedure.procedure_name)]
 
+            assigned_procedures_query = AssignedProcedures.objects.filter(procedure=procedure)
+            all_patients = set([])
+            for single_assignment in assigned_procedures_query:
+                all_patients.add(single_assignment.patient.all()[0])
+
             return render(request, 'view_procedure.html',
                           {'procedure': procedure, 'title': 'View: ' + procedure.procedure_name,
-                           'breadcrumbs': breadcrumbs})
+                           'breadcrumbs': breadcrumbs, 'all_patients': all_patients, 'number_of_patients': len(all_patients)})
         except Procedure.DoesNotExist:
             messages.warning(request, "The procedure you tried to reach doesn't exist!")
             return redirect('/procedures/')
