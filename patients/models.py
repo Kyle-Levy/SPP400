@@ -91,11 +91,11 @@ class Patients(models.Model):
             if result == "in progress (behind)":
                 self.behind_flag = True
                 self.save()
-                return True, procedureToCheck
+                return procedureToCheck[0], True
 
         self.behind_flag = False
         self.save()
-        return False, None
+        return None, False
 
     def patient_is_done(self):
         from assigned_procedures.models import AssignedProcedures

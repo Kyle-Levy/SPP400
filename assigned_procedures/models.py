@@ -191,7 +191,7 @@ class AssignedProcedures(models.Model):
                 quiriedPatients = quiriedPatients.union(quiriedPatients, unassignedPatientQuery)
 
                 for patient in quiriedPatients:
-                    behindCheck, behindProc = patient.flag_update()
+                    behindCheck = patient.flag_update()[1]
                     # Used to be behindCheck or patient.flagged or patient.has_missed_appointment:
                     result = patient.has_missed_appointment()
                     if patient.flagged or result or behindCheck:
@@ -200,7 +200,7 @@ class AssignedProcedures(models.Model):
             return test
         else:
             for patient in unassignedPatientQuery:
-                behindCheck, behindProc = patient.flag_update()
+                behindCheck = patient.flag_update()[1]
                 # Used to be behindCheck or patient.flagged or patient.has_missed_appointment:
                 patient.has_missed_appointment()
                 if patient.flagged or patient.has_missed_appointment or behindCheck:

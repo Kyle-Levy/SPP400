@@ -93,6 +93,13 @@
                                     {% if current_patient.patient_flagged_reason %}
                                         <p class="mb-1"> Alert Reason: {{ current_patient.patient_flagged_reason }}</p>
                                     {% endif %}
+                                    {% if current_patient.behind_flag %}
+                                        {% for procedure in current_patient.flag_update %}
+                                            {% if procedure.procedure_name %}
+                                                <p class="mb-1"> Procedure Behind Goal: {{ procedure.procedure_name }}</p>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
                                     <small>{{ current_status }}</small>
                                 </a>
                             {% endwith %}

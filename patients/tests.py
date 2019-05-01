@@ -63,11 +63,11 @@ class TestPatientModel(TestCase):
         AssignedProcedures.assign_procedure_to_patient(2,tPatient,tProcedure2)
         AssignedProcedures.assign_procedure_to_patient(3,tPatient,tProcedure3)
 
-        self.assertEqual(tPatient.flag_update(), (False,None))
+        self.assertEqual(tPatient.flag_update(), (None, False))
         tProcedure = Procedure.objects.create(procedure_name="mmmhm popy")
         tProcedure.save()
         AssignedProcedures.assign_procedure_to_patient(4, tPatient, tProcedure, -10)
-        self.assertEqual(tPatient.flag_update(), (True,(tProcedure,4)))
+        self.assertEqual(tPatient.flag_update(), (tProcedure, True))
 
     def test_patient_status(self):
         from assigned_procedures.models import AssignedProcedures
