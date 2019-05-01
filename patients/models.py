@@ -20,7 +20,10 @@ class Patients(models.Model):
     today_flag_end = models.DateTimeField(default=timezone.now)
     today_flag_reason = models.CharField(max_length=1000, default="")
     record_number = models.CharField(max_length=150, default="########")
+
     # Foreign key for a patent's procedure step.
+    # PROCEDURE_STEP = PHASE NUMBER. I'M TOO SCARED TO
+    # REFACTOR IT RIGHT NOW
     procedure_step = models.CharField(max_length=1000, default="")
     # Fields for referring physician and date of referral.
     referring_physician = models.CharField(max_length=150, default='')
@@ -88,11 +91,11 @@ class Patients(models.Model):
             if result == "in progress (behind)":
                 self.behind_flag = True
                 self.save()
-                return True, procedureToCheck
+                return procedureToCheck[0], True
 
         self.behind_flag = False
         self.save()
-        return False, None
+        return None, False
 
     def patient_is_done(self):
         from assigned_procedures.models import AssignedProcedures
@@ -179,21 +182,20 @@ class Patients(models.Model):
 
     def has_missed_appointment(self):
         from assigned_procedures.models import AssignedProcedures
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 
         yesterday = timezone.now() - timedelta(days=1)
         procedure_list = ""
-        todays_incomplete_procedures = AssignedProcedures.objects.filter(patient=self, completed=False, scheduled=True,
-                                                                         date_scheduled__lte=yesterday)
+        todays_incomplete_procedures = AssignedProcedures.objects.filter(patient=self, completed=False, scheduled=True)
 
+        #checks that the list as items
         if todays_incomplete_procedures:
-            print(self.first_name + self.last_name)
+
             for assigned_proc in todays_incomplete_procedures:
-                procedure_list += assigned_proc.procedure.all()[0].procedure_name + ', '
+                if assigned_proc.date_scheduled < yesterday:
+                    procedure_list += assigned_proc.procedure.all()[0].procedure_name + ', '
 
             # This line removes the last comma and space
             procedure_list = procedure_list[:-2]
-            print(procedure_list)
             self.today_flag_reason = "Missed appointment(s): " + procedure_list
             self.save()
             return True

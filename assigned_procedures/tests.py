@@ -163,10 +163,17 @@ class TestAssignedProcedures(TestCase):
     def test_update_all_patient_goal_flags(self):
         result = AssignedProcedures.update_and_return_all_patient_goal_flags()
         self.assertEqual(result, [])
+
+        tPatient3 = Patients.objects.create(first_name="Woof", last_name="Daddy", bday=datetime(1996, 10, 24))
+        tPatient3.toggle_flag()
+        tPatient3.save()
+        self.assertEqual(AssignedProcedures.update_and_return_all_patient_goal_flags(),[tPatient3])
+
         tPatient = Patients.objects.create(first_name="Kyle", last_name="Dorcey", bday=datetime(1996, 10, 24))
         tPatient.save()
         tPatient2 = Patients.objects.create(first_name="Mr", last_name="Magoo", bday=datetime(1996, 10, 24))
         tPatient2.save()
+
 
         testProcedure = Procedure.objects.create(procedure_name="Leaches")
         testProcedure.save()
@@ -178,7 +185,8 @@ class TestAssignedProcedures(TestCase):
         AssignedProcedures.assign_procedure_to_patient(1, tPatient2, testProcedure)
         AssignedProcedures.assign_procedure_to_patient(2, tPatient2, testProcedure2, -10)
         result = AssignedProcedures.update_and_return_all_patient_goal_flags()
-        self.assertEqual(result, [tPatient, tPatient2])
+        print(result)
+        self.assertEqual(result, [tPatient3, tPatient, tPatient2])
 
     def test_get_all_active_procedures_for_patient(self):
         testAssign, testPatient, testProcedure = self.test_create_assignedProcedure()
@@ -266,3 +274,4 @@ class TestAssignedProcedures(TestCase):
         first_incomplete_phase = AssignedProcedures.get_first_incomplete_phase(testPatient)
 
         self.assertEqual(first_incomplete_phase, 3)
+

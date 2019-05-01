@@ -43,10 +43,24 @@
                             <div>
                                 Patient Status: {{ patient.patient_status }}
                             </div>
-                            {% if patient.flagged %}
+                            {% if patient.today_flag_reason %}
+                                <div>
+                                    {{ patient.today_flag_reason }}
+                                </div>
+                            {% endif %}
+                            {% if patient.patient_flagged_reason %}
                                 <div>
                                     Reason for Flagging: {{ patient.patient_flagged_reason }}
                                 </div>
+                            {% endif %}
+                            {% if patient.behind_flag %}
+                                {% for procedure in patient.flag_update %}
+                                    {% if procedure.procedure_name %}
+                                        <div>
+                                            Procedure Behind Goal: {{ procedure.procedure_name }}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
                             {% endif %}
                         </div>
 

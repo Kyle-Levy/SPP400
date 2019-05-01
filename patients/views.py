@@ -63,6 +63,8 @@ def profile(request):
             patient = Patients.objects.get(id=request.GET.get('id'))
             breadcrumbs = [('/patients/', 'Patients'),
                            ('#', patient.last_name + ', ' + patient.first_name)]
+
+
             roadmap_pairs = AssignedProcedures.get_all_procedures(patient)
 
             all_assigned_procedures = RoadmapProcedureLink.seperate_by_phase(roadmap_pairs)
@@ -83,7 +85,8 @@ def profile(request):
             return render(request, 'patient.html',
                           {"patient": patient, 'title': 'Profile: ' + patient.last_name + ', ' + patient.first_name,
                            'breadcrumbs': breadcrumbs, 'assigned_procedures': all_assigned_procedures,
-                           'flag_form': FlagForm(), 'goals': goals, 'bool_goals': bool_goals, 'first_incomplete_phase': first_incomplete_phase})
+                           'flag_form': FlagForm(), 'goals': goals, 'bool_goals': bool_goals,
+                           'first_incomplete_phase': first_incomplete_phase})
         except Patients.DoesNotExist:
             messages.warning(request, "The patient you tried to reach doesn't exist!")
             return redirect('/patients/')
@@ -307,7 +310,6 @@ def checkbox_submission(request):
 
             # In this array are the IDs of the boxes that were submitted checked. These are later set to complete.
 
-
             for assigned_procedure in procedures_assigned:
                 procedure_id = assigned_procedure.procedure.all()[0].id
                 procedure_obj = Procedure.objects.get(id=procedure_id)
@@ -318,6 +320,8 @@ def checkbox_submission(request):
                     AssignedProcedures.set_complete(patient_obj, procedure_obj, phase)
                 else:
                     AssignedProcedures.set_incomplete(patient_obj, procedure_obj, phase)
+
+            AssignedProcedures.update_and_return_all_patient_goal_flags()
 
             return redirect('/patients/profile/?id=' + str(patient_id))
         except Patients.DoesNotExist:
