@@ -183,19 +183,18 @@ class Patients(models.Model):
     def has_missed_appointment(self):
         from assigned_procedures.models import AssignedProcedures
 
-        yesterday = timezone.now() - timedelta(days=1)
+        today = timezone.now()
         procedure_list = ""
         todays_incomplete_procedures = AssignedProcedures.objects.filter(patient=self, completed=False, scheduled=True)
 
-        #checks that the list as items
-        if todays_incomplete_procedures:
+        for assigned_proc in todays_incomplete_procedures:
+            if assigned_proc.date_scheduled.date() < today.date():
+                procedure_list += assigned_proc.procedure.all()[0].procedure_name + ', '
 
-            for assigned_proc in todays_incomplete_procedures:
-                if assigned_proc.date_scheduled < yesterday:
-                    procedure_list += assigned_proc.procedure.all()[0].procedure_name + ', '
+        # This line removes the last comma and space
+        procedure_list = procedure_list[:-2]
 
-            # This line removes the last comma and space
-            procedure_list = procedure_list[:-2]
+        if procedure_list != "":
             self.today_flag_reason = "Missed appointment(s): " + procedure_list
             self.save()
             return True
