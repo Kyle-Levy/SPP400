@@ -98,7 +98,7 @@ class TestAssignedProcedures(TestCase):
         time = AssignedProcedures.average_completion_time(tProcedure.id)
         self.assertEqual(time, "0")
         # test 2 procedures 1 time
-        assigned = AssignedProcedures.assign_procedure_to_patient(2, testPatient, tProcedure)
+        assigned = AssignedProcedures.assign_procedure_to_patient(3, testPatient, tProcedure)
         spoof_time = assigned.created_at
         assigned.completed = True
         assigned.date_completed = spoof_time + timedelta(days=2)
@@ -129,13 +129,13 @@ class TestAssignedProcedures(TestCase):
         testAssign, testPatient, testProcedure = self.test_create_assignedProcedure()
         result = AssignedProcedures.check_goal_status(testPatient, testProcedure)
         self.assertEqual(result, "not scheduled")
-        tAssignment = AssignedProcedures.assign_procedure_to_patient(step=1, patientToLink=testPatient,
+        tAssignment = AssignedProcedures.assign_procedure_to_patient(step=2, patientToLink=testPatient,
                                                                      procedureToLink=testProcedure, proc_est=2,
                                                                      return_visit=True)
         resultz = AssignedProcedures.check_goal_status(testPatient, testProcedure, 2)
         self.assertEqual(resultz, "in progress (on time)")
         AssignedProcedures.toggle_completed(testPatient, testProcedure, 2)
-        tAssignment = AssignedProcedures.assign_procedure_to_patient(step=1, patientToLink=testPatient,
+        tAssignment = AssignedProcedures.assign_procedure_to_patient(step=3, patientToLink=testPatient,
                                                                      procedureToLink=testProcedure, proc_est=2,
                                                                      return_visit=True)
         resultz = AssignedProcedures.check_goal_status(testPatient, testProcedure, 2)
@@ -185,7 +185,6 @@ class TestAssignedProcedures(TestCase):
         AssignedProcedures.assign_procedure_to_patient(1, tPatient2, testProcedure)
         AssignedProcedures.assign_procedure_to_patient(2, tPatient2, testProcedure2, -10)
         result = AssignedProcedures.update_and_return_all_patient_goal_flags()
-        print(result)
         self.assertEqual(result, [tPatient3, tPatient, tPatient2])
 
     def test_get_all_active_procedures_for_patient(self):

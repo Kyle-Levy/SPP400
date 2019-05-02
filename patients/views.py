@@ -151,6 +151,10 @@ def delete(request):
             if form.is_valid():
                 cd = form.cleaned_data
                 if patient.record_number == cd['item_name']:
+                    patient_assignments = AssignedProcedures.objects.filter(patient=patient)
+
+                    for assignment in patient_assignments:
+                        assignment.delete()
                     patient.delete()
                     return redirect('/patients/')
                 else:
