@@ -11,6 +11,8 @@ from procedures.models import Procedure
 from procedures.views import new_procedure
 from roadmaps.models import Roadmap
 from roadmaps.views import create_roadmap, view_roadmap, add_to_roadmap
+from django.utils import timezone
+from django.utils.timezone import now
 
 
 class TestRoadmapToPatients(TestCase):
@@ -288,3 +290,35 @@ class TestRoadmapToPatients(TestCase):
 
         response = update(request)
         self.assertEqual(response.status_code, 200)
+
+    def test_fail_post_update_page(self):
+        request = self.factory.post('/assigned/procedure/?id=134512342344')
+        self.middleware.process_request(request)
+
+        request.session.save()
+        request.user = self.user
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = update(request)
+        self.assertEqual(response.status_code, 302)
+
+    def test_post_update_page(self):
+        procedure = AssignedProcedures.assign_procedure_to_patient(1, self.test_patient, self.test_object_one)
+        request = self.factory.post('/assigned/procedure/?id=' + str(procedure.id), {'completion_goal': '2019-05-07', 'assigned_date': '2019-04-30', 'scheduled_date': '2019-04-30', 'scheduled': 'True', 'completed_date': '2019-04-30', 'notes': ''})
+
+        self.middleware.process_request(request)
+
+        request.session.save()
+        request.user = self.user
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = update(request)
+
+        updated_procedure = AssignedProcedures.objects.get(scheduled=True)
+        self.assertIsNotNone(updated_procedure)
