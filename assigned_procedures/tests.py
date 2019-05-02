@@ -98,7 +98,7 @@ class TestAssignedProcedures(TestCase):
         time = AssignedProcedures.average_completion_time(tProcedure.id)
         self.assertEqual(time, "0")
         # test 2 procedures 1 time
-        assigned = AssignedProcedures.assign_procedure_to_patient(2, testPatient, tProcedure)
+        assigned = AssignedProcedures.assign_procedure_to_patient(3, testPatient, tProcedure)
         spoof_time = assigned.created_at
         assigned.completed = True
         assigned.date_completed = spoof_time + timedelta(days=2)
