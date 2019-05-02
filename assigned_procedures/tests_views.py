@@ -261,7 +261,7 @@ class TestRoadmapToPatients(TestCase):
         self.assertListEqual(expected_list, AssignedProcedures.get_all_procedures(self.test_patient))
 
     def test_fail_get_update_page(self):
-        request = self.factory.get('/assigned/procedure/?id=')
+        request = self.factory.get('/assigned/procedure/?id=134512342344')
         self.middleware.process_request(request)
 
         request.session.save()
