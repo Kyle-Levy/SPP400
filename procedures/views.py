@@ -7,6 +7,9 @@ from procedures.forms import NewProcedure, SearchProcedures
 from procedures.models import Procedure
 from django.contrib import messages
 
+from roadmaps.models import RoadmapProcedureLink
+
+
 @login_required
 def index(request):
     if request.method == 'POST':
@@ -131,6 +134,16 @@ def delete_this_procedure(request):
             if form.is_valid():
                 cd = form.cleaned_data
                 if procedure.procedure_name == cd['item_name']:
+                    procedure_assignments = AssignedProcedures.objects.filter(procedure=procedure)
+
+                    for assignment in procedure_assignments:
+                        assignment.delete()
+
+                    procedure_roadmap_links = RoadmapProcedureLink.objects.filter(procedure=procedure)
+
+                    for link in procedure_roadmap_links:
+                        link.delete()
+
                     procedure.delete()
                     return redirect('/procedures/')
                 else:
