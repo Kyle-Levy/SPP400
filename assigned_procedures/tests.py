@@ -185,7 +185,6 @@ class TestAssignedProcedures(TestCase):
         AssignedProcedures.assign_procedure_to_patient(1, tPatient2, testProcedure)
         AssignedProcedures.assign_procedure_to_patient(2, tPatient2, testProcedure2, -10)
         result = AssignedProcedures.update_and_return_all_patient_goal_flags()
-        print(result)
         self.assertEqual(result, [tPatient3, tPatient, tPatient2])
 
     def test_get_all_active_procedures_for_patient(self):
