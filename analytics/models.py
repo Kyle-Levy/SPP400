@@ -24,13 +24,13 @@ class Analytics(models.Model):
                 behindProc += 1
 
         if totalProc is 0:
-            percentBehind = 0.0
+            percentBehind = 0
         else:
             percentBehind = (behindProc/totalProc) * 100
 
         Analytics.behind_procedure_perc = percentBehind
 
-        return percentBehind
+        return round(percentBehind, 1)
 
     @staticmethod
     def return_all_behind_procedures():
