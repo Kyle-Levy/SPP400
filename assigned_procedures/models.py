@@ -33,6 +33,8 @@ class AssignedProcedures(models.Model):
 
     @classmethod
     def assign_procedure_to_patient(cls, step, patientToLink, procedureToLink, proc_est=0, return_visit=False):
+        if AssignedProcedures.objects.filter(patient=patientToLink, procedure=procedureToLink,phaseNumber=step):
+            return False
         if proc_est is not 0 or procedureToLink.est_days_to_complete is not 0:
             est_flag = True
             if proc_est is not 0:
