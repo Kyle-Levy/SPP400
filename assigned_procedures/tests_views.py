@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.sessions.middleware import SessionMiddleware
 
 from assigned_procedures.models import AssignedProcedures
+from assigned_procedures.views import *
 from patients.models import Patients
 from patients.views import new_patient, procedures, remove_pairs_from_patient, add_roadmap, add_procedure
 from procedures.models import Procedure
@@ -258,3 +259,17 @@ class TestRoadmapToPatients(TestCase):
         expected_list = [(self.test_object_one, 1), (self.test_object_two, 1), (self.test_object_three, 1)]
 
         self.assertListEqual(expected_list, AssignedProcedures.get_all_procedures(self.test_patient))
+
+    def test_fail_get_update_page(self):
+        request = self.factory.get('/assigned/procedure/?id=')
+        self.middleware.process_request(request)
+
+        request.session.save()
+        request.user = self.user
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = update(request)
+        self.assertEqual(response.status_code, 302)
