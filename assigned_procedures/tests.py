@@ -129,13 +129,13 @@ class TestAssignedProcedures(TestCase):
         testAssign, testPatient, testProcedure = self.test_create_assignedProcedure()
         result = AssignedProcedures.check_goal_status(testPatient, testProcedure)
         self.assertEqual(result, "not scheduled")
-        tAssignment = AssignedProcedures.assign_procedure_to_patient(step=1, patientToLink=testPatient,
+        tAssignment = AssignedProcedures.assign_procedure_to_patient(step=2, patientToLink=testPatient,
                                                                      procedureToLink=testProcedure, proc_est=2,
                                                                      return_visit=True)
         resultz = AssignedProcedures.check_goal_status(testPatient, testProcedure, 2)
         self.assertEqual(resultz, "in progress (on time)")
         AssignedProcedures.toggle_completed(testPatient, testProcedure, 2)
-        tAssignment = AssignedProcedures.assign_procedure_to_patient(step=1, patientToLink=testPatient,
+        tAssignment = AssignedProcedures.assign_procedure_to_patient(step=3, patientToLink=testPatient,
                                                                      procedureToLink=testProcedure, proc_est=2,
                                                                      return_visit=True)
         resultz = AssignedProcedures.check_goal_status(testPatient, testProcedure, 2)
