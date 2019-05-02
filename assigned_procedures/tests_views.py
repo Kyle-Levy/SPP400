@@ -273,3 +273,18 @@ class TestRoadmapToPatients(TestCase):
 
         response = update(request)
         self.assertEqual(response.status_code, 302)
+
+    def test_get_update_page(self):
+        procedure = AssignedProcedures.assign_procedure_to_patient(1, self.test_patient, self.test_object_one)
+        request = self.factory.get('/assigned/procedure/?id=' + str(procedure.id))
+        self.middleware.process_request(request)
+
+        request.session.save()
+        request.user = self.user
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = update(request)
+        self.assertEqual(response.status_code, 200)
