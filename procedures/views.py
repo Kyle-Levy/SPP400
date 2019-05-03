@@ -148,10 +148,10 @@ def delete_this_procedure(request):
                     return redirect('/procedures/')
                 else:
                     messages.error(request, 'Incorrect procedure name!')
-                    return redirect('procedures/view_procedure/update/?id=' + str(procedure.id))
+                    return redirect('/procedures/view_procedure/update/?id=' + str(procedure.id))
             else:
                 messages.error(request, 'Invalid Form!')
-                return redirect('procedures/view_procedure/update/?id=' + str(procedure.id))
+                return redirect('/procedures/view_procedure/update/?id=' + str(procedure.id))
 
         except Procedure.DoesNotExist:
             messages.warning(request, "The procedure you tried to reach doesn't exist!")
