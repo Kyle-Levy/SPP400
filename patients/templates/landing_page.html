@@ -20,25 +20,35 @@
             <div class="row">
                 <div class="col" id="patients-col">
                     <div class="container">
-                      <h2>All Patients</h2>
-                          <form action="/patients/" method="POST"> {% csrf_token %}
-                              <div class="float-left" align="left">
-                                {{ form.search_terms }}
-                              </div>
-                              <div class="float-left" align="right">
-                                <button type="submit" name="submit" class="btn btn-warning ml-3 mr-2 mb-4">Search</button>
-                              </div>
-                              {% if filter %}
-                                <div>
-                                <strong class="ml-2">Showing results for search: </strong> {{ filter }}
+                        <form action="/patients/" method="POST"> {% csrf_token %}
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <h2>All Patients</h2>
                                 </div>
-                              {% else %}
-                                <div>
-                                <a class="ml-2">Showing all patients. </a>
+                                <div class="col-sm-8">
+                                    <div class="row">
+                                        <div class="float-left" align="left">
+                                          {{ form.search_terms }}
+                                        </div>
+                                        <div class="float-left" align="right">
+                                          <button type="submit" name="submit" class="btn btn-warning ml-3 mr-2 mb-4">Search</button>
+                                        </div>
+                                        {% if filter %}
+                                          <div>
+                                          <strong class="ml-2">Showing results for search: </strong> {{ filter }}
+                                          </div>
+                                        {% else %}
+                                          <div>
+                                          <a class="ml-2">Showing all patients. </a>
+                                          </div>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                              {% endif %}
-                          </form>
-
+                                <div class="col-sm-2">
+                                    <a class="btn btn-success" href="create/" role="button" name="new-patient-button">Add New Patient</a>
+                                </div>
+                            </div>
+                        </form>
                       {% if not patients %}
                         <div class="alert alert-danger" role="alert" style="margin-top:20px">
                             <strong>Error: </strong>No patients found.
@@ -68,11 +78,6 @@
                       </table>
                       {% endif %}
                     </div>
-                </div>
-            </div>
-            <div class="row" name='subr'>
-                <div class="col" name = 'subc'>
-                    <a class="btn btn-success" href="create/" role="button" name="new-patient-button">Add New Patient</a>
                 </div>
             </div>
         </div>
